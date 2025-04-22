@@ -3,8 +3,8 @@ using Honamic.PayMaster.PaymentProvider.Core;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Security.Cryptography;
-using System.Text;
+using Honamic.PayMaster.PaymentProvider.Core.Models;
+using Honamic.PayMaster.PaymentProvider.Sadad.Extensions;
 
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
 public class SadadPaymentProvider : PaymentProviderBase
@@ -50,7 +50,7 @@ public class SadadPaymentProvider : PaymentProviderBase
                 TerminalId = Configurations.TerminalId,
                 MerchantId = Configurations.MerchantId,
                 ReturnUrl = request.CallbackUrl,
-                SignData = CreateSign(request, Configurations),
+                SignData = SadadPaymentProviderHelpers.CreateSign(request, Configurations),
             };
 
             result.LogData.Request = apiRequest;
@@ -71,6 +71,7 @@ public class SadadPaymentProvider : PaymentProviderBase
                     result.PayUrl = Configurations.PurchasePage;
                     result.PayVerb = PayVerb.Get;
                     result.PayParams.Add("Token", response?.Token ?? "null");
+                    result.Token = response?.Token;
                     result.Success = true;
                 }
                 else
@@ -89,21 +90,32 @@ public class SadadPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    private static string CreateSign(ParamsForPayRequest request, SadadConfigurations configurations)
+    public override ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue)
     {
-        var data = $"{configurations.TerminalId};{request.UniqueRequestId};{request.Amount}";
+        var result = new ExtractCallBackDataResult();
 
-        var dataBytes = Encoding.UTF8.GetBytes(data);
+        try
+        {
+            var callbackData = JsonSerializer.Deserialize<CallBackData>(callBackJsonValue);
 
-        using var tripleDes = TripleDES.Create();
-        tripleDes.Mode = CipherMode.ECB;
-        tripleDes.Padding = PaddingMode.PKCS7;
+            if (!string.IsNullOrEmpty(callbackData?.OrderId))
+            {
+                result.UniqueRequestId = callbackData.OrderId;
+                result.Token = callbackData.Token;
+                result.CallBack = callbackData;
+                result.Success = true;
+            }
+            else
+            {
+                result.Error = "OrderId Value not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+            _logger.LogError(ex, "ExtractCallBackData Failed");
+        }
 
-        var encryptor = tripleDes.CreateEncryptor(
-            Convert.FromBase64String(configurations.MerchantKey), new byte[8]);
-
-        var bytes = encryptor.TransformFinalBlock(dataBytes, 0, dataBytes.Length);
-
-        return Convert.ToBase64String(bytes);
+        return result;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos;
 using Honamic.PayMaster.PaymentProvider.Core;
+using Honamic.PayMaster.PaymentProvider.Core.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -75,6 +76,35 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         {
             result.LogData.SetException(ex);
             _logger.LogError(ex, "PrePay Failed");
+        }
+
+        return result;
+    }
+
+    public override ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue)
+    {
+        var result = new ExtractCallBackDataResult();
+
+        try
+        {
+            var callbackData = JsonSerializer.Deserialize<CallBackDataModel>(callBackJsonValue);
+
+            if (!string.IsNullOrEmpty(callbackData?.SaleOrderId))
+            {
+                result.UniqueRequestId = callbackData.SaleReferenceId;
+                result.Token = callbackData.RefId;
+                result.CallBack = callbackData;
+                result.Success = true;
+            }
+            else
+            {
+                result.Error = "SaleOrderId value not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+            _logger.LogError(ex, "ExtractCallBackData Failed");
         }
 
         return result;

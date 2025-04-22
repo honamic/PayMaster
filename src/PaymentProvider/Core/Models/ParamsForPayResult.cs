@@ -1,5 +1,4 @@
-﻿
-namespace Honamic.PayMaster.PaymentProvider.Core;
+﻿namespace Honamic.PayMaster.PaymentProvider.Core.Models;
 
 public class ParamsForPayResult
 {
@@ -12,6 +11,8 @@ public class ParamsForPayResult
     public bool Success { get; set; }
     
     public string? Error { get; set; }
+    
+    public string? Token { get; set; }
 
     public Dictionary<string, string> PayParams { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Honamic.PayMaster.PaymentProvider.Core.Extensions;
+using Honamic.PayMaster.PaymentProvider.Core.Models;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -9,6 +10,7 @@ public abstract class PaymentProviderBase : IPaymentProvider
 {
     public abstract void Configure(string providerConfiguration);
     public abstract Task<ParamsForPayResult> ParamsForPayAsync(ParamsForPayRequest prePayRequest);
+    public abstract ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
 
     protected string ToJson(object obj)
     {
@@ -28,4 +30,5 @@ public abstract class PaymentProviderBase : IPaymentProvider
 
         return $"{obj} | {description}".TrimEnd(' ').TrimEnd('|');
     }
+
 }
