@@ -4,10 +4,6 @@ public class ParamsForPayRequest
 {
     public decimal Amount { get; set; }
 
-    //Mellt: MerchantId
-    //BMI,Saman: TerminalId 
-    public string TerminalId { get; set; }
-
     //Mellt: CallbackUrl
     //BMI,Saman: RedirectUrl 
     public string CallbackUrl { get; set; }

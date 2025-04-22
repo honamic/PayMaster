@@ -10,6 +10,8 @@ public class ParamsForPayResult
     }
 
     public bool Success { get; set; }
+    
+    public string? Error { get; set; }
 
     public Dictionary<string, string> PayParams { get; set; }
 
