@@ -1,0 +1,17 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Honamic.PayMaster.PaymentProvider.Core.Extensions;
+public static class ServiceCollectionExtensions
+{
+    public static List<KeyValuePair<string, string>> Providers = new List<KeyValuePair<string, string>>();
+
+    public static void RegisterPaymentProvider<TProvider>(this IServiceCollection services)
+        where TProvider : PaymentProviderBase
+    {
+        services.AddKeyedTransient<IPaymentProvider, TProvider>(typeof(TProvider).FullName);
+
+        var providerName = typeof(TProvider).Name.Replace("Provider", "", StringComparison.InvariantCultureIgnoreCase);
+
+        Providers.Add(new KeyValuePair<string, string>(typeof(TProvider).FullName!, providerName));
+    }
+}
