@@ -1,0 +1,19 @@
+﻿namespace Honamic.PayMaster.PaymentProvider.Core.Models;
+
+public class VerfiyResult
+{
+    public VerfiyResult()
+    {
+        LogData = new PaymentProviderLogData();
+    }
+
+    public bool Success { get; set; }
+
+    public string? Error { get; set; }
+
+    public PaymentProviderLogData LogData { get; }
+
+    public SupplementaryPaymentInformation? SupplementaryPaymentInformation { get; set; }
+
+    public PaymentFailedReason? PaymentFailedReason { get; set; }
+}

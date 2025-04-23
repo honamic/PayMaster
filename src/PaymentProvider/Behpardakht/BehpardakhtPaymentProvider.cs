@@ -109,4 +109,169 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
         return result;
     }
+
+    public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    {
+        var result = new VerfiyResult();
+
+        try
+        {
+            var callbackData = (CallBackDataModel?)request.CallBackData;
+
+            if (!InternalVerify(request, result, callbackData))
+            {
+                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                return result;
+            }
+            var resCode = callbackData?.ResCode ?? "";
+
+            if (resCode != "0")
+            {
+                switch (resCode)
+                {
+                    case "17":
+                        result.PaymentFailedReason = PaymentFailedReason.Canceled;
+                        result.Error = ResultCodeDescription(resCode);
+                        break;
+                    default:
+                        result.PaymentFailedReason = PaymentFailedReason.Other;
+                        result.Error = ResultCodeDescription(resCode);
+                        break;
+                }
+                return result;
+            }
+
+            var apiVerfiyRequest = new
+            {
+                terminalId = Configurations.TerminalId,
+                userName = Configurations.UserName,
+                userPassword = Configurations.Password,
+
+                orderId = long.Parse(request.PatmentInfo.UniqueRequestId),
+                saleOrderId = long.Parse(request.PatmentInfo.UniqueRequestId),
+                saleReferenceId = long.Parse(callbackData?.SaleReferenceId!),
+            };
+
+            result.LogData.Request = apiVerfiyRequest;
+
+            var verifyResponse = "";// await providerClient.bpVerifyRequestAsync(pr.terminalId, pr.userName, pr.userPassword, pr.orderId, pr.saleOrderId, pr.saleReferenceId);
+            result.LogData.Response = verifyResponse;//.Body.@return;
+            var VerifyResultCode = verifyResponse;//.Body.@return
+
+            if (VerifyResultCode != "0")
+            {
+                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.Error = ResultCodeDescription(VerifyResultCode);
+                return result;
+            }
+
+            var settlmentResponse = "";// await providerClient.bpSettleRequestAsync(pr.terminalId, pr.userName,pr.userPassword, pr.orderId, pr.saleOrderId, pr.saleReferenceId);
+
+            result.LogData.Response = new { verify = verifyResponse, settlment = settlmentResponse };
+
+            var settlmentResultCode = verifyResponse;//.Body.@return
+
+            if (settlmentResultCode != "0")
+            {
+                result.PaymentFailedReason = PaymentFailedReason.Settlement;
+                result.Error = ResultCodeDescription(VerifyResultCode);
+                return result;
+            }
+
+            result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
+            {
+                Pan=callbackData?.CardHolderPan,
+                TerminalId=Configurations.TerminalId,
+            };
+
+            result.Success = true;
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+            _logger.LogError(ex, "ExtractCallBackData Failed");
+        }
+
+        return result;
+    }
+
+    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, CallBackDataModel? callbackData)
+    {
+        if (callbackData is null)
+        {
+            result.Error = "Call Back is empty";
+            return false;
+        }
+
+        if (callbackData.FinalAmount != request.PatmentInfo.Amount.ToString())
+        {
+            result.Error = "مغایرت در مبلغ";
+            return false;
+        }
+
+        if (callbackData.RefId != request.PatmentInfo.Token)
+        {
+            result.Error = "مغایرت در RefId";
+            return false;
+        }
+
+        if (callbackData.SaleOrderId != request.PatmentInfo.UniqueRequestId)
+        {
+            result.Error = "مغایرت در شناسه درخواست";
+            return false;
+        }
+
+
+        return true;
+    }
+
+    public static string ResultCodeDescription(string result) => result switch
+    {
+        "0" => "تراكنش با موفقيت انجام شد",
+        "11" => "شماره كارت نامعتبر است",
+        "12" => "موجودي كافي نيست",
+        "13" => "رمز نادرست است",
+        "14" => "تعداد دفعات وارد كردن رمز بيش از حد مجاز است",
+        "15" => "كارت نامعتبر است",
+        "16" => "دفعات برداشت وجه بيش از حد مجاز است",
+        "17" => "كاربر از انجام تراكنش منصرف شده است",
+        "18" => "تاريخ انقضاي كارت گذشته است",
+        "19" => "مبلغ برداشت وجه بيش از حد مجاز است",
+        "111" => "صادر كننده كارت نامعتبر است",
+        "112" => "خطاي سوييچ صادر كننده كارت",
+        "113" => "پاسخي از صادر كننده كارت دريافت نشد",
+        "114" => "دارنده كارت مجاز به انجام اين تراكنش نيست",
+        "21" => "پذيرنده نامعتبر است",
+        "23" => "خطاي امنيتي رخ داده است",
+        "24" => "اطلاعات كاربري پذيرنده نامعتبر است",
+        "25" => "مبلغ نامعتبر است",
+        "31" => "پاسخ نامعتبر است",
+        "32" => "فرمت اطلاعات وارد شده صحيح نمي باشد",
+        "33" => "حساب نامعتبر است",
+        "34" => "خطاي سيستمي",
+        "35" => "تاريخ نامعتبر است",
+        "41" => "شماره درخواست تكراري است",
+        "42" => "تراکنش Sale یافت نشد",
+        "43" => "قبلا درخواست Verify داده شده است",
+        "44" => "درخواست Verify یافت نشد",
+        "45" => "تراکنش Settle شده است",
+        "46" => "تراکنش Settle نشده است",
+        "47" => "تراکنش Settle یافت نشد",
+        "48" => "تراکنش Reverse شده است",
+        "49" => "تراکنش Refund یافت نشد",
+        "412" => "شناسه قبض نادرست است",
+        "413" => "شناسه پرداخت نادرست است",
+        "414" => "سازمان صادر كننده قبض نامعتبر است",
+        "415" => "زمان جلسه كاري به پايان رسيده است",
+        "416" => "خطا در ثبت اطلاعات",
+        "417" => "شناسه پرداخت كننده نامعتبر است",
+        "418" => "اشكال در تعريف اطلاعات مشتري",
+        "419" => "تعداد دفعات ورود اطلاعات از حد مجاز گذشته است",
+        "421" => "IP نامعتبر است",
+        "51" => "تراكنش تكراري است",
+        "54" => "تراكنش مرجع موجود نيست",
+        "55" => "تراكنش نامعتبر است",
+        "61" => "خطا در واريز",
+        _ => $"UnexpectedError, Response: {result}"
+    };
 }

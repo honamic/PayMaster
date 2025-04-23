@@ -118,4 +118,9 @@ public class SadadPaymentProvider : PaymentProviderBase
 
         return result;
     }
+
+    public override Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    {
+        throw new NotImplementedException();
+    }
 }

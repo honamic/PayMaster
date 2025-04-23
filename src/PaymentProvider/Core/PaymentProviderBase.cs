@@ -11,6 +11,7 @@ public abstract class PaymentProviderBase : IPaymentProvider
     public abstract void Configure(string providerConfiguration);
     public abstract Task<ParamsForPayResult> ParamsForPayAsync(ParamsForPayRequest prePayRequest);
     public abstract ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
+    public abstract Task<VerfiyResult> VerifyAsync(VerifyRequest request);
 
     protected string ToJson(object obj)
     {
