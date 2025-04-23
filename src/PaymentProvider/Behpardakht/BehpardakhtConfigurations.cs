@@ -7,12 +7,12 @@ public class BehpardakhtConfigurations
     {
         ApiAddress = "https://bpm.shaparak.ir";
         PayUrl = "https://bpm.shaparak.ir/pgwchannel/startpay.mellat";
-        TerminalId = "YourTerminalId";
+        TerminalId = 1234567890;
         UserName = "UserName";
         Password= "Password";
     }
 
-    public string TerminalId { get; set; }
+    public long TerminalId { get; set; }
 
     public string ApiAddress { get; set; }
 

@@ -6,7 +6,7 @@ public class ParamsForPayRequest
 
     public required string CallbackUrl { get; set; }
 
-    public required string UniqueRequestId { get; set; }
+    public required long UniqueRequestId { get; set; }
 
     public string? MobileNumber { get; set; }
 

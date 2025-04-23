@@ -43,12 +43,12 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             var client = _httpClientFactory.CreateClient(Constants.HttpClientName);
 
-            var apiRequest = new MellatPrepareRequest
+            var apiRequest = new bpPayRequestBody
             {
-                MerchantId = Configurations.TerminalId,
-                Amount = request.Amount,
-                CallbackUrl = request.CallbackUrl,
-                OrderId = request.UniqueRequestId,
+                terminalId = Configurations.TerminalId,
+                amount = (long)request.Amount,
+                callBackUrl = request.CallbackUrl,
+                orderId = request.UniqueRequestId,
             };
 
             result.LogData.Request = apiRequest;
@@ -141,7 +141,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
                 return result;
             }
 
-            var apiVerfiyRequest = new
+            var apiVerfiyRequest = new bpVerifyRequestBody
             {
                 terminalId = Configurations.TerminalId,
                 userName = Configurations.UserName,
@@ -154,9 +154,13 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             result.LogData.Request = apiVerfiyRequest;
 
-            var verifyResponse = "";// await providerClient.bpVerifyRequestAsync(pr.terminalId, pr.userName, pr.userPassword, pr.orderId, pr.saleOrderId, pr.saleReferenceId);
-            result.LogData.Response = verifyResponse;//.Body.@return;
-            var VerifyResultCode = verifyResponse;//.Body.@return
+            var client = CreateClient();
+
+            var verifyResponse = await client.bpVerifyRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
+                apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
+
+            result.LogData.Response = verifyResponse.Body.@return;
+            var VerifyResultCode = verifyResponse.Body.@return;
 
             if (VerifyResultCode != "0")
             {
@@ -165,11 +169,12 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
                 return result;
             }
 
-            var settlmentResponse = "";// await providerClient.bpSettleRequestAsync(pr.terminalId, pr.userName,pr.userPassword, pr.orderId, pr.saleOrderId, pr.saleReferenceId);
+            var settlmentResponse = await client.bpSettleRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
+                apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
 
-            result.LogData.Response = new { verify = verifyResponse, settlment = settlmentResponse };
+            result.LogData.Response = new { verify = verifyResponse, settlment = settlmentResponse.Body.@return };
 
-            var settlmentResultCode = verifyResponse;//.Body.@return
+            var settlmentResultCode = verifyResponse.Body.@return;
 
             if (settlmentResultCode != "0")
             {
@@ -180,8 +185,8 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
             {
-                Pan=callbackData?.CardHolderPan,
-                TerminalId=Configurations.TerminalId,
+                Pan = callbackData?.CardHolderPan,
+                TerminalId = Configurations.TerminalId.ToString(),
             };
 
             result.Success = true;
@@ -223,6 +228,12 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
 
         return true;
+    }
+
+    private PaymentGatewayClient CreateClient()
+    {
+        return new PaymentGatewayClient(PaymentGatewayClient.EndpointConfiguration.PaymentGatewayImplPort,
+            Configurations.ApiAddress);
     }
 
     public static string ResultCodeDescription(string result) => result switch
