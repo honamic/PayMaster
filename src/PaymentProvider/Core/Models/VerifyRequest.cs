@@ -14,5 +14,5 @@ public class VerifyRequestPatmentInfo
 
     public decimal Amount { get; init; }
 
-    public string? Token { get; set; }
+    public string? CreateToken { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Honamic.PayMaster.PaymentProvider.Core.Models;
 
-public class ParamsForPayRequest
+public class CreateRequest
 {
     public decimal Amount { get; set; }
 
@@ -11,4 +11,6 @@ public class ParamsForPayRequest
     public string? MobileNumber { get; set; }
 
     public string? NationalityCode { get; set; }
+
+    public string? Currency { get; set; }
 }

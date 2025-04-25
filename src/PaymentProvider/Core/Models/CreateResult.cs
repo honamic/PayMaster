@@ -1,8 +1,8 @@
 ﻿namespace Honamic.PayMaster.PaymentProvider.Core.Models;
 
-public class ParamsForPayResult
+public class CreateResult
 {
-    public ParamsForPayResult()
+    public CreateResult()
     {
         LogData = new PaymentProviderLogData();
         PayParams = new Dictionary<string, string>();
@@ -12,7 +12,7 @@ public class ParamsForPayResult
     
     public string? Error { get; set; }
     
-    public string? Token { get; set; }
+    public string? CreateToken { get; set; }
 
     public Dictionary<string, string> PayParams { get; set; }
 

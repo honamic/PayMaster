@@ -33,9 +33,9 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         Configurations = options;
     }
 
-    public override async Task<ParamsForPayResult> ParamsForPayAsync(ParamsForPayRequest request)
+    public override async Task<CreateResult> ParamsForPayAsync(CreateRequest request)
     {
-        var result = new ParamsForPayResult();
+        var result = new CreateResult();
 
         try
         {
@@ -92,7 +92,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.SaleOrderId))
             {
                 result.UniqueRequestId = callbackData.SaleReferenceId;
-                result.Token = callbackData.RefId;
+                result.CreateToken = callbackData.RefId;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
@@ -208,13 +208,14 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             return false;
         }
 
+        // todo: invariant Cultuer fix!
         if (callbackData.FinalAmount != request.PatmentInfo.Amount.ToString())
         {
             result.Error = "مغایرت در مبلغ";
             return false;
         }
 
-        if (callbackData.RefId != request.PatmentInfo.Token)
+        if (callbackData.RefId != request.PatmentInfo.CreateToken)
         {
             result.Error = "مغایرت در RefId";
             return false;

@@ -6,7 +6,7 @@ namespace Honamic.PayMaster.PaymentProvider.Sadad.Extensions;
 
 public static class SadadPaymentProviderHelpers
 {
-    public static string CreateSign(ParamsForPayRequest request, SadadConfigurations configurations)
+    public static string CreateSign(CreateRequest request, SadadConfigurations configurations)
     {
         var data = $"{configurations.TerminalId};{request.UniqueRequestId};{request.Amount}";
 

@@ -9,7 +9,7 @@ namespace Honamic.PayMaster.PaymentProvider.Core;
 public abstract class PaymentProviderBase : IPaymentProvider
 {
     public abstract void Configure(string providerConfiguration);
-    public abstract Task<ParamsForPayResult> ParamsForPayAsync(ParamsForPayRequest prePayRequest);
+    public abstract Task<CreateResult> ParamsForPayAsync(CreateRequest prePayRequest);
     public abstract ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
     public abstract Task<VerfiyResult> VerifyAsync(VerifyRequest request);
 

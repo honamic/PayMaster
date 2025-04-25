@@ -34,9 +34,9 @@ public class SadadPaymentProvider : PaymentProviderBase
         Configurations = options;
     }
 
-    public override async Task<ParamsForPayResult> ParamsForPayAsync(ParamsForPayRequest request)
+    public override async Task<CreateResult> ParamsForPayAsync(CreateRequest request)
     {
-        var result = new ParamsForPayResult();
+        var result = new CreateResult();
 
         try
         {
@@ -45,7 +45,7 @@ public class SadadPaymentProvider : PaymentProviderBase
             var apiRequest = new PaymentRequest
             {
                 Amount = request.Amount,
-                OrderId = request.UniqueRequestId,
+                OrderId = request.UniqueRequestId.ToString(),
                 LocalDateTime = DateTime.Now,
                 TerminalId = Configurations.TerminalId,
                 MerchantId = Configurations.MerchantId,
@@ -71,7 +71,7 @@ public class SadadPaymentProvider : PaymentProviderBase
                     result.PayUrl = Configurations.PurchasePage;
                     result.PayVerb = PayVerb.Get;
                     result.PayParams.Add("Token", response?.Token ?? "null");
-                    result.Token = response?.Token;
+                    result.CreateToken = response?.Token;
                     result.Success = true;
                 }
                 else
@@ -101,7 +101,7 @@ public class SadadPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.OrderId))
             {
                 result.UniqueRequestId = callbackData.OrderId;
-                result.Token = callbackData.Token;
+                result.CreateToken = callbackData.Token;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
