@@ -11,6 +11,9 @@ public class CreateRequest
     public string? MobileNumber { get; set; }
 
     public string? NationalityCode { get; set; }
+    public string? Email { get; set; }
 
     public string? Currency { get; set; }
+
+    public string? GatewayNote { get; set; }
 }
