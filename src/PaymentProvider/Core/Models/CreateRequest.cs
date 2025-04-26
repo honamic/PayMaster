@@ -2,7 +2,7 @@
 
 public class CreateRequest
 {
-    public decimal Amount { get; set; }
+    public required decimal Amount { get; set; }
 
     public required string CallbackUrl { get; set; }
 
@@ -11,6 +11,7 @@ public class CreateRequest
     public string? MobileNumber { get; set; }
 
     public string? NationalityCode { get; set; }
+
     public string? Email { get; set; }
 
     public string? Currency { get; set; }

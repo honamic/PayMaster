@@ -9,12 +9,11 @@ using System.Text;
 namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 
 public class ZarinPalPaymentProvider(
-    ZarinPalConfigurations zarinPalConfigurations,
     IHttpClientFactory httpClientFactory,
     ILogger<ZarinPalPaymentProvider> logger)
     : PaymentProviderBase
 {
-    private ZarinPalConfigurations _configurations = zarinPalConfigurations;
+    private ZarinPalConfigurations _configurations = new ZarinPalConfigurations();
 
     public override void Configure(string providerConfiguration)
     {
@@ -115,48 +114,57 @@ public class ZarinPalPaymentProvider(
 
     public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
     {
-        var callbackData = (CallBackDataModel?)request.CallBackData;
         var result = new VerfiyResult();
-        if (!InternalVerify(request, result, callbackData))
+        try
         {
-            result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
-            return result;
+            var callbackData = (CallBackDataModel?)request.CallBackData;
+            if (!InternalVerify(request, result, callbackData))
+            {
+                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                return result;
+            }
+
+            var verificationRequest = new PaymentVerificationRequest
+            {
+                merchant_id = _configurations.MerchantId,
+                amount = request.PatmentInfo.Amount,
+                authority = callbackData!.Authority
+            };
+            result.LogData.Request = verificationRequest;
+
+            var json = JsonSerializer.Serialize(verificationRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var client = httpClientFactory.CreateClient(Constants.HttpClientName);
+            var url = new Uri(new Uri(_configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
+            var response = await client.PostAsync(url, content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            result.LogData.Response = responseString;
+
+            var paymentVerificationResponse = JsonSerializer.Deserialize<ZarinPalResult<PaymentVerificationResponse>>(responseString);
+
+            if (paymentVerificationResponse is null || paymentVerificationResponse.data.code != 100)
+            {
+                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.Error = GetDescriptionFromCode(paymentVerificationResponse?.data.code);
+                return result;
+            }
+
+            result.Success = true;
+            result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
+            {
+                MerchantId = _configurations.MerchantId,
+                Pan = paymentVerificationResponse.data.card_pan,
+                ReferenceRetrievalNumber = $"",
+                RefNum = $"{paymentVerificationResponse.data.ref_id}",
+                TerminalId = $"{_configurations.TerminalId}",
+                TrackingNumber = paymentVerificationResponse.data.card_hash
+            };
         }
-
-        var verificationRequest = new PaymentVerificationRequest
+        catch (Exception ex)
         {
-            merchant_id = _configurations.MerchantId,
-            amount = request.PatmentInfo.Amount,
-            authority = callbackData!.Authority
-        };
-        result.LogData.Request = verificationRequest;
-
-        var json = JsonSerializer.Serialize(verificationRequest);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var client = httpClientFactory.CreateClient(Constants.HttpClientName);
-        var url = new Uri(new Uri(_configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
-        var response = await client.PostAsync(url, content);
-        var responseString = await response.Content.ReadAsStringAsync();
-        var paymentVerificationResponse = JsonSerializer.Deserialize<ZarinPalResult<PaymentVerificationResponse>>(responseString);
-        result.LogData.Response = paymentVerificationResponse;
-
-        if (paymentVerificationResponse is null || paymentVerificationResponse.data.code != 100)
-        {
-            result.PaymentFailedReason = PaymentFailedReason.Verfiy;
-            result.Error = GetDescriptionFromCode(paymentVerificationResponse?.data.code);
-            return result;
+            result.Error = ex.Message;
+            logger.LogError(ex, "Verify Failed");
         }
-
-        result.Success = true;
-        result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
-        {
-            MerchantId = _configurations.MerchantId,
-            Pan = paymentVerificationResponse.data.card_pan,
-            ReferenceRetrievalNumber = $"",
-            RefNum = $"{paymentVerificationResponse.data.ref_id}",
-            TerminalId = $"{_configurations.TerminalId}",
-            TrackingNumber = paymentVerificationResponse.data.card_hash
-        };
 
         return result;
     }

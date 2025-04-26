@@ -2,7 +2,7 @@
 
 public class PaymentVerificationResponse
 {
-    public object wages { get; set; }
+    public string wages { get; set; }
     public int code { get; set; }
     public string message { get; set; }
     public string card_hash { get; set; }
@@ -11,5 +11,6 @@ public class PaymentVerificationResponse
     public string fee_type { get; set; }
     public int fee { get; set; }
     public int shaparak_fee { get; set; }
-    public object order_id { get; set; }
+    public string? order_id { get; set; }
 }
+
