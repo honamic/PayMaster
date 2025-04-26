@@ -5,7 +5,7 @@ namespace Honamic.PayMaster.PaymentProvider.Core;
 
 public interface IPaymentProvider
 {
-    public Task<CreateResult> ParamsForPayAsync(CreateRequest request);
+    public Task<CreateResult> CreateAsync(CreateRequest request);
     
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
 

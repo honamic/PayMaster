@@ -34,7 +34,7 @@ public class SadadPaymentProvider : PaymentProviderBase
         Configurations = options;
     }
 
-    public override async Task<CreateResult> ParamsForPayAsync(CreateRequest request)
+    public override async Task<CreateResult> CreateAsync(CreateRequest request)
     {
         var result = new CreateResult();
 
