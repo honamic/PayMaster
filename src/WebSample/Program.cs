@@ -30,18 +30,24 @@ app.MapPost("/Payment/create/", async (HttpContext context, IServiceProvider ser
 
     IPaymentProvider provider = PaymentFacoty.GetSampleProvider(services);
 
-    var createResult = await provider.CreateAsync(new Honamic.PayMaster.PaymentProvider.Core.Models.CreateRequest()
+    var newPayment = PaymentStorage.Create(amount);
+
+    var createResult = await provider.CreateAsync(new CreateRequest()
     {
-        Amount = amount,
+        Amount = newPayment.Amount,
+        UniqueRequestId = newPayment.UniqueRequestId,
         CallbackUrl = callbackUrl,
-        UniqueRequestId = DateTime.Now.Millisecond,
     });
 
     if (createResult.Success)
     {
+        PaymentStorage.UpdaeToken(newPayment.UniqueRequestId, createResult.CreateToken);
+
+        newPayment.CreateToken = createResult.CreateToken;
+
         var redirectUrl = new Uri(createResult.PayUrl!);
 
-        if (createResult.PayVerb == Honamic.PayMaster.PaymentProvider.Core.Models.PayVerb.Get)
+        if (createResult.PayVerb == PayVerb.Get)
             foreach (var param in createResult.PayParams)
             {
                 redirectUrl = new Uri(redirectUrl + $"?{param.Key}={param.Value}");
@@ -74,13 +80,15 @@ app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpC
         return Results.Ok(ExtractCallBackDataResult);
     }
 
+    var dbPayment = PaymentStorage.Get(ExtractCallBackDataResult.UniqueRequestId, ExtractCallBackDataResult.CreateToken);
+
     VerifyRequest verifyRequest = new()
     {
         PatmentInfo = new VerifyRequestPatmentInfo
         {
-            Amount = 100,
-            UniqueRequestId = 123.ToString(),
-            CreateToken = "",
+            Amount = dbPayment!.Amount,
+            UniqueRequestId = dbPayment.UniqueRequestId,
+            CreateToken = dbPayment.CreateToken,
         },
         CallBackData = ExtractCallBackDataResult.CallBack
     };
@@ -111,7 +119,52 @@ public static class PaymentFacoty
         provider.Configure(JsonSerializer.Serialize(zarinPalConfig));
         return provider;
     }
-
 }
 
+public static class PaymentStorage
+{
+    private static List<VerifyRequestPatmentInfo> List = new List<VerifyRequestPatmentInfo>();
 
+    internal static VerifyRequestPatmentInfo Create(decimal amount)
+    {
+        var newPayment = new VerifyRequestPatmentInfo()
+        {
+            UniqueRequestId = DateTime.Now.Ticks,
+            Amount = amount
+        };
+
+        List.Add(newPayment);
+
+        return newPayment;
+    }
+
+    internal static VerifyRequestPatmentInfo? Get(long? uniqueRequestId, string? createToken)
+    {
+        var query = List.AsQueryable();
+
+        if (uniqueRequestId.HasValue)
+        {
+            query = query.Where(c => c.UniqueRequestId == uniqueRequestId.Value);
+        }
+        else if (!string.IsNullOrEmpty(createToken))
+        {
+            query = query.Where(c => c.CreateToken == createToken);
+        }
+        else
+        {
+            throw new ArgumentNullException();
+        }
+
+        return query.FirstOrDefault();
+    }
+
+    internal static void UpdaeToken(long uniqueRequestId, string? createToken)
+    {
+        var pay = List.FirstOrDefault(c => c.UniqueRequestId == uniqueRequestId);
+
+        if (pay is not null)
+        {
+            pay.CreateToken = createToken;
+        }
+    }
+}

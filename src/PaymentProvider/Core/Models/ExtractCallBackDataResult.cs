@@ -6,7 +6,7 @@ public class ExtractCallBackDataResult
 
     public string? Error { get; set; }
 
-    public string? UniqueRequestId { get; set; }
+    public long? UniqueRequestId { get; set; }
     
     public string? CreateToken { get; set; }
 

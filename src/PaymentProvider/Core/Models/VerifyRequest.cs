@@ -10,9 +10,9 @@ public class VerifyRequest
 
 public class VerifyRequestPatmentInfo
 {
-    public required string UniqueRequestId { get; init; }
+    public required long UniqueRequestId { get; init; }
 
-    public decimal Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     public string? CreateToken { get; set; }
 }
