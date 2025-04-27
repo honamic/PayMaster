@@ -106,10 +106,8 @@ public static class PaymentFacoty
     private static ZarinPalConfigurations zarinPalConfig = new()
     {
         ApiAddress = "https://sandbox.zarinpal.com/",
-        MerchantId = "123",
-        TerminalId = 456,
-        UserName = "UserName",
-        Password = "password",
+        PayUrl= "https://sandbox.zarinpal.com/pg/StartPay/",
+        MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
     };
     public static IPaymentProvider GetSampleProvider(IServiceProvider services)
     {
