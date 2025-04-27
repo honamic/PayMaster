@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddKeyedTransient<IPaymentProvider, TProvider>(typeof(TProvider).FullName);
 
-        var providerName = typeof(TProvider).Name.Replace("Provider", "", StringComparison.InvariantCultureIgnoreCase);
+        var providerName = typeof(TProvider).Name.Replace("PaymentProvider", "", StringComparison.InvariantCultureIgnoreCase);
 
         Providers.Add(new KeyValuePair<string, string>(typeof(TProvider).FullName!, providerName));
     }

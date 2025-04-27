@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{723F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZarinPal", "PaymentProvider\ZarinPal\ZarinPal\ZarinPal.csproj", "{45893362-3815-40AE-B1D4-9188D015F434}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSample", "WebSample\WebSample.csproj", "{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{45893362-3815-40AE-B1D4-9188D015F434}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45893362-3815-40AE-B1D4-9188D015F434}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45893362-3815-40AE-B1D4-9188D015F434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8B7ABDA0-3EA4-41E8-9249-1273E49A2956}
 		{723FE1EB-715F-4EE6-B036-82045969DA6E} = {8B7ABDA0-3EA4-41E8-9249-1273E49A2956}
 		{45893362-3815-40AE-B1D4-9188D015F434} = {723FE1EB-715F-4EE6-B036-82045969DA6E}
+		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7} = {1B666BD8-243E-434B-A185-BBBD67FEDAA4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2395F65-A679-4732-A522-0C7D24F44238}

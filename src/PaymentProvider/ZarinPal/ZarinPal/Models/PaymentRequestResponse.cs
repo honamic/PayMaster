@@ -1,11 +1,24 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
 
 public class PaymentRequestResponse
 {
-    public string authority { get; set; }
-    public int fee { get; set; }
-    public string fee_type { get; set; }
-    public int code { get; set; }
-    public string message { get; set; }
-    public string Link { get; set; }
+    [JsonPropertyName("authority")]
+    public string? Authority { get; set; }
+
+    [JsonPropertyName("fee")]
+    public decimal Fee { get; set; }
+
+    [JsonPropertyName("fee_type")]
+    public string? FeeType { get; set; }
+
+    [JsonPropertyName("code")]
+    public int Code { get; set; }
+
+    [JsonPropertyName("message")]
+    public string? Message { get; set; }
+
+    [JsonPropertyName("link")]
+    public string? Link { get; set; }
 }

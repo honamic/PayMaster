@@ -2,6 +2,7 @@
 using Honamic.PayMaster.PaymentProvider.Core;
 using Honamic.PayMaster.PaymentProvider.Core.Models;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -91,7 +92,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (!string.IsNullOrEmpty(callbackData?.SaleOrderId))
             {
-                result.UniqueRequestId = callbackData.SaleReferenceId;
+                result.UniqueRequestId = long.Parse(callbackData.SaleReferenceId ?? "");
                 result.CreateToken = callbackData.RefId;
                 result.CallBack = callbackData;
                 result.Success = true;
@@ -147,8 +148,8 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
                 userName = Configurations.UserName,
                 userPassword = Configurations.Password,
 
-                orderId = long.Parse(request.PatmentInfo.UniqueRequestId),
-                saleOrderId = long.Parse(request.PatmentInfo.UniqueRequestId),
+                orderId = request.PatmentInfo.UniqueRequestId,
+                saleOrderId = request.PatmentInfo.UniqueRequestId,
                 saleReferenceId = long.Parse(callbackData?.SaleReferenceId!),
             };
 
@@ -221,7 +222,8 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             return false;
         }
 
-        if (callbackData.SaleOrderId != request.PatmentInfo.UniqueRequestId)
+        if (callbackData.SaleOrderId
+                != request.PatmentInfo.UniqueRequestId.ToString(CultureInfo.InvariantCulture))
         {
             result.Error = "مغایرت در شناسه درخواست";
             return false;
