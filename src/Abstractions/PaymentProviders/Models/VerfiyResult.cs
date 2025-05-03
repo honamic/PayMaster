@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.Core.Models;
+﻿namespace Honamic.PayMaster.PaymentProviders.Models;
 
 public class VerfiyResult
 {

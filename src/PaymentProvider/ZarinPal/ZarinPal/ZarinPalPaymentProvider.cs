@@ -1,11 +1,11 @@
-﻿using Honamic.PayMaster.PaymentProvider.Core;
-using Honamic.PayMaster.PaymentProvider.Core.Models;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
 using System.Text;
 using System.Globalization;
+using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.PaymentProviders; 
 
 namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 

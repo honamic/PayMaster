@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Honamic.PayMaster.PaymentProviders;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Honamic.PayMaster.PaymentProvider.Core.Extensions;
+namespace Honamic.PayMaster.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static List<KeyValuePair<string, string>> Providers = new List<KeyValuePair<string, string>>();

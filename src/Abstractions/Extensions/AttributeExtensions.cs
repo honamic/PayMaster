@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace Honamic.PayMaster.PaymentProvider.Core.Extensions;
+namespace Honamic.PayMaster.Extensions;
 
 public static class AttributeExtensions
 {

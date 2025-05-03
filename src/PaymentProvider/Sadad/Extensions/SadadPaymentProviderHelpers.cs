@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.PaymentProvider.Core.Models;
+﻿using Honamic.PayMaster.PaymentProviders.Models;
 using System.Security.Cryptography;
 using System.Text;
 

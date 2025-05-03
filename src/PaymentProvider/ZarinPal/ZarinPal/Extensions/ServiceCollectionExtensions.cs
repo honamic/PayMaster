@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.PaymentProvider.Core.Extensions;
+﻿using Honamic.PayMaster.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;

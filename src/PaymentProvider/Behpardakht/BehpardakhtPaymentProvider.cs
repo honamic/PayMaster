@@ -1,8 +1,9 @@
-﻿using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos;
-using Honamic.PayMaster.PaymentProvider.Core;
-using Honamic.PayMaster.PaymentProvider.Core.Models;
+﻿using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
+using Honamic.PayMaster.PaymentProviders;
+using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
