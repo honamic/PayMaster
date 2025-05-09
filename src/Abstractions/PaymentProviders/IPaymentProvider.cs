@@ -1,7 +1,6 @@
-﻿
-using Honamic.PayMaster.PaymentProvider.Core.Models;
+﻿using Honamic.PayMaster.PaymentProviders.Models;
 
-namespace Honamic.PayMaster.PaymentProvider.Core;
+namespace Honamic.PayMaster.PaymentProviders;
 
 public interface IPaymentProvider
 {

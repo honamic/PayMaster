@@ -1,7 +1,7 @@
-using Honamic.PayMaster.PaymentProvider.Core;
-using Honamic.PayMaster.PaymentProvider.Core.Models;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
+using Honamic.PayMaster.PaymentProviders;
+using Honamic.PayMaster.PaymentProviders.Models;
 using System.Dynamic;
 using System.Text.Json;
 

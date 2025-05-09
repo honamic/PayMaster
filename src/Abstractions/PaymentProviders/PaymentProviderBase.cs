@@ -1,10 +1,10 @@
-﻿using Honamic.PayMaster.PaymentProvider.Core.Extensions;
-using Honamic.PayMaster.PaymentProvider.Core.Models;
+﻿using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.PaymentProviders.Models;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 
-namespace Honamic.PayMaster.PaymentProvider.Core;
+namespace Honamic.PayMaster.PaymentProviders;
 
 public abstract class PaymentProviderBase : IPaymentProvider
 {

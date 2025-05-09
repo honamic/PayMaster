@@ -1,10 +1,11 @@
 ﻿using Honamic.PayMaster.PaymentProvider.Sadad.Models;
-using Honamic.PayMaster.PaymentProvider.Core;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Honamic.PayMaster.PaymentProvider.Core.Models;
 using Honamic.PayMaster.PaymentProvider.Sadad.Extensions;
+using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.PaymentProviders;
+using System.Net.Http;
 
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
 public class SadadPaymentProvider : PaymentProviderBase
@@ -100,7 +101,7 @@ public class SadadPaymentProvider : PaymentProviderBase
 
             if (!string.IsNullOrEmpty(callbackData?.OrderId))
             {
-                result.UniqueRequestId = callbackData.OrderId;
+                result.UniqueRequestId = long.Parse(callbackData.OrderId ?? "-1");
                 result.CreateToken = callbackData.Token;
                 result.CallBack = callbackData;
                 result.Success = true;

@@ -1,6 +1,6 @@
-﻿using Honamic.PayMaster.PaymentProvider.Core.Extensions;
+﻿using Honamic.PayMaster.Extensions;
 
-namespace Honamic.PayMaster.PaymentProvider.Core;
+namespace Honamic.PayMaster.PaymentProviders.Models;
 
 public class PaymentProviderLogData
 {

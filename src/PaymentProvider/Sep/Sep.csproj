@@ -9,11 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Docs\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\Abstractions\Honamic.PayMaster.Abstractions.csproj" />
+	</ItemGroup>
 </Project>
