@@ -12,7 +12,7 @@ public class CreateResult
     
     public string? Error { get; set; }
     
-    public string? CreateToken { get; set; }
+    public string? CreateReference { get; set; }
 
     public Dictionary<string, string> PayParams { get; set; }
 

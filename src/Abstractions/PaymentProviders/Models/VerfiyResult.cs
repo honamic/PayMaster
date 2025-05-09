@@ -1,4 +1,6 @@
-﻿namespace Honamic.PayMaster.PaymentProviders.Models;
+﻿using Honamic.PayMaster.Enums;
+
+namespace Honamic.PayMaster.PaymentProviders.Models;
 
 public class VerfiyResult
 {

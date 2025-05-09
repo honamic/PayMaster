@@ -41,9 +41,9 @@ app.MapPost("/Payment/create/", async (HttpContext context, IServiceProvider ser
 
     if (createResult.Success)
     {
-        PaymentStorage.UpdaeToken(newPayment.UniqueRequestId, createResult.CreateToken);
+        PaymentStorage.UpdaeToken(newPayment.UniqueRequestId, createResult.CreateReference);
 
-        newPayment.CreateToken = createResult.CreateToken;
+        newPayment.CreateReference = createResult.CreateReference;
 
         var redirectUrl = new Uri(createResult.PayUrl!);
 
@@ -80,7 +80,7 @@ app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpC
         return Results.Ok(ExtractCallBackDataResult);
     }
 
-    var dbPayment = PaymentStorage.Get(ExtractCallBackDataResult.UniqueRequestId, ExtractCallBackDataResult.CreateToken);
+    var dbPayment = PaymentStorage.Get(ExtractCallBackDataResult.UniqueRequestId, ExtractCallBackDataResult.CreateReference);
 
     VerifyRequest verifyRequest = new()
     {
@@ -88,7 +88,7 @@ app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpC
         {
             Amount = dbPayment!.Amount,
             UniqueRequestId = dbPayment.UniqueRequestId,
-            CreateToken = dbPayment.CreateToken,
+            CreateReference = dbPayment.CreateReference,
         },
         CallBackData = ExtractCallBackDataResult.CallBack
     };
@@ -146,7 +146,7 @@ public static class PaymentStorage
         }
         else if (!string.IsNullOrEmpty(createToken))
         {
-            query = query.Where(c => c.CreateToken == createToken);
+            query = query.Where(c => c.CreateReference == createToken);
         }
         else
         {
@@ -162,7 +162,7 @@ public static class PaymentStorage
 
         if (pay is not null)
         {
-            pay.CreateToken = createToken;
+            pay.CreateReference = createToken;
         }
     }
 }

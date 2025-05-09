@@ -31,5 +31,4 @@ public abstract class PaymentProviderBase : IPaymentProvider
 
         return $"{obj} | {description}".TrimEnd(' ').TrimEnd('|');
     }
-
 }

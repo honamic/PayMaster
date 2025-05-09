@@ -6,4 +6,8 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Abstractions\Honamic.PayMaster.Abstractions.csproj" />
+	</ItemGroup>
+
 </Project>

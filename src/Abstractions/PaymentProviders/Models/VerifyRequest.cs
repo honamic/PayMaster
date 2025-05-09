@@ -14,5 +14,5 @@ public class VerifyRequestPatmentInfo
 
     public required decimal Amount { get; init; }
 
-    public string? CreateToken { get; set; }
+    public string? CreateReference { get; set; }
 }

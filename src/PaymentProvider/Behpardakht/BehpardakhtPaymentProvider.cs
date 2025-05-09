@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
+﻿using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
@@ -94,7 +95,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.SaleOrderId))
             {
                 result.UniqueRequestId = long.Parse(callbackData.SaleReferenceId ?? "");
-                result.CreateToken = callbackData.RefId;
+                result.CreateReference = callbackData.RefId;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
@@ -217,7 +218,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             return false;
         }
 
-        if (callbackData.RefId != request.PatmentInfo.CreateToken)
+        if (callbackData.RefId != request.PatmentInfo.CreateReference)
         {
             result.Error = "مغایرت در RefId";
             return false;

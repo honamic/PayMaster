@@ -72,7 +72,7 @@ public class SadadPaymentProvider : PaymentProviderBase
                     result.PayUrl = Configurations.PurchasePage;
                     result.PayVerb = PayVerb.Get;
                     result.PayParams.Add("Token", response?.Token ?? "null");
-                    result.CreateToken = response?.Token;
+                    result.CreateReference = response?.Token;
                     result.Success = true;
                 }
                 else
@@ -102,7 +102,7 @@ public class SadadPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.OrderId))
             {
                 result.UniqueRequestId = long.Parse(callbackData.OrderId ?? "-1");
-                result.CreateToken = callbackData.Token;
+                result.CreateReference = callbackData.Token;
                 result.CallBack = callbackData;
                 result.Success = true;
             }

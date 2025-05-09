@@ -5,7 +5,8 @@ using Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
 using System.Text;
 using System.Globalization;
 using Honamic.PayMaster.PaymentProviders.Models;
-using Honamic.PayMaster.PaymentProviders; 
+using Honamic.PayMaster.PaymentProviders;
+using Honamic.PayMaster.Enums;
 
 namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 
@@ -69,7 +70,7 @@ public class ZarinPalPaymentProvider(
                 var payUrl = $"{_configurations.PayUrl.TrimEnd('/')}/{zarinPalResult.data.Authority}";
                 result.PayUrl = payUrl;
                 result.PayVerb = PayVerb.Get;
-                result.CreateToken = zarinPalResult.data.Authority;
+                result.CreateReference = zarinPalResult.data.Authority;
                 result.Success = true;
                 return result;
             }
@@ -109,7 +110,7 @@ public class ZarinPalPaymentProvider(
             {
                 //زرین پال توی callback فقط یک status میده و یک authority که شناسه ای هست که باهاش رفتیم درگاه
                 //result.UniqueRequestId = ;
-                result.CreateToken = callbackData.Authority;
+                result.CreateReference = callbackData.Authority;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
@@ -172,7 +173,7 @@ public class ZarinPalPaymentProvider(
             result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
             {
                 Pan = paymentVerificationResponse.data.card_pan,
-                RefNum = $"{paymentVerificationResponse.data.ref_id}",
+                SuccessReference = $"{paymentVerificationResponse.data.ref_id}",
                 ReferenceRetrievalNumber = null,
                 TrackingNumber = paymentVerificationResponse.data.ref_id.ToString(CultureInfo.InvariantCulture),
                 TerminalId = null,
@@ -234,9 +235,9 @@ public class ZarinPalPaymentProvider(
             return false;
         }
 
-        if (callbackData.Authority != request.PatmentInfo.CreateToken)
+        if (callbackData.Authority != request.PatmentInfo.CreateReference)
         {
-            result.Error = "مغایرت در توکن";
+            result.Error = "مغایرت در مقدار Authority";
             return false;
         }
 

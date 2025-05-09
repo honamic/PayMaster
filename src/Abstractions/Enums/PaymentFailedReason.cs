@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Honamic.PayMaster;
+namespace Honamic.PayMaster.Enums;
 
 public enum PaymentFailedReason
 {
+    [Display(Name = "ندارد")]
+    None = 1,
+
     [Display(Name = "انصراف کاربر")]
     Canceled = 1,
 
