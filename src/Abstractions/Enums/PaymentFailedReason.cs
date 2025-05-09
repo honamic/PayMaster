@@ -5,20 +5,27 @@ namespace Honamic.PayMaster.Enums;
 public enum PaymentFailedReason
 {
     [Display(Name = "ندارد")]
-    None = 1,
+    None = 0,
+
+    [Display(Name = "خطا در ایجاد")]
+    CreateFailed = 1,
+
+    [Display(Name = "خطا در برگشت از بانک")]
+    CallBackFailed = 2,
 
     [Display(Name = "انصراف کاربر")]
-    Canceled = 1,
+    Canceled = 3,
 
     [Display(Name = "تایید داخلی ناموفق")]
-    InternalVerfiy = 2,
+    InternalVerfiy = 4,
 
     [Display(Name = "استعلام ناموفق")]
-    Verfiy = 3,
+    Verfiy = 5,
 
     [Display(Name = "تسویه ناموفق")]
-    Settlement = 4,
+    Settlement = 6,
+
 
     [Display(Name = "سایر")]
-    Other = 5,
+    Other = 9,
 }

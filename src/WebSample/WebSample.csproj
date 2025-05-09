@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PayMaster\Honamic.PayMaster.csproj" />
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
   </ItemGroup>
 

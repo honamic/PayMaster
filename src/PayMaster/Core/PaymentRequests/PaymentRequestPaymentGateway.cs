@@ -5,18 +5,18 @@ namespace Honamic.PayMaster.Core.PaymentRequests;
 
 public class PaymentRequestPaymentGateway
 {
-    public long Id { get; private set; }
+    public long Id { get;  set; }
 
-    public decimal Amount { get; private set; }
+    public decimal Amount { get; set; }
 
     /// <summary>
     /// https://en.wikipedia.org/wiki/ISO_4217
     /// </summary>
-    public string Currency { get; private set; } = default!;
+    public string Currency { get; set; } = default!;
 
-    public PaymentRequestStatus Status { get; private set; }
+    public GatewayPaymentStatus Status { get; set; }
 
-    public PaymentFailedReason FailedReason { get; private set; }
+    public PaymentFailedReason FailedReason { get; set; }
 
     public long GatewayProviderRef { get; set; }
     public PaymentGatewayProvider GatewayProvider { get; set; }

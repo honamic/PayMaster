@@ -1,3 +1,4 @@
+﻿using Honamic.PayMaster.Core.PaymentRequests;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
 using Honamic.PayMaster.PaymentProviders;
@@ -32,31 +33,38 @@ app.MapPost("/Payment/create/", async (HttpContext context, IServiceProvider ser
 
     var newPayment = PaymentStorage.Create(amount);
 
-    var createResult = await provider.CreateAsync(new CreateRequest()
+    var newGatewayPayment = PaymentStorage.CreateGatewayPayment(newPayment.Id);
+
+    var createProviderResult = await provider.CreateAsync(new CreateRequest()
     {
         Amount = newPayment.Amount,
-        UniqueRequestId = newPayment.UniqueRequestId,
+        Currency = newPayment.Currency,
+        UniqueRequestId = newGatewayPayment.Id,
         CallbackUrl = callbackUrl,
     });
 
-    if (createResult.Success)
+    PaymentStorage.SetCreateProviderRestul(newGatewayPayment.Id,
+        createProviderResult.Success,
+        createProviderResult.CreateReference);
+
+    if (createProviderResult.Success)
     {
-        PaymentStorage.UpdaeToken(newPayment.UniqueRequestId, createResult.CreateReference);
+        var redirectUrl = new Uri(createProviderResult.PayUrl!);
 
-        newPayment.CreateReference = createResult.CreateReference;
-
-        var redirectUrl = new Uri(createResult.PayUrl!);
-
-        if (createResult.PayVerb == PayVerb.Get)
-            foreach (var param in createResult.PayParams)
+        if (createProviderResult.PayVerb == PayVerb.Get)
+            foreach (var param in createProviderResult.PayParams)
             {
                 redirectUrl = new Uri(redirectUrl + $"?{param.Key}={param.Value}");
             }
+
+
+        return Results.Ok(new { redirectUrl, newPayment, createProviderResult });
+
         //todo add param to pay url 
-        return Results.Redirect(redirectUrl.ToString());
+        //return Results.Redirect(redirectUrl.ToString());
     }
 
-    return Results.Ok(createResult);
+    return Results.Ok(new { newPayment, createProviderResult });
 });
 
 app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpContext context, IServiceProvider services) =>
@@ -75,27 +83,39 @@ app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpC
 
     var ExtractCallBackDataResult = provider.ExtractCallBackData(json);
 
+    var gatewayPayment = PaymentStorage.GetForVerify(
+        ExtractCallBackDataResult.UniqueRequestId,
+        ExtractCallBackDataResult.CreateReference,
+        ExtractCallBackDataResult.Success,
+        ExtractCallBackDataResult.Error);
+
     if (!ExtractCallBackDataResult.Success)
     {
-        return Results.Ok(ExtractCallBackDataResult);
+        return Results.Ok(new { ExtractCallBackDataResult, gatewayPayment });
     }
-
-    var dbPayment = PaymentStorage.Get(ExtractCallBackDataResult.UniqueRequestId, ExtractCallBackDataResult.CreateReference);
 
     VerifyRequest verifyRequest = new()
     {
         PatmentInfo = new VerifyRequestPatmentInfo
         {
-            Amount = dbPayment!.Amount,
-            UniqueRequestId = dbPayment.UniqueRequestId,
-            CreateReference = dbPayment.CreateReference,
+            Amount = gatewayPayment!.Amount,
+            UniqueRequestId = gatewayPayment.Id,
+            CreateReference = gatewayPayment.GatewayCreateReference,
         },
         CallBackData = ExtractCallBackDataResult.CallBack
     };
 
     var verifyResult = await provider.VerifyAsync(verifyRequest);
 
-    return Results.Ok(verifyResult);
+    PaymentStorage.SaveVerify(verifyResult, gatewayPayment);
+
+    if (verifyResult.Success)
+    {
+
+    }
+
+
+    return Results.Ok(new { verifyResult, ExtractCallBackDataResult, gatewayPayment });
 });
 
 app.Run();
@@ -106,7 +126,7 @@ public static class PaymentFacoty
     private static ZarinPalConfigurations zarinPalConfig = new()
     {
         ApiAddress = "https://sandbox.zarinpal.com/",
-        PayUrl= "https://sandbox.zarinpal.com/pg/StartPay/",
+        PayUrl = "https://sandbox.zarinpal.com/pg/StartPay/",
         MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
     };
     public static IPaymentProvider GetSampleProvider(IServiceProvider services)
@@ -121,14 +141,19 @@ public static class PaymentFacoty
 
 public static class PaymentStorage
 {
-    private static List<VerifyRequestPatmentInfo> List = new List<VerifyRequestPatmentInfo>();
+    private static List<PaymentRequest> List = new List<PaymentRequest>();
 
-    internal static VerifyRequestPatmentInfo Create(decimal amount)
+    internal static PaymentRequest Create(decimal amount)
     {
-        var newPayment = new VerifyRequestPatmentInfo()
+        var newPayment = new PaymentRequest()
         {
-            UniqueRequestId = DateTime.Now.Ticks,
-            Amount = amount
+            Id = DateTime.Now.Ticks,
+            Amount = amount,
+            Currency = "IRR",
+            Requester = null,
+            RequesterRef = null,
+            Description = "خرید گوشی اینترنتی",
+            AdditionalData = "{}",
         };
 
         List.Add(newPayment);
@@ -136,33 +161,106 @@ public static class PaymentStorage
         return newPayment;
     }
 
-    internal static VerifyRequestPatmentInfo? Get(long? uniqueRequestId, string? createToken)
+    internal static PaymentRequestPaymentGateway CreateGatewayPayment(long paymentRequestId)
     {
-        var query = List.AsQueryable();
+        var paymentRequest = List.First(x => x.Id == paymentRequestId);
+
+        // اگر قبض فعال نداشته باشد
+        // قبض جدید ساخته می شود
+
+        var newGatewayPayment = new PaymentRequestPaymentGateway
+        {
+            Id = DateTime.Now.Ticks,
+            Amount = paymentRequest.Amount,
+            Currency = paymentRequest.Currency,
+            Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.New,
+        };
+
+        paymentRequest.GatewayPayments.Add(newGatewayPayment);
+
+        return newGatewayPayment;
+    }
+    internal static void SetCreateProviderRestul(long gatewayPaymentId, bool success, string? createReference)
+    {
+        var paymentRequest = List.Where(c => c.GatewayPayments.Any(c => c.Id == gatewayPaymentId))
+            .First();
+
+        var gatewayPayment = paymentRequest.GatewayPayments.First(c => c.Id == gatewayPaymentId);
+
+        if (success)
+        {
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Waiting;
+            gatewayPayment.GatewayCreateReference = createReference;
+            gatewayPayment.GatewayRedirectAt = DateTimeOffset.Now;
+        }
+        else
+        {
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Failed;
+            gatewayPayment.GatewayCreateReference = createReference;
+            gatewayPayment.FailedReason = Honamic.PayMaster.Enums.PaymentFailedReason.CreateFailed;
+        }
+    }
+
+    internal static PaymentRequestPaymentGateway? GetForVerify(long? uniqueRequestId, string? createToken,
+        bool success, string? error)
+    {
+        var query = List.SelectMany(c => c.GatewayPayments).AsQueryable();
 
         if (uniqueRequestId.HasValue)
         {
-            query = query.Where(c => c.UniqueRequestId == uniqueRequestId.Value);
+            query = query.Where(c => c.Id == uniqueRequestId.Value);
         }
         else if (!string.IsNullOrEmpty(createToken))
         {
-            query = query.Where(c => c.CreateReference == createToken);
+            query = query.Where(c => c.GatewayCreateReference == createToken);
         }
         else
         {
             throw new ArgumentNullException();
         }
+        var gatewayPayment = query.FirstOrDefault();
 
-        return query.FirstOrDefault();
+        if (gatewayPayment == null)
+            return null;
+
+        gatewayPayment.GatewayCallBackAt = DateTimeOffset.Now;
+
+        if (success)
+        {
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Settlement;
+        }
+        else
+        {
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Failed;
+            gatewayPayment.FailedReason = Honamic.PayMaster.Enums.PaymentFailedReason.CallBackFailed;
+        }
+
+        return gatewayPayment;
     }
 
-    internal static void UpdaeToken(long uniqueRequestId, string? createToken)
+    internal static void SaveVerify(VerfiyResult verifyResult, PaymentRequestPaymentGateway gatewayPayment)
     {
-        var pay = List.FirstOrDefault(c => c.UniqueRequestId == uniqueRequestId);
-
-        if (pay is not null)
+        if (verifyResult.Success)
         {
-            pay.CreateReference = createToken;
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Success;
+            gatewayPayment.FailedReason = Honamic.PayMaster.Enums.PaymentFailedReason.None;
+
+            if (verifyResult.SupplementaryPaymentInformation is not null)
+            {
+                gatewayPayment.TrackingNumber = verifyResult.SupplementaryPaymentInformation?.TrackingNumber;
+                gatewayPayment.ReferenceRetrievalNumber = verifyResult.SupplementaryPaymentInformation?.ReferenceRetrievalNumber;
+                gatewayPayment.Pan = verifyResult.SupplementaryPaymentInformation?.Pan;
+                gatewayPayment.GatewaySuccessReference = verifyResult.SupplementaryPaymentInformation?.SuccessReference;
+                gatewayPayment.MerchantId = verifyResult.SupplementaryPaymentInformation?.MerchantId;
+                gatewayPayment.TerminalId = verifyResult.SupplementaryPaymentInformation?.TerminalId;
+            }
+
         }
+        else
+        {
+            gatewayPayment.Status = Honamic.PayMaster.Enums.GatewayPaymentStatus.Failed;
+            gatewayPayment.FailedReason = verifyResult.PaymentFailedReason ?? Honamic.PayMaster.Enums.PaymentFailedReason.Other;
+        }
+
     }
 }
