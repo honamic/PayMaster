@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSample", "WebSample\WebS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZarinPal", "PaymentProvider\ZarinPal\ZarinPal.csproj", "{E0FAA67A-9B80-C336-0AEC-5DAAB0FADF0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{790B6691-BC3A-42A7-A333-CFEFCDC03E1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Abstractions.UnitTest", "Tests\Honamic.PayMaster.Abstractions.UnitTest\Honamic.PayMaster.Abstractions.UnitTest.csproj", "{447085D2-2A99-46E7-A33F-7DF254DB721E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,10 @@ Global
 		{E0FAA67A-9B80-C336-0AEC-5DAAB0FADF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0FAA67A-9B80-C336-0AEC-5DAAB0FADF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0FAA67A-9B80-C336-0AEC-5DAAB0FADF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{447085D2-2A99-46E7-A33F-7DF254DB721E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{447085D2-2A99-46E7-A33F-7DF254DB721E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{447085D2-2A99-46E7-A33F-7DF254DB721E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{447085D2-2A99-46E7-A33F-7DF254DB721E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +79,7 @@ Global
 		{723FE1EB-715F-4EE6-B036-82045969DA6E} = {8B7ABDA0-3EA4-41E8-9249-1273E49A2956}
 		{A0B2FEB6-6410-4D3A-8C8B-9B3719C365E7} = {1B666BD8-243E-434B-A185-BBBD67FEDAA4}
 		{E0FAA67A-9B80-C336-0AEC-5DAAB0FADF0E} = {723FE1EB-715F-4EE6-B036-82045969DA6E}
+		{447085D2-2A99-46E7-A33F-7DF254DB721E} = {790B6691-BC3A-42A7-A333-CFEFCDC03E1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2395F65-A679-4732-A522-0C7D24F44238}
