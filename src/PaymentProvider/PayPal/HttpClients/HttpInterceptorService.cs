@@ -1,4 +1,4 @@
-using Honamic.PayMaster.PaymentProvider.PayPal.Dtos;
+using Honamic.PayMaster.PaymentProvider.PayPal.Models;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -70,8 +70,11 @@ public class HttpInterceptorService : DelegatingHandler
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authBytes));
 
-        var tokenResponse = await client.PostAsync($"{payPalConfigurations.ApiAddress}/v1/oauth2/token",
-            new StringContent("grant_type=client_credentials", Encoding.UTF8, "application/x-www-form-urlencoded"));
+        var loginUrl = new Uri(new Uri(payPalConfigurations.ApiAddress), Constants.PayPalAuthPath);
+
+        var tokenResponse = await client.PostAsync(loginUrl,
+            new StringContent("grant_type=client_credentials", Encoding.UTF8,
+            "application/x-www-form-urlencoded"));
 
         var tokenResponseString = await tokenResponse.Content.ReadAsStringAsync();
 
@@ -80,7 +83,7 @@ public class HttpInterceptorService : DelegatingHandler
             throw new Exception($"paypal login failed. {tokenResponseString}");
         }
 
-        var tokenData = JsonSerializer.Deserialize<AuthResponse>(tokenResponseString);
+        var tokenData = JsonSerializer.Deserialize<PayPalAuthResponse>(tokenResponseString);
 
         if (!string.IsNullOrEmpty(tokenData?.AccessToken))
         {

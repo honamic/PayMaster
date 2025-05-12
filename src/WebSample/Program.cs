@@ -1,4 +1,6 @@
 ﻿using Honamic.PayMaster.Core.PaymentRequests;
+using Honamic.PayMaster.PaymentProvider.PayPal;
+using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
 using Honamic.PayMaster.PaymentProviders;
@@ -12,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddZarinPalPaymentProviderServices();
+builder.Services.AddPayPalPaymentProviderServices();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
@@ -31,7 +34,7 @@ app.MapPost("/Payment/create/", async (HttpContext context, IServiceProvider ser
 
     IPaymentProvider provider = PaymentFacoty.GetSampleProvider(services);
 
-    var newPayment = PaymentStorage.Create(amount);
+    var newPayment = PaymentStorage.Create(amount, "USD");
 
     var newGatewayPayment = PaymentStorage.CreateGatewayPayment(newPayment.Id);
 
@@ -129,12 +132,32 @@ public static class PaymentFacoty
         PayUrl = "https://sandbox.zarinpal.com/pg/StartPay/",
         MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
     };
+
+    private static PayPalConfigurations payPalConfig = new()
+    {
+        ApiAddress = "https://api-m.sandbox.paypal.com",
+        PayUrl = "",
+        ClientId = "AfxzjPrL2vgk8FJIZdWDFlZov-k-zrL0AcqdgNkYRCX4ZNmFSgG190hFdA-cGtAB7MKWwHHdfq7sNlEf",
+        Secret = "EB1Xw8-lZsoSZ22gCz--2lbrBBxgOi2uTNwZDC6PwcrSLBA1ABmFuFkA5j3ffnKkRRKScTQZujjk30SI"
+    };
     public static IPaymentProvider GetSampleProvider(IServiceProvider services)
     {
-        var ProviderType = typeof(ZarinPalPaymentProvider).FullName;
+        var payPal = true;
+        IPaymentProvider provider;
 
-        var provider = services.GetRequiredKeyedService<IPaymentProvider>(ProviderType);
-        provider.Configure(JsonSerializer.Serialize(zarinPalConfig));
+        if (payPal)
+        {
+            var payPalProviderType = typeof(PayPalPaymentProvider).FullName;
+            provider = services.GetRequiredKeyedService<IPaymentProvider>(payPalProviderType);
+            provider.Configure(JsonSerializer.Serialize(payPalConfig));
+        }
+        else
+        {
+            var ProviderType = typeof(ZarinPalPaymentProvider).FullName;
+            provider = services.GetRequiredKeyedService<IPaymentProvider>(ProviderType);
+            provider.Configure(JsonSerializer.Serialize(zarinPalConfig));
+        }
+
         return provider;
     }
 }
@@ -143,13 +166,13 @@ public static class PaymentStorage
 {
     private static List<PaymentRequest> List = new List<PaymentRequest>();
 
-    internal static PaymentRequest Create(decimal amount)
+    internal static PaymentRequest Create(decimal amount, string currency)
     {
         var newPayment = new PaymentRequest()
         {
             Id = DateTime.Now.Ticks,
             Amount = amount,
-            Currency = "IRR",
+            Currency = currency,// "IRR",
             Requester = null,
             RequesterRef = null,
             Description = "خرید گوشی اینترنتی",

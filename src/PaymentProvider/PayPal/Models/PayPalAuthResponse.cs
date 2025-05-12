@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Honamic.PayMaster.PaymentProvider.PayPal.Dtos;
+namespace Honamic.PayMaster.PaymentProvider.PayPal.Models;
 
-public class AuthResponse
+public class PayPalAuthResponse
 {
     [JsonPropertyName("scope")]
     public string? Scope { get; set; }

@@ -1,6 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using Honamic.PayMaster.PaymentProvider.PayPal.Models.Enums;
+using Honamic.PayMaster.PaymentProvider.PayPal.Models.Shared;
+using System.Text.Json.Serialization;
 
-namespace Honamic.PayMaster.PaymentProvider.PayPal.Dtos;
+namespace Honamic.PayMaster.PaymentProvider.PayPal.Models;
 
 public class PaypalCreateOrderResponse
 {
@@ -8,8 +10,7 @@ public class PaypalCreateOrderResponse
     public string Id { get; set; }
 
     [JsonPropertyName("status")]
-    public string Status { get; set; }
-
+    public PayPalOrderStatus Status { get; set; }
 
     [JsonPropertyName("payment_source")]
     public PaypalCreateOrderResponsePaymentSource? PaymentSource { get; set; }
@@ -24,29 +25,28 @@ public class PaypalCreateOrderResponse
 public class PaypalCreateOrderResponsePaymentSource
 {
     [JsonPropertyName("paypal")]
-    public required PaymentSource Paypal { get; set; }
+    public PaypalWalletModel? Paypal { get; set; }
 }
-
 
 public class PaypalCreateOrderResponsePayer
 {
     [JsonPropertyName("address")]
-    public Address? Address { get; set; }
+    public PayPalAddressModel? Address { get; set; }
 
     [JsonPropertyName("email_address")]
     public string? EmailAddress { get; set; }
 
     [JsonPropertyName("payment_method_preference")]
-    public required string PaymentMethodPreference { get; set; }
+    public string? PaymentMethodPreference { get; set; }
 
     [JsonPropertyName("experience_context")]
-    public required ExperienceContext ExperienceContext { get; set; }
+    public PayPalExperienceContextModel? ExperienceContext { get; set; }
 }
 
 
 public class PaypalCreateOrderResponseLink
 {
-    [JsonPropertyName("id")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
     [JsonPropertyName("rel")]

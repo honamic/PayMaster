@@ -1,11 +1,13 @@
 ﻿using Honamic.PayMaster.Enums;
-using Honamic.PayMaster.PaymentProvider.PayPal.Dtos;
+using Honamic.PayMaster.PaymentProvider.PayPal.Models;
+using Honamic.PayMaster.PaymentProvider.PayPal.Models.Enums;
+using Honamic.PayMaster.PaymentProvider.PayPal.Models.Shared;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;
-using System.Text.Json; 
+using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal;
 public class PayPalPaymentProvider : PaymentProviderBase
@@ -45,26 +47,27 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             var apiRequest = new PaypalCreateOrder
             {
-                Intent = "AUTHORIZE", //"AUTHORIZE" or "CAPTURE"
-                PurchaseUnits = [ new PurchaseUnit
+                Intent = PayPalCheckoutPaymentIntent.Capture,
+                PurchaseUnits = [ new PayPalPurchaseUnit
                 {
                      ReferenceId=request.UniqueRequestId.ToString(),
-                     Amount= new Amount
+                     Amount= new PayPalAmount
                      {
                          CurrencyCode=request.Currency!,
                          Value=request.Amount.ToString(CultureInfo.InvariantCulture),
                      },
                 }],
-                PaymentSource = new PaymentSourceList
+                PaymentSource = new PaypalCreateOrderRequestPaymentSource
                 {
-                    Paypal = new PaymentSource
+                    Paypal = new PaypalWalletModel
                     {
                         EmailAddress = request.Email,
-                        PaymentMethodPreference = "IMMEDIATE_PAYMENT_REQUIRED",
-                        ExperienceContext = new ExperienceContext
+                        ExperienceContext = new PayPalExperienceContextModel
                         {
                             CancelUrl = request.CallbackUrl,
                             ReturnUrl = request.CallbackUrl,
+                            PaymentMethodPreference = PayPalPayeePaymentMethodPreference.ImmediatePaymentRequired,
+                            BrandName="Iman",
                         }
                     }
                 }
@@ -128,7 +131,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
         try
         {
-            var callbackData = JsonSerializer.Deserialize<CallBackDataModel>(callBackJsonValue);
+            var callbackData = JsonSerializer.Deserialize<PayPalCallBackDataModel>(callBackJsonValue);
 
             if (!string.IsNullOrEmpty(callbackData?.Token))
             {
@@ -138,7 +141,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
             }
             else
             {
-                result.Error = "Token value not found.";
+                result.Error = "the token value is empty.";
             }
         }
         catch (Exception ex)
@@ -156,7 +159,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
         try
         {
-            var callbackData = (CallBackDataModel?)request.CallBackData;
+            var callbackData = (PayPalCallBackDataModel?)request.CallBackData;
 
             if (!InternalVerify(request, result, callbackData))
             {
@@ -170,7 +173,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             HttpRequestMessage httpRequest = CreateVerifyHttpRequest(orderId);
 
-            result.LogData.Request = orderId;
+            result.LogData.Request = httpRequest.RequestUri?.ToString();
 
             var verifyResponse = await client.SendAsync(httpRequest);
 
@@ -214,7 +217,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
         return httpRequest;
     }
 
-    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, CallBackDataModel? callbackData)
+    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, PayPalCallBackDataModel? callbackData)
     {
         if (callbackData is null)
         {
