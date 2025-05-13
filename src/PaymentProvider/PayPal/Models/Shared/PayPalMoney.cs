@@ -2,7 +2,7 @@
 
 using System.Text.Json.Serialization;
 
-public class PayPalAmount
+public class PayPalMoney
 {
     [JsonPropertyName("currency_code")]
     public string? CurrencyCode { get; set; }

@@ -13,21 +13,16 @@ public class PaypalCreateOrderResponse
     public PayPalOrderStatus Status { get; set; }
 
     [JsonPropertyName("payment_source")]
-    public PaypalCreateOrderResponsePaymentSource? PaymentSource { get; set; }
+    public PayPalOrderPaymentSource? PaymentSource { get; set; }
 
     [JsonPropertyName("payer")]
     public PaypalCreateOrderResponsePayer? Payer { get; set; }
 
     [JsonPropertyName("links")]
-    public PaypalCreateOrderResponseLink[]? Links { get; set; }
+    public PaypalOrderLink[]? Links { get; set; }
 }
 
-public class PaypalCreateOrderResponsePaymentSource
-{
-    [JsonPropertyName("paypal")]
-    public PaypalWalletModel? Paypal { get; set; }
-}
-
+ 
 public class PaypalCreateOrderResponsePayer
 {
     [JsonPropertyName("address")]
@@ -41,17 +36,4 @@ public class PaypalCreateOrderResponsePayer
 
     [JsonPropertyName("experience_context")]
     public PayPalExperienceContextModel? ExperienceContext { get; set; }
-}
-
-
-public class PaypalCreateOrderResponseLink
-{
-    [JsonPropertyName("href")]
-    public string Href { get; set; }
-
-    [JsonPropertyName("rel")]
-    public string Rel { get; set; }
-
-    [JsonPropertyName("method")]
-    public string Method { get; set; }
 }

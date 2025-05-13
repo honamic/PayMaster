@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal;
 public class PayPalPaymentProvider : PaymentProviderBase
@@ -51,7 +52,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
                 PurchaseUnits = [ new PayPalPurchaseUnit
                 {
                      ReferenceId=request.UniqueRequestId.ToString(),
-                     Amount= new PayPalAmount
+                     Amount= new PayPalMoney
                      {
                          CurrencyCode=request.Currency!,
                          Value=request.Amount.ToString(CultureInfo.InvariantCulture),
@@ -67,7 +68,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
                             CancelUrl = request.CallbackUrl,
                             ReturnUrl = request.CallbackUrl,
                             PaymentMethodPreference = PayPalPayeePaymentMethodPreference.ImmediatePaymentRequired,
-                            BrandName="Iman",
+                            BrandName = "Iman",
                         }
                     }
                 }
@@ -171,7 +172,41 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             var orderId = callbackData?.Token ?? "";
 
-            HttpRequestMessage httpRequest = CreateVerifyHttpRequest(orderId);
+
+            //------------------- Get Order -----------
+            HttpRequestMessage httpRequestGetOrder = CreateGetOrderHttpRequest(orderId);
+
+            result.LogData.Request = httpRequestGetOrder.RequestUri?.ToString();
+
+            var getOrderResponse = await client.SendAsync(httpRequestGetOrder);
+
+            var getOrderResponseString = await getOrderResponse.Content.ReadAsStringAsync();
+
+            result.LogData.Response = getOrderResponseString;
+
+            if (getOrderResponse.IsSuccessStatusCode)
+            {
+                var payPalOrder = JsonSerializer.Deserialize<PayPalOrder>(getOrderResponseString);
+
+                if (payPalOrder?.Status != PayPalOrderStatus.Approved)
+                {
+                    result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                    result.Error = $"Status not Valid {payPalOrder?.Status}";
+                    return result;
+                }
+
+                var amount = decimal.Parse(payPalOrder?.PurchaseUnits[0].Amount?.Value ?? "0");
+                if (amount != request.PatmentInfo.Amount)
+                {
+                    result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                    result.Error = $"Amount not Valid [{amount}]";
+                    return result;
+                }
+            }
+
+            //------------------- Capture Order -----------
+
+            HttpRequestMessage httpRequest = CreateCaptureHttpRequest(orderId);
 
             result.LogData.Request = httpRequest.RequestUri?.ToString();
 
@@ -179,13 +214,23 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             var verifyResponseString = await verifyResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = verifyResponseString;
+            result.LogData.Response = new { Get = getOrderResponseString, Capture = verifyResponseString };
 
             if (!verifyResponse.IsSuccessStatusCode)
             {
                 result.PaymentFailedReason = PaymentFailedReason.Verfiy;
                 result.Error = verifyResponse.StatusCode.ToString();
                 return result;
+            }
+
+            var payPalCaptureOrder = JsonSerializer.Deserialize<PayPalOrder>(verifyResponseString);
+
+            if (payPalCaptureOrder?.PurchaseUnits?[0]?.Payments?.Captures?[0].Id != null)
+            {
+                result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
+                {
+                    SuccessReference = payPalCaptureOrder?.PurchaseUnits?[0]?.Payments?.Captures?[0].Id,
+                };
             }
 
             result.Success = true;
@@ -200,12 +245,27 @@ public class PayPalPaymentProvider : PaymentProviderBase
     }
 
 
-    private HttpRequestMessage CreateVerifyHttpRequest(string orderId)
+    private HttpRequestMessage CreateCaptureHttpRequest(string orderId)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), $"/{orderId}/capture");
-
+        var url = new Uri(new Uri(Configurations.ApiAddress), $"{checkoutOrdersPath.TrimEnd('/')}/{orderId}/capture");
 
         HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        {
+            Content = new StringContent("", Encoding.UTF8, "application/json")
+        };
+
+        var customOptionKey = new HttpRequestOptionsKey<PayPalConfigurations>(Constants.PayPalRequestOptionsKey);
+
+        httpRequest.Options.Set(customOptionKey, Configurations);
+
+        return httpRequest;
+    }
+
+    private HttpRequestMessage CreateGetOrderHttpRequest(string orderId)
+    {
+        var url = new Uri(new Uri(Configurations.ApiAddress), $"{checkoutOrdersPath.TrimEnd('/')}/{orderId}");
+
+        HttpRequestMessage httpRequest = new(HttpMethod.Get, url)
         {
             Content = new StringContent("", Encoding.UTF8, "application/json")
         };

@@ -8,9 +8,13 @@ public class PayPalPurchaseUnit
     public string? ReferenceId { get; set; }
 
     [JsonPropertyName("amount")]
-    public PayPalAmount? Amount { get; set; }
+    public PayPalMoney? Amount { get; set; }
 
 
     [JsonPropertyName("payee")]
     public PayPalPayeeBase? Payee { get; set; }
+
+
+    [JsonPropertyName("payments")]
+    public PayPalPaymentCollection? Payments { get; set; }
 }
