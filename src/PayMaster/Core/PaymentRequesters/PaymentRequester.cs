@@ -1,9 +1,9 @@
-﻿namespace Honamic.PayMaster.Core.PaymentRequesters;
+﻿using Honamic.Framework.Domain;
 
-public class PaymentRequester
+namespace Honamic.PayMaster.Core.PaymentRequesters;
+
+public class PaymentRequester: AggregateRoot<long>
 {
-    public long Id { get; set; }
-
     /// <summary>
     /// sample: 100 , Ordering
     /// </summary>

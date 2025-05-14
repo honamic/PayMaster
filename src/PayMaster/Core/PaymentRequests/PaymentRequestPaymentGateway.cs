@@ -1,12 +1,11 @@
-﻿using Honamic.PayMaster.Core.PaymentGatewayProviders;
+﻿using Honamic.Framework.Domain;
+using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Enums;
 
 namespace Honamic.PayMaster.Core.PaymentRequests;
 
-public class PaymentRequestPaymentGateway
+public class PaymentRequestPaymentGateway : Entity<long>
 {
-    public long Id { get;  set; }
-
     public decimal Amount { get; set; }
 
     /// <summary>

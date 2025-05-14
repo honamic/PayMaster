@@ -1,16 +1,15 @@
-﻿using Honamic.PayMaster.Core.PaymentRequesters;
+﻿using Honamic.Framework.Domain;
+using Honamic.PayMaster.Core.PaymentRequesters;
 using Honamic.PayMaster.Enums;
 
 namespace Honamic.PayMaster.Core.PaymentRequests;
 
-public class PaymentRequest
+public class PaymentRequest: AggregateRoot<long>
 {
     public PaymentRequest()
     {
         GatewayPayments = [];
     }
-
-    public long Id { get; set; }
 
     public PaymentRequestStatus Status { get; set; }
 

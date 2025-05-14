@@ -1,14 +1,13 @@
-﻿namespace Honamic.PayMaster.Core.PaymentGatewayProviders;
+﻿using Honamic.Framework.Domain;
 
-public class PaymentGatewayProvider
+namespace Honamic.PayMaster.Core.PaymentGatewayProviders;
+public class PaymentGatewayProvider: AggregateRoot<long>
 {
     public PaymentGatewayProvider()
     {
         Configurations = "{}";
         ProviderType = "";
     }
-
-    public long Id { get; private set; }
 
     /// <summary>
     /// samples: Behpardakht,Sep,Sadad
