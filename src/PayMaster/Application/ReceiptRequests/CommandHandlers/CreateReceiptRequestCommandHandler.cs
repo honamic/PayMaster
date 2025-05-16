@@ -4,7 +4,7 @@ using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptRequests;
-using Honamic.PayMaster.Core.ReceiptRequests.Paramas;
+using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceiptRequestCommand>

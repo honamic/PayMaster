@@ -61,31 +61,31 @@ public class ReceiptRequestGatewayPayment : Entity<long>
 
     public string? MerchantId { get; private set; }
 
-    internal static ReceiptRequestGatewayPayment Create(CreateGatewayPaymentParamters paramters)
+    internal static ReceiptRequestGatewayPayment Create(CreateGatewayPaymentParameters parameters)
     {
-        if (!paramters.GatewayProvider.Enabled)
+        if (!parameters.GatewayProvider.Enabled)
         {
             throw new ArgumentException($"درگاه انتخاب شده غیرفعال است.");
         }
 
-        if (paramters.GatewayProvider.MinimumAmount.HasValue
-           && paramters.Amount < paramters.GatewayProvider.MinimumAmount)
+        if (parameters.GatewayProvider.MinimumAmount.HasValue
+           && parameters.Amount < parameters.GatewayProvider.MinimumAmount)
         {
-            throw new ArgumentException($"حداقل مبلغ برای پرداخت در این درگاه {paramters.GatewayProvider.MinimumAmount} است");
+            throw new ArgumentException($"حداقل مبلغ برای پرداخت در این درگاه {parameters.GatewayProvider.MinimumAmount} است");
         }
 
-        if (paramters.GatewayProvider.MaximumAmount.HasValue
-           && paramters.Amount > paramters.GatewayProvider.MaximumAmount)
+        if (parameters.GatewayProvider.MaximumAmount.HasValue
+           && parameters.Amount > parameters.GatewayProvider.MaximumAmount)
         {
-            throw new ArgumentException($"حداکثر مبلغ برای پرداخت در این درگاه {paramters.GatewayProvider.MaximumAmount} است");
+            throw new ArgumentException($"حداکثر مبلغ برای پرداخت در این درگاه {parameters.GatewayProvider.MaximumAmount} است");
         }
 
         var newReceiptRequestGatewayPayment = new ReceiptRequestGatewayPayment()
         {
-            Id = paramters.Id,
-            Amount = paramters.Amount,
-            Currency = paramters.Currency,
-            GatewayProviderId = paramters.GatewayProvider.Id,
+            Id = parameters.Id,
+            Amount = parameters.Amount,
+            Currency = parameters.Currency,
+            GatewayProviderId = parameters.GatewayProvider.Id,
             Status = PaymentGatewayStatus.New,
         };
 

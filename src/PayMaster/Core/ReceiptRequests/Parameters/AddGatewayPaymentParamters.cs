@@ -1,5 +1,5 @@
 ﻿namespace Honamic.PayMaster.Core.ReceiptRequests.Parameters;
-public class CreateGatewayPaymentParamters
+public class CreateGatewayPaymentParameters
 {
     public required long Id { get; set; }
     public required decimal Amount { get; set; }

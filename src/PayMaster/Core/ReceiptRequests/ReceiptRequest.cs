@@ -73,7 +73,7 @@ public class ReceiptRequest : AggregateRoot<long>
             IssuerId = createParameters.Issuer?.Id,
         };
 
-        CreateGatewayPaymentParamters createGatewayPayment = new CreateGatewayPaymentParamters
+        CreateGatewayPaymentParameters createGatewayPayment = new CreateGatewayPaymentParameters
         {
             Id = idGenerator.GetNewId(),
             Amount = createParameters.Amount,
