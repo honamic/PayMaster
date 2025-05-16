@@ -18,7 +18,7 @@ internal class ReceiptRequestRepository
     {
         return new List<Expression<Func<ReceiptRequest, object?>>>
         {
-            // c=>c.Logs
+            c=>c.GatewayPayments
         };
     }
 }
