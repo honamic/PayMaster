@@ -1,27 +1,27 @@
-using Honamic.PayMaster.Core.PaymentRequests;
+using Honamic.PayMaster.Core.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Honamic.PayMaster.Persistence.EntityConfigurations;
-public class PaymentRequestPaymentGatewayEntityConfiguration
-    : IEntityTypeConfiguration<PaymentRequestPaymentGateway>
+public class ReceiptRequestGatewayPaymentEntityConfiguration
+    : IEntityTypeConfiguration<ReceiptRequestGatewayPayment>
 {
     private string schema;
 
-    public PaymentRequestPaymentGatewayEntityConfiguration(string schema)
+    public ReceiptRequestGatewayPaymentEntityConfiguration(string schema)
     {
         this.schema = schema;
     }
 
-    public void Configure(EntityTypeBuilder<PaymentRequestPaymentGateway> builder)
+    public void Configure(EntityTypeBuilder<ReceiptRequestGatewayPayment> builder)
     {
-        builder.ToTable(nameof(PaymentRequestPaymentGateway), schema);
+        builder.ToTable(nameof(ReceiptRequestGatewayPayment), schema);
 
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Amount)
             .IsRequired()
-            .HasColumnType("decimal(18,2)");
+            .HasPrecision(18, 2);
 
         builder.Property(x => x.Currency)
             .IsRequired()
@@ -33,13 +33,13 @@ public class PaymentRequestPaymentGatewayEntityConfiguration
         builder.Property(x => x.FailedReason)
             .IsRequired();
 
-        builder.Property(x => x.GatewayProviderRef)
+        builder.Property(x => x.GatewayProviderId)
             .IsRequired();
 
-        builder.Property(x => x.GatewayCreateReference)
+        builder.Property(x => x.CreateReference)
             .HasMaxLength(128);
 
-        builder.Property(x => x.GatewaySuccessReference)
+        builder.Property(x => x.SuccessReference)
             .HasMaxLength(128);
 
         builder.Property(x => x.ReferenceRetrievalNumber)
@@ -57,13 +57,13 @@ public class PaymentRequestPaymentGatewayEntityConfiguration
         builder.Property(x => x.MerchantId)
             .HasMaxLength(32);
 
-        builder.Property(x => x.GatewayRedirectAt);
+        builder.Property(x => x.RedirectAt);
 
-        builder.Property(x => x.GatewayCallBackAt);
+        builder.Property(x => x.CallBackAt);
 
         builder.HasOne(x => x.GatewayProvider)
             .WithMany()
-            .HasForeignKey(x => x.GatewayProviderRef)
+            .HasForeignKey(x => x.GatewayProviderId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

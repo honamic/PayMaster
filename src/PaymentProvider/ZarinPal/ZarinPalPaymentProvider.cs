@@ -136,7 +136,7 @@ public class ZarinPalPaymentProvider(
             var callbackData = (CallBackDataModel?)request.CallBackData;
             if (!InternalVerify(request, result, callbackData))
             {
-                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerfiy;
                 return result;
             }
 
@@ -164,7 +164,7 @@ public class ZarinPalPaymentProvider(
                 && paymentVerificationResponse.data.code != 101)
                 )
             {
-                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                 result.Error = GetDescriptionFromCode(paymentVerificationResponse?.data.code);
                 return result;
             }

@@ -17,5 +17,5 @@ public class VerfiyResult
 
     public SupplementaryPaymentInformation? SupplementaryPaymentInformation { get; set; }
 
-    public PaymentFailedReason? PaymentFailedReason { get; set; }
+    public PaymentGatewayFailedReason? PaymentFailedReason { get; set; }
 }

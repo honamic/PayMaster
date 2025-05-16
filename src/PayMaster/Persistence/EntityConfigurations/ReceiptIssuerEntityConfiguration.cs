@@ -1,29 +1,28 @@
-﻿using Honamic.PayMaster.Core.PaymentRequesters;
+﻿using Honamic.PayMaster.Core.ReceiptIssuers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Honamic.PayMaster.Persistence.EntityConfigurations;
-public class PaymentRequesterEntityConfiguration : IEntityTypeConfiguration<PaymentRequester>
+public class ReceiptIssuerEntityConfiguration : IEntityTypeConfiguration<ReceiptIssuer>
 {
     private string schema;
 
-    public PaymentRequesterEntityConfiguration(string schema)
+    public ReceiptIssuerEntityConfiguration(string schema)
     {
         this.schema = schema;
     }
 
-    public void Configure(EntityTypeBuilder<PaymentRequester> builder)
+    public void Configure(EntityTypeBuilder<ReceiptIssuer> builder)
     {
         builder.HasKey(o => o.Id);
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
-        builder.ToTable(nameof(PaymentRequester), schema);
-
+        builder.ToTable(nameof(ReceiptIssuer), schema);
 
         builder.Property(p => p.Code)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(128);
 
         builder.Property(p => p.Title)
             .IsRequired()

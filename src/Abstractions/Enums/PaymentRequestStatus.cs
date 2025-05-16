@@ -2,7 +2,7 @@
 
 namespace Honamic.PayMaster.Enums;
 
-public enum PaymentRequestStatus
+public enum ReceiptRequestStatus
 {
     [Display(Name = "نامشخص")]
     None = 0,

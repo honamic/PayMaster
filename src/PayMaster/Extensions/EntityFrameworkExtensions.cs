@@ -6,7 +6,7 @@ namespace Honamic.PayMaster.Extensions;
 public static class EntityFrameworkExtensions
 {
 
-    [Obsolete("use the last version , Version1", true)]
+    [Obsolete("use the last version [Version1] and Create migration.", true)]
     public static ModelBuilder AddPayMasterModelsVersion0(this ModelBuilder modelBuilder)
     {
         return modelBuilder;
@@ -23,13 +23,13 @@ public static class EntityFrameworkExtensions
             new PaymentGatewayProviderEntityConfiguration(Constants.Schema));
 
         modelBuilder.ApplyConfiguration(
-            new PaymentRequestEntityConfiguration(Constants.Schema));
+            new ReceiptRequestEntityConfiguration(Constants.Schema));
 
         modelBuilder.ApplyConfiguration(
-            new PaymentRequesterEntityConfiguration(Constants.Schema));
+            new ReceiptIssuerEntityConfiguration(Constants.Schema));
 
         modelBuilder.ApplyConfiguration(
-            new PaymentRequestPaymentGatewayEntityConfiguration(Constants.Schema));
+            new ReceiptRequestGatewayPaymentEntityConfiguration(Constants.Schema));
 
         return modelBuilder;
     }

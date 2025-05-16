@@ -1,17 +1,17 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Core.PaymentRequesters;
+using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Enums;
 
-namespace Honamic.PayMaster.Core.PaymentRequests;
+namespace Honamic.PayMaster.Core.ReceiptRequests;
 
-public class PaymentRequest: AggregateRoot<long>
+public class ReceiptRequest : AggregateRoot<long>
 {
-    public PaymentRequest()
+    public ReceiptRequest()
     {
         GatewayPayments = [];
     }
 
-    public PaymentRequestStatus Status { get; set; }
+    public ReceiptRequestStatus Status { get; set; }
 
     public decimal Amount { get; set; }
 
@@ -30,9 +30,8 @@ public class PaymentRequest: AggregateRoot<long>
     public string? PartyIdentity { get; private set; }
     public long? PartyId { get; private set; }
 
-    public PaymentRequester? Requester { get; set; }
-    public long? RequesterRef { get; set; }
+    public ReceiptIssuer? Issuer { get; set; }
+    public long? IssuerId { get; set; }
 
-
-    public List<PaymentRequestPaymentGateway> GatewayPayments { get; set; }
+    public List<ReceiptRequestGatewayPayment> GatewayPayments { get; set; }
 }

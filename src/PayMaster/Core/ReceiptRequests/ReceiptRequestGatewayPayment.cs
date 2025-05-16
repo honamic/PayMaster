@@ -2,9 +2,9 @@
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Enums;
 
-namespace Honamic.PayMaster.Core.PaymentRequests;
+namespace Honamic.PayMaster.Core.ReceiptRequests;
 
-public class PaymentRequestPaymentGateway : Entity<long>
+public class ReceiptRequestGatewayPayment : Entity<long>
 {
     public decimal Amount { get; set; }
 
@@ -13,33 +13,33 @@ public class PaymentRequestPaymentGateway : Entity<long>
     /// </summary>
     public string Currency { get; set; } = default!;
 
-    public GatewayPaymentStatus Status { get; set; }
+    public PaymentGatewayStatus Status { get; set; }
 
-    public PaymentFailedReason FailedReason { get; set; }
+    public PaymentGatewayFailedReason FailedReason { get; set; }
 
-    public long GatewayProviderRef { get; set; }
-    public PaymentGatewayProvider GatewayProvider { get; set; }
+    public long GatewayProviderId { get; set; }
+    public PaymentGatewayProvider GatewayProvider { get; set; } = default!;
 
     /// <summary>
     /// این مقدار هنگام ایجاد پرداخت به ما برای فرستادن کاربر به درگاه داده می شود.    
     /// </summary>
-    public string? GatewayCreateReference { get; set; }
+    public string? CreateReference { get; set; }
 
     /// <summary>
     /// زمان ارسال به درگاه
     /// </summary>
-    public DateTimeOffset? GatewayRedirectAt { get; set; }
+    public DateTimeOffset? RedirectAt { get; set; }
 
     /// <summary>
     /// زمان برگشت از درگاه
     /// </summary>
-    public DateTimeOffset? GatewayCallBackAt { get; set; }
+    public DateTimeOffset? CallBackAt { get; set; }
 
     /// <summary>
     /// بعضی از درگاه ها هنگام پرداخت موفق یه شناسه پرداخت موفق جدا می دهند
     /// مثلا در بانک سامان نام این فید رسید دیجیتال است
     /// </summary>
-    public string? GatewaySuccessReference { get; set; }
+    public string? SuccessReference { get; set; }
 
     /// <summary>
     /// شماره مرجع 12 رقمی یا RRN
@@ -59,5 +59,4 @@ public class PaymentRequestPaymentGateway : Entity<long>
     public string? TerminalId { get; set; }
 
     public string? MerchantId { get; set; }
-
 }

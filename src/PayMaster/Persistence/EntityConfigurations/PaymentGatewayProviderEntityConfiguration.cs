@@ -20,21 +20,14 @@ public class PaymentGatewayProviderEntityConfiguration : IEntityTypeConfiguratio
 
         builder.ToTable(nameof(PaymentGatewayProvider), schema);
 
-
         builder.Property(p => p.ProviderType)
             .IsRequired()
-            .HasMaxLength(256);
+            .HasMaxLength(128);
 
         builder.Property(p => p.LogoPath)
-            .HasMaxLength(500);
+            .HasMaxLength(128);
 
         builder.Property(p => p.Configurations)
-            .IsRequired();
-
-        builder.Property(p => p.Enable)
-            .IsRequired();
-
-        builder.Property(p => p.Order)
             .IsRequired();
     }
 }

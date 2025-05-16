@@ -1,48 +1,49 @@
-using Honamic.PayMaster.Core.PaymentRequests;
+using Honamic.PayMaster.Core.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Honamic.PayMaster.Persistence.EntityConfigurations;
 
-public class PaymentRequestEntityConfiguration : IEntityTypeConfiguration<PaymentRequest>
+public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<ReceiptRequest>
 {
     private string schema;
 
-    public PaymentRequestEntityConfiguration(string schema)
+    public ReceiptRequestEntityConfiguration(string schema)
     {
         this.schema = schema;
     }
 
-    public void Configure(EntityTypeBuilder<PaymentRequest> builder)
+    public void Configure(EntityTypeBuilder<ReceiptRequest> builder)
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
-        builder.ToTable(nameof(PaymentRequest), schema);
+        builder.ToTable(nameof(ReceiptRequest), schema);
 
         builder.Property(p => p.Status)
             .IsRequired();
 
         builder.Property(p => p.Amount)
             .IsRequired()
-            .HasColumnType("decimal(18,2)");
+            .HasPrecision(18, 2);
+        
 
         builder.Property(p => p.Currency)
             .IsRequired()
-            .HasMaxLength(5);
+            .HasMaxLength(3);
 
         builder.Property(p => p.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(256);
 
         builder.Property(p => p.AdditionalData)
             .HasMaxLength(2048);
 
         builder.Property(p => p.MobileNumber)
-            .HasMaxLength(20);
+            .HasMaxLength(16);
 
         builder.Property(p => p.NationalityCode)
-            .HasMaxLength(20);
+            .HasMaxLength(16);
 
         builder.Property(p => p.Email)
             .HasMaxLength(256);
@@ -51,9 +52,9 @@ public class PaymentRequestEntityConfiguration : IEntityTypeConfiguration<Paymen
             .HasMaxLength(128);
 
         // Relationships
-        builder.HasOne(p => p.Requester)
+        builder.HasOne(p => p.Issuer)
             .WithMany()
-            .HasForeignKey(p => p.RequesterRef)
+            .HasForeignKey(p => p.IssuerId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(p => p.GatewayPayments)

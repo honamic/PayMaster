@@ -21,7 +21,7 @@ public class PaymentGatewayProvider: AggregateRoot<long>
     /// </summary>
     public string Configurations { get; set; }
 
-    public bool Enable { get; set; }
+    public bool Enabled { get; set; }
 
     public int Order { get; set; }
 }

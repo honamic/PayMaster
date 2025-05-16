@@ -2,7 +2,7 @@
 
 namespace Honamic.PayMaster.Enums;
 
-public enum PaymentFailedReason
+public enum PaymentGatewayFailedReason
 {
     [Display(Name = "ندارد")]
     None = 0,

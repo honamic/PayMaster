@@ -164,7 +164,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             if (!InternalVerify(request, result, callbackData))
             {
-                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerfiy;
                 return result;
             }
 
@@ -190,7 +190,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
                 if (payPalOrder?.Status != PayPalOrderStatus.Approved)
                 {
-                    result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                     result.Error = $"Status not Valid {payPalOrder?.Status}";
                     return result;
                 }
@@ -198,7 +198,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
                 var amount = decimal.Parse(payPalOrder?.PurchaseUnits[0].Amount?.Value ?? "0");
                 if (amount != request.PatmentInfo.Amount)
                 {
-                    result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                     result.Error = $"Amount not Valid [{amount}]";
                     return result;
                 }
@@ -218,7 +218,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
 
             if (!verifyResponse.IsSuccessStatusCode)
             {
-                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                 result.Error = verifyResponse.StatusCode.ToString();
                 return result;
             }

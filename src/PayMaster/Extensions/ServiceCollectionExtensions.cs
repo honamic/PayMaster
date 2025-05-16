@@ -5,8 +5,8 @@ using Honamic.Framework.Tools.IdGenerators;
 using Honamic.Framework.Applications.Extensions;
 using Honamic.PayMaster.Persistence;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.PaymentRequesters;
-using Honamic.PayMaster.Core.PaymentRequests;
+using Honamic.PayMaster.Core.ReceiptIssuers;
+using Honamic.PayMaster.Core.ReceiptRequests;
 
 namespace Honamic.PayMaster.Extensions;
 
@@ -46,8 +46,8 @@ public static class ServiceCollectionExtensions
         //for default DbContext in framework
         services.AddScoped<DbContext>((sp) => sp.GetRequiredService<PaymasterDbContext>());
         services.AddTransient<IPaymentGatewayProviderRepository, PaymentGatewayProviderRepository>();
-        services.AddTransient<IPaymentRequesterRepository, PaymentRequesterRepository>();
-        services.AddTransient<IPaymentRequestRepository, PaymentRequestRepository>();
+        services.AddTransient<IReceiptIssuerRepository, ReceiptIssuerRepository>();
+        services.AddTransient<IReceiptRequestRepository, ReceiptRequestRepository>();
         services.AddUnitOfWorkByEntityFramework();
     }
 

@@ -123,7 +123,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (!InternalVerify(request, result, callbackData))
             {
-                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerfiy;
                 return result;
             }
             var resCode = callbackData?.ResCode ?? "";
@@ -133,11 +133,11 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
                 switch (resCode)
                 {
                     case "17":
-                        result.PaymentFailedReason = PaymentFailedReason.Canceled;
+                        result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
                         result.Error = ResultCodeDescription(resCode);
                         break;
                     default:
-                        result.PaymentFailedReason = PaymentFailedReason.Other;
+                        result.PaymentFailedReason = PaymentGatewayFailedReason.Other;
                         result.Error = ResultCodeDescription(resCode);
                         break;
                 }
@@ -167,7 +167,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (VerifyResultCode != "0")
             {
-                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                 result.Error = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
@@ -181,7 +181,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (settlmentResultCode != "0")
             {
-                result.PaymentFailedReason = PaymentFailedReason.Settlement;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Settlement;
                 result.Error = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
