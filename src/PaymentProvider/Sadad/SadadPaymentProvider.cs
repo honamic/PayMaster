@@ -8,7 +8,7 @@ using Honamic.PayMaster.PaymentProviders;
 using System.Net.Http;
 
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
-public class SadadPaymentProvider : PaymentProviderBase
+public class SadadPaymentProvider : PaymentGatewayProviderBase
 {
     private const string PaymentRequestPath = "/api/v0/Request/PaymentRequest";
     private readonly ILogger<SadadPaymentProvider> _logger;
@@ -72,7 +72,7 @@ public class SadadPaymentProvider : PaymentProviderBase
                     result.PayUrl = Configurations.PurchasePage;
                     result.PayVerb = PayVerb.Get;
                     result.PayParams.Add("Token", response?.Token ?? "null");
-                    result.CreateToken = response?.Token;
+                    result.CreateReference = response?.Token;
                     result.Success = true;
                 }
                 else
@@ -102,7 +102,7 @@ public class SadadPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.OrderId))
             {
                 result.UniqueRequestId = long.Parse(callbackData.OrderId ?? "-1");
-                result.CreateToken = callbackData.Token;
+                result.CreateReference = callbackData.Token;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
@@ -120,7 +120,7 @@ public class SadadPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    public override Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
         throw new NotImplementedException();
     }

@@ -2,7 +2,7 @@
 
 namespace Honamic.PayMaster.PaymentProviders;
 
-public interface IPaymentProvider
+public interface IPaymentGatewayProvider
 {
     void Configure(string providerJsonConfiguration);
 
@@ -10,6 +10,6 @@ public interface IPaymentProvider
     
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
 
-    public Task<VerfiyResult> VerifyAsync(VerifyRequest request);
+    public Task<VerifyResult> VerifyAsync(VerifyRequest request);
 
 }

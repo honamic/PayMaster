@@ -9,9 +9,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.15" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	  
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PayMaster\Honamic.PayMaster.csproj" />
+    <ProjectReference Include="..\PaymentProvider\PayPal\PayPal.csproj" />
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
   </ItemGroup>
 

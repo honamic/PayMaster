@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
+﻿using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.Behpardakht;
-public class BehpardakhtPaymentProvider : PaymentProviderBase
+public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
 {
     private const string ParamsForGatewayPath = "/pgwchannel/services/pgw";
     private readonly ILogger<BehpardakhtPaymentProvider> _logger;
@@ -94,7 +95,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             if (!string.IsNullOrEmpty(callbackData?.SaleOrderId))
             {
                 result.UniqueRequestId = long.Parse(callbackData.SaleReferenceId ?? "");
-                result.CreateToken = callbackData.RefId;
+                result.CreateReference = callbackData.RefId;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
@@ -112,9 +113,9 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override async Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
-        var result = new VerfiyResult();
+        var result = new VerifyResult();
 
         try
         {
@@ -122,7 +123,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (!InternalVerify(request, result, callbackData))
             {
-                result.PaymentFailedReason = PaymentFailedReason.InternalVerfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerfiy;
                 return result;
             }
             var resCode = callbackData?.ResCode ?? "";
@@ -132,11 +133,11 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
                 switch (resCode)
                 {
                     case "17":
-                        result.PaymentFailedReason = PaymentFailedReason.Canceled;
+                        result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
                         result.Error = ResultCodeDescription(resCode);
                         break;
                     default:
-                        result.PaymentFailedReason = PaymentFailedReason.Other;
+                        result.PaymentFailedReason = PaymentGatewayFailedReason.Other;
                         result.Error = ResultCodeDescription(resCode);
                         break;
                 }
@@ -166,7 +167,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (VerifyResultCode != "0")
             {
-                result.PaymentFailedReason = PaymentFailedReason.Verfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
                 result.Error = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
@@ -180,7 +181,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
 
             if (settlmentResultCode != "0")
             {
-                result.PaymentFailedReason = PaymentFailedReason.Settlement;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Settlement;
                 result.Error = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
@@ -202,7 +203,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, CallBackDataModel? callbackData)
+    private static bool InternalVerify(VerifyRequest request, VerifyResult result, CallBackDataModel? callbackData)
     {
         if (callbackData is null)
         {
@@ -217,7 +218,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
             return false;
         }
 
-        if (callbackData.RefId != request.PatmentInfo.CreateToken)
+        if (callbackData.RefId != request.PatmentInfo.CreateReference)
         {
             result.Error = "مغایرت در RefId";
             return false;

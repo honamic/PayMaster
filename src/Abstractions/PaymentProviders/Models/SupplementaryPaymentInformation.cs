@@ -2,7 +2,7 @@
 
 public class SupplementaryPaymentInformation
 {
-    public string? RefNum { get; set; }
+    public string? SuccessReference { get; set; }
 
     /// <summary>
     /// شماره مرجع 12 رقمی یا RRN

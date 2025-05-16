@@ -6,12 +6,12 @@ using System.Text.Unicode;
 
 namespace Honamic.PayMaster.PaymentProviders;
 
-public abstract class PaymentProviderBase : IPaymentProvider
+public abstract class PaymentGatewayProviderBase : IPaymentGatewayProvider
 {
     public abstract void Configure(string providerConfiguration);
     public abstract Task<CreateResult> CreateAsync(CreateRequest prePayRequest);
     public abstract ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
-    public abstract Task<VerfiyResult> VerifyAsync(VerifyRequest request);
+    public abstract Task<VerifyResult> VerifyAsync(VerifyRequest request);
 
     protected string ToJson(object obj)
     {
@@ -31,5 +31,4 @@ public abstract class PaymentProviderBase : IPaymentProvider
 
         return $"{obj} | {description}".TrimEnd(' ').TrimEnd('|');
     }
-
 }

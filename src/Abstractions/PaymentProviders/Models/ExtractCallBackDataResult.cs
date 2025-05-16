@@ -8,7 +8,7 @@ public class ExtractCallBackDataResult
 
     public long? UniqueRequestId { get; set; }
     
-    public string? CreateToken { get; set; }
+    public string? CreateReference { get; set; }
 
     public object? CallBack { get; set; }
 }
