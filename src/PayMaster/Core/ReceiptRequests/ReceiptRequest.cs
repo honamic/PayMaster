@@ -1,6 +1,5 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Core.ReceiptIssuers;
-using Honamic.PayMaster.Core.ReceiptRequests.Paramas;
 using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 

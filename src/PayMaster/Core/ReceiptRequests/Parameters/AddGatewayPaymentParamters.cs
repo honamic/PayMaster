@@ -1,6 +1,4 @@
-﻿using Honamic.PayMaster.Core.ReceiptRequests.Paramas;
-
-namespace Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+﻿namespace Honamic.PayMaster.Core.ReceiptRequests.Parameters;
 public class CreateGatewayPaymentParamters
 {
     public required long Id { get; set; }
