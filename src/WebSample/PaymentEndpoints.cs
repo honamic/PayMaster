@@ -16,7 +16,7 @@ public static class PaymentEndpoints
         {
             var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
 
-            IPaymentProvider provider = PaymentFacoty.GetSampleProvider(services);
+            IPaymentGatewayProvider provider = PaymentFacoty.GetSampleProvider(services);
 
             var newPayment = PaymentStorage.Create(amount, "USD");
 
@@ -65,7 +65,7 @@ public static class PaymentEndpoints
 
             var json = JsonSerializer.Serialize(queryObjectDict);
 
-            IPaymentProvider provider = PaymentFacoty.GetSampleProvider(services);
+            IPaymentGatewayProvider provider = PaymentFacoty.GetSampleProvider(services);
 
             var ExtractCallBackDataResult = provider.ExtractCallBackData(json);
 

@@ -11,7 +11,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal;
-public class PayPalPaymentProvider : PaymentProviderBase
+public class PayPalPaymentProvider : PaymentGatewayProviderBase
 {
     private const string checkoutOrdersPath = "/v2/checkout/orders";
     private readonly ILogger<PayPalPaymentProvider> _logger;
@@ -154,9 +154,9 @@ public class PayPalPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override async Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
-        var result = new VerfiyResult();
+        var result = new VerifyResult();
 
         try
         {
@@ -277,7 +277,7 @@ public class PayPalPaymentProvider : PaymentProviderBase
         return httpRequest;
     }
 
-    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, PayPalCallBackDataModel? callbackData)
+    private static bool InternalVerify(VerifyRequest request, VerifyResult result, PayPalCallBackDataModel? callbackData)
     {
         if (callbackData is null)
         {

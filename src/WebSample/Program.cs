@@ -55,21 +55,21 @@ public static class PaymentFacoty
         ClientId = "AfxzjPrL2vgk8FJIZdWDFlZov-k-zrL0AcqdgNkYRCX4ZNmFSgG190hFdA-cGtAB7MKWwHHdfq7sNlEf",
         Secret = "EB1Xw8-lZsoSZ22gCz--2lbrBBxgOi2uTNwZDC6PwcrSLBA1ABmFuFkA5j3ffnKkRRKScTQZujjk30SI"
     };
-    public static IPaymentProvider GetSampleProvider(IServiceProvider services)
+    public static IPaymentGatewayProvider GetSampleProvider(IServiceProvider services)
     {
         var payPal = true;
-        IPaymentProvider provider;
+        IPaymentGatewayProvider provider;
 
         if (payPal)
         {
             var payPalProviderType = typeof(PayPalPaymentProvider).FullName;
-            provider = services.GetRequiredKeyedService<IPaymentProvider>(payPalProviderType);
+            provider = services.GetRequiredKeyedService<IPaymentGatewayProvider>(payPalProviderType);
             provider.Configure(JsonSerializer.Serialize(payPalConfig));
         }
         else
         {
             var ProviderType = typeof(ZarinPalPaymentProvider).FullName;
-            provider = services.GetRequiredKeyedService<IPaymentProvider>(ProviderType);
+            provider = services.GetRequiredKeyedService<IPaymentGatewayProvider>(ProviderType);
             provider.Configure(JsonSerializer.Serialize(zarinPalConfig));
         }
 
@@ -176,7 +176,7 @@ public static class PaymentStorage
         return gatewayPayment;
     }
 
-    internal static void SaveVerify(VerfiyResult verifyResult, ReceiptRequestGatewayPayment gatewayPayment)
+    internal static void SaveVerify(VerifyResult verifyResult, ReceiptRequestGatewayPayment gatewayPayment)
     {
         if (verifyResult.Success)
         {

@@ -13,7 +13,7 @@ namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 public class ZarinPalPaymentProvider(
     IHttpClientFactory httpClientFactory,
     ILogger<ZarinPalPaymentProvider> logger)
-    : PaymentProviderBase
+    : PaymentGatewayProviderBase
 {
     private ZarinPalConfigurations _configurations = new ZarinPalConfigurations();
 
@@ -128,9 +128,9 @@ public class ZarinPalPaymentProvider(
         return result;
     }
 
-    public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override async Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
-        var result = new VerfiyResult();
+        var result = new VerifyResult();
         try
         {
             var callbackData = (CallBackDataModel?)request.CallBackData;
@@ -227,7 +227,7 @@ public class ZarinPalPaymentProvider(
 
     }
 
-    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, CallBackDataModel? callbackData)
+    private static bool InternalVerify(VerifyRequest request, VerifyResult result, CallBackDataModel? callbackData)
     {
         if (callbackData is null)
         {

@@ -8,7 +8,7 @@ using Honamic.PayMaster.PaymentProviders;
 using System.Net.Http;
 
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
-public class SadadPaymentProvider : PaymentProviderBase
+public class SadadPaymentProvider : PaymentGatewayProviderBase
 {
     private const string PaymentRequestPath = "/api/v0/Request/PaymentRequest";
     private readonly ILogger<SadadPaymentProvider> _logger;
@@ -120,7 +120,7 @@ public class SadadPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    public override Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
         throw new NotImplementedException();
     }

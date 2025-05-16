@@ -7,9 +7,9 @@ public static class ServiceCollectionExtensions
     public static List<KeyValuePair<string, string>> Providers = new List<KeyValuePair<string, string>>();
 
     public static void RegisterPaymentProvider<TProvider>(this IServiceCollection services)
-        where TProvider : PaymentProviderBase
+        where TProvider : PaymentGatewayProviderBase
     {
-        services.AddKeyedTransient<IPaymentProvider, TProvider>(typeof(TProvider).FullName);
+        services.AddKeyedTransient<IPaymentGatewayProvider, TProvider>(typeof(TProvider).FullName);
 
         var providerName = typeof(TProvider).Name.Replace("PaymentProvider", "", StringComparison.InvariantCultureIgnoreCase);
 

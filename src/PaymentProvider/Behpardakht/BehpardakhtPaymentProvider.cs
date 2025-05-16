@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.Behpardakht;
-public class BehpardakhtPaymentProvider : PaymentProviderBase
+public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
 {
     private const string ParamsForGatewayPath = "/pgwchannel/services/pgw";
     private readonly ILogger<BehpardakhtPaymentProvider> _logger;
@@ -113,9 +113,9 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    public override async Task<VerfiyResult> VerifyAsync(VerifyRequest request)
+    public override async Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
-        var result = new VerfiyResult();
+        var result = new VerifyResult();
 
         try
         {
@@ -203,7 +203,7 @@ public class BehpardakhtPaymentProvider : PaymentProviderBase
         return result;
     }
 
-    private static bool InternalVerify(VerifyRequest request, VerfiyResult result, CallBackDataModel? callbackData)
+    private static bool InternalVerify(VerifyRequest request, VerifyResult result, CallBackDataModel? callbackData)
     {
         if (callbackData is null)
         {

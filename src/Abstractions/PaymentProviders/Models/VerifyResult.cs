@@ -2,9 +2,9 @@
 
 namespace Honamic.PayMaster.PaymentProviders.Models;
 
-public class VerfiyResult
+public class VerifyResult
 {
-    public VerfiyResult()
+    public VerifyResult()
     {
         LogData = new PaymentProviderLogData();
     }
