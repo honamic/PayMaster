@@ -7,6 +7,8 @@ using Honamic.PayMaster.Persistence;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptRequests;
+using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 
 namespace Honamic.PayMaster.Extensions;
 
@@ -23,7 +25,7 @@ public static class ServiceCollectionExtensions
 
     private static void AddApplicationServices(this IServiceCollection services)
     {
-
+        services.AddCommandHandler<CreateReceiptRequestCommand, CreateReceiptRequestCommandHandler>();
     }
 
     private static void AddBackgroundJobs(this IServiceCollection services)

@@ -39,7 +39,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
         builder.Property(p => p.AdditionalData)
             .HasMaxLength(2048);
 
-        builder.Property(p => p.MobileNumber)
+        builder.Property(p => p.Mobile)
             .HasMaxLength(16);
 
         builder.Property(p => p.NationalityCode)

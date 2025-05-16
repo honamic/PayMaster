@@ -1,7 +1,7 @@
 ﻿using Honamic.Framework.Domain;
 
 namespace Honamic.PayMaster.Core.PaymentGatewayProviders;
-public class PaymentGatewayProvider: AggregateRoot<long>
+public class PaymentGatewayProvider : AggregateRoot<long>
 {
     public PaymentGatewayProvider()
     {
@@ -9,9 +9,10 @@ public class PaymentGatewayProvider: AggregateRoot<long>
         ProviderType = "";
     }
 
-    /// <summary>
-    /// samples: Behpardakht,Sep,Sadad
-    /// </summary>
+    public string Title { get; set; }
+
+    public string Code { get; set; }
+
     public string ProviderType { get; set; }
 
     public string? LogoPath { get; set; }
@@ -24,4 +25,8 @@ public class PaymentGatewayProvider: AggregateRoot<long>
     public bool Enabled { get; set; }
 
     public int Order { get; set; }
+
+    public decimal? MinimumAmount { get; set; }
+
+    public decimal? MaximumAmount { get; set; }
 }
