@@ -44,7 +44,7 @@ public class ReceiptRequest : AggregateRoot<long>
             throw new ArgumentException($"مبلغ نمی تواند صفر یا کوچکتر باشد.");
         }
 
-        if (createParameters.SupportedCurrencies.Contains(createParameters.Currency))
+        if (!createParameters.SupportedCurrencies.Contains(createParameters.Currency))
         {
             throw new ArgumentException($"واحد پولی {createParameters.Currency} مجاز نیست.");
         }
