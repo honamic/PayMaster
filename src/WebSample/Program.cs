@@ -1,6 +1,12 @@
-﻿using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
+﻿using Honamic.PayMaster.Core.PaymentGatewayProviders;
+using Honamic.PayMaster.Core.ReceiptIssuers;
+using Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
+using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
+using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
 
@@ -23,6 +29,8 @@ internal class Program
             options.UseSqlServer(sqlServerConnection);
         });
 
+        builder.Services.AddPayMasterServices(sqlServerConnection);
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
@@ -39,6 +47,52 @@ internal class Program
         {
             var db = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
             db.Database.Migrate();
+
+            var defaultIssuer = db.Set<ReceiptIssuer>().FirstOrDefault(b => b.Code == "Default");
+            if (defaultIssuer == null)
+            {
+                var parameters = new ReceiptIssuerParameters
+                {
+                    Id = 100,
+                    Code = "Default",
+                    CallbackUrl = "",
+                    Title = "صادر کننده پیش فرض",
+                    Enabled = true,
+                    Description = "تست",
+                };
+
+                defaultIssuer = ReceiptIssuer.Create(parameters);
+
+                db.Set<ReceiptIssuer>().Add(defaultIssuer!);
+            }
+
+            var zainpalProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "Default");
+            if (zainpalProvider == null)
+            {
+                ZarinPalConfigurations zarinPalConfig = new()
+                {
+                    ApiAddress = "https://sandbox.zarinpal.com/",
+                    PayUrl = "https://sandbox.zarinpal.com/pg/StartPay/",
+                    MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
+                };
+
+                zainpalProvider = new PaymentGatewayProvider
+                {
+                    Id = 1001,
+                    Code = "Default",
+                    Title = "زرین پل تستی",
+                    Enabled = true,
+                    Configurations = JsonSerializer.Serialize(zarinPalConfig),
+                    MinimumAmount = 1000,
+                    MaximumAmount = null,
+                    Order = 1,
+                    ProviderType = typeof(ZarinPalPaymentProvider).FullName,
+                    LogoPath=null,
+                };
+
+                db.Set<PaymentGatewayProvider>().Add(zainpalProvider);
+            }
+            db.SaveChanges();
         }
 
         app.Run();

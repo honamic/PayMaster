@@ -232,10 +232,7 @@ namespace WebSample.Migrations
             modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)

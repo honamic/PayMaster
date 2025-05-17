@@ -19,6 +19,9 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(p => p.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Amount)
             .IsRequired()
             .HasPrecision(18, 2);

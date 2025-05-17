@@ -12,7 +12,7 @@ using WebSample.Entities;
 namespace WebSample.Migrations
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20250517115234_Version01")]
+    [Migration("20250517124651_Version01")]
     partial class Version01
     {
         /// <inheritdoc />
@@ -235,10 +235,7 @@ namespace WebSample.Migrations
             modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
