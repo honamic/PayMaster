@@ -24,6 +24,19 @@ public static class PaymentEndpoints
             return Results.Ok(commandResult);
         });
 
+        payGroup.MapPost("/receipt/pay/", async (HttpContext context,
+          IServiceProvider services,
+         [FromServices] ICommandBus commandBus,
+          [AsParameters] PayReceiptRequestCommand model,
+            CancellationToken cancellationToken) =>
+        {
+            var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
+
+            var commandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, PayReceiptRequestCommandResult>(model, cancellationToken);
+
+            return Results.Ok(commandResult);
+        });
+
         //app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpContext context, IServiceProvider services) =>
         //{
         //    dynamic queryObject = new ExpandoObject();

@@ -87,4 +87,9 @@ public class ReceiptRequest : AggregateRoot<long>
 
         return newReceiptRequest;
     }
+
+    public ReceiptRequestGatewayPayment? GetPayableGatewayPayment()
+    {
+       return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+    }
 }
