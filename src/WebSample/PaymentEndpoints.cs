@@ -8,10 +8,10 @@ public static class PaymentEndpoints
 {
     public static void MapPaymentEndpoints(IEndpointRouteBuilder app)
     {
-        var payGroup = app.MapGroup("Payment");
+        var payGroup = app.MapGroup("PaymentMaster");
 
 
-        payGroup.MapPost("/Payment/create/", async (HttpContext context,
+        payGroup.MapPost("/receipt/create/", async (HttpContext context,
                 IServiceProvider services,
                [FromServices] ICommandBus commandBus,
                 [AsParameters] CreateReceiptRequestCommand model,
