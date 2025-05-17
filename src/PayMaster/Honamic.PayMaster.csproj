@@ -12,9 +12,9 @@
 		<PackageReference Include="Honamic.Framework.EntityFramework.Persistence" Version="1.0.1-Beta01" />
 		<PackageReference Include="Honamic.Framework.Facade.Abstractions" Version="1.0.1-Beta01" />
 		<PackageReference Include="Honamic.Framework.Tools.IdGenerators" Version="1.0.1-Beta01" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" /> 
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" /> 
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Abstractions\Honamic.PayMaster.Abstractions.csproj" />

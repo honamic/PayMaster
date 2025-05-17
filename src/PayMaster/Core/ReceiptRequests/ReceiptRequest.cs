@@ -31,8 +31,8 @@ public class ReceiptRequest : AggregateRoot<long>
     public string? PartyIdentity { get; private set; }
     public long? PartyId { get; private set; }
 
-    public ReceiptIssuer? Issuer { get; set; }
-    public long? IssuerId { get; set; }
+    public ReceiptIssuer Issuer { get; set; }
+    public long IssuerId { get; set; }
 
     public List<ReceiptRequestGatewayPayment> GatewayPayments { get; set; }
 
@@ -70,7 +70,7 @@ public class ReceiptRequest : AggregateRoot<long>
             PartyId = createParameters.PartyId,
             PartyIdentity = createParameters.PartyIdentity,
             NationalityCode = createParameters.NationalityCode,
-            IssuerId = createParameters.Issuer?.Id,
+            IssuerId = createParameters.Issuer.Id,
         };
 
         CreateGatewayPaymentParameters createGatewayPayment = new CreateGatewayPaymentParameters

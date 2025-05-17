@@ -30,6 +30,9 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
         builder.Property(x => x.Status)
             .IsRequired();
 
+        builder.Property(x => x.StatusDescription)
+            .HasMaxLength(256);
+
         builder.Property(x => x.FailedReason)
             .IsRequired();
 

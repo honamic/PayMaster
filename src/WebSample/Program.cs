@@ -16,10 +16,11 @@ internal class Program
         builder.Services.AddZarinPalPaymentProviderServices();
         builder.Services.AddPayPalPaymentProviderServices();
         builder.Services.AddHttpClient();
-        var connectionString = "";
+
+        var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnectionString");
         builder.Services.AddDbContext<SampleDbContext>((serviceProvider, options) =>
         {
-            options.UseSqlServer(connectionString);
+            options.UseSqlServer(sqlServerConnection);
         });
 
         var app = builder.Build();
@@ -33,6 +34,12 @@ internal class Program
         app.UseHttpsRedirection();
 
         PaymentEndpoints.MapPaymentEndpoints(app);
+
+        using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
+            db.Database.Migrate();
+        }
 
         app.Run();
     }
