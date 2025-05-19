@@ -10,6 +10,29 @@ public static class PaymentEndpoints
 {
     public static void MapPaymentEndpoints(IEndpointRouteBuilder app)
     {
+        app.MapGet("sample/receipt/createAndPay/", async (HttpContext context,
+          IServiceProvider services,
+          [FromServices] ICommandBus commandBus,
+          [AsParameters] CreateReceiptRequestCommand model,
+          CancellationToken cancellationToken) =>
+        {
+            var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>(model, cancellationToken);
+
+            var paycommand = new PayReceiptRequestCommand
+            {
+                ReceiptRequestId = createResult.Id,
+            };
+
+            var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, PayReceiptRequestCommandResult>(paycommand, cancellationToken);
+
+            if(paycommandResult.PayUrl != null)
+            {
+                return Results.Redirect(paycommandResult.PayUrl);
+            }
+
+            return Results.Ok(paycommandResult);
+        });
+
         var payGroup = app.MapGroup("PaymentMaster");
 
 
@@ -19,8 +42,6 @@ public static class PaymentEndpoints
                 [AsParameters] CreateReceiptRequestCommand model,
                   CancellationToken cancellationToken) =>
         {
-            var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
-
             var commandResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>(model, cancellationToken);
 
             return Results.Ok(commandResult);

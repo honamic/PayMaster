@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.Core.PaymentGatewayProviders;
+﻿using Honamic.PayMaster.Application.Options;
+using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Extensions;
@@ -30,6 +31,12 @@ internal class Program
         });
 
         builder.Services.AddPayMasterServices(sqlServerConnection);
+
+        builder.Services.Configure<PayMasterOptions>(c =>
+        {
+            c.CallBackUrl = "https://localhost:7121/PaymentMaster/callback/{GatewayProviderId}/{GatewayPaymentId}/";
+
+        });
 
         var app = builder.Build();
 

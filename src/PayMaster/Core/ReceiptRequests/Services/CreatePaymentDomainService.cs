@@ -1,8 +1,10 @@
 ﻿using Honamic.Framework.Domain;
+using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Honamic.PayMaster.Core.ReceiptRequests.Services;
 
@@ -12,23 +14,23 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
     private readonly IPaymentGatewayProviderFactory _factory;
     private readonly IClock _clock;
     private readonly ILogger<CreatePaymentDomainService> _logger;
+    private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
     public CreatePaymentDomainService(
         IPaymentGatewayProviderRepository repository,
         IPaymentGatewayProviderFactory factory,
         IClock clock,
-        ILogger<CreatePaymentDomainService> logger)
+        ILogger<CreatePaymentDomainService> logger,
+        IOptions<PayMasterOptions> payMasterOptions)
     {
         _repository = repository;
         _factory = factory;
         _clock = clock;
         _logger = logger;
+        _payMasterOptions = payMasterOptions;
     }
 
-
-    public async Task<CreateResult> CreatePaymentAsync(
-        ReceiptRequest receiptRequest,
-        string callbackUrl)
+    public async Task<CreateResult> CreatePaymentAsync(ReceiptRequest receiptRequest)
     {
         var gatewayPayment = receiptRequest.GetPayableGatewayPayment();
 
@@ -52,7 +54,7 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
             throw new InvalidOperationException("درگاه پرداخت ساخته نشد.");
         }
 
-        callbackUrl = callbackUrl
+        var callbackUrl = _payMasterOptions.Value.CallBackUrl
             .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
             .Replace(Constants.GatewayProviderIdParameter, gatewayPayment.GatewayProviderId.ToString());
 
