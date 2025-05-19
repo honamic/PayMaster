@@ -8,14 +8,14 @@ namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptRequestCommand, PayReceiptRequestCommandResult>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
-    private readonly ICreatePaymentDomianService _createPaymentDomianService;
+    private readonly ICreatePaymentDomainService _createPaymentDomainService;
 
     public PayReceiptRequestCommandHandler(
         IReceiptRequestRepository receiptRequestRepository,
-        ICreatePaymentDomianService paymentProcessingService)
+        ICreatePaymentDomainService createPaymentDomainService)
     {
         _receiptRequestRepository = receiptRequestRepository;
-        _createPaymentDomianService = paymentProcessingService;
+        _createPaymentDomainService = createPaymentDomainService;
     }
 
     public async Task<PayReceiptRequestCommandResult> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
@@ -24,14 +24,14 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
         var callbackUrl = "https://localhost:7121/PayMaster/Callback/";
 
         var receiptRequest = await _receiptRequestRepository
-                        .GetAsync(c => c.Id == command.ReceiptRequestIdAslong());
+                        .GetAsync(c => c.Id == command.GetReceiptRequestIdAsLong());
 
         if (receiptRequest is null)
         {
             throw new ArgumentException("فیش وجود ندارد.");
         }
 
-        var createResult =await _createPaymentDomianService.CreatePaymentAsync(receiptRequest, callbackUrl);
+        var createResult =await _createPaymentDomainService.CreatePaymentAsync(receiptRequest, callbackUrl);
 
         if (createResult.Success)
         {

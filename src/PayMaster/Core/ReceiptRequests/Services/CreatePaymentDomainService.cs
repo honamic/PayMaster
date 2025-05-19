@@ -7,18 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Honamic.PayMaster.Core.ReceiptRequests.Services;
 
-public class CreatePaymentDomianService : ICreatePaymentDomianService
+public class CreatePaymentDomainService : ICreatePaymentDomainService
 {
     private readonly IPaymentGatewayProviderRepository _repository;
     private readonly IPaymentGatewayProviderFactory _factory;
     private readonly IClock _clock;
-    private readonly ILogger<CreatePaymentDomianService> _logger;
+    private readonly ILogger<CreatePaymentDomainService> _logger;
 
-    public CreatePaymentDomianService(
+    public CreatePaymentDomainService(
         IPaymentGatewayProviderRepository repository,
         IPaymentGatewayProviderFactory factory,
         IClock clock,
-        ILogger<CreatePaymentDomianService> logger)
+        ILogger<CreatePaymentDomainService> logger)
     {
         _repository = repository;
         _factory = factory;

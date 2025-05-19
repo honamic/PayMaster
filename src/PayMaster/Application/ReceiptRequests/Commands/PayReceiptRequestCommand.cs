@@ -6,7 +6,7 @@ public class PayReceiptRequestCommand : ICommand<PayReceiptRequestCommandResult>
 {
     public required string ReceiptRequestId { get; set; }
 
-    public long ReceiptRequestIdAslong()
+    public long GetReceiptRequestIdAsLong()
     {
         return long.Parse(ReceiptRequestId);
     }
