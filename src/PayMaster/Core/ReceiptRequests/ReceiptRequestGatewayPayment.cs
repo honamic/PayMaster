@@ -101,8 +101,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
 
         if (createReference?.Length > 128)
         {
-            //Todo: exception or Substring
-            createReference = createReference.Substring(0, 128);
+            throw new Exception("The number of CreateReference cannot be more than 128 characters.");
         }
 
         CreateReference = createReference;

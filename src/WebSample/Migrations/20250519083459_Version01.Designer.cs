@@ -12,7 +12,7 @@ using WebSample.Entities;
 namespace WebSample.Migrations
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20250517124651_Version01")]
+    [Migration("20250519083459_Version01")]
     partial class Version01
     {
         /// <inheritdoc />
@@ -32,7 +32,8 @@ namespace WebSample.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Configurations")
                         .IsRequired()
@@ -56,9 +57,11 @@ namespace WebSample.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<decimal?>("MaximumAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("MinimumAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ModifiedBy")
@@ -81,7 +84,8 @@ namespace WebSample.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
