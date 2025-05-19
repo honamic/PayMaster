@@ -10,7 +10,7 @@ using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.PaymentProviders;
-using Honamic.PayMaster.Core.Services;
+using Honamic.PayMaster.Core.ReceiptRequests.Services;
 
 namespace Honamic.PayMaster.Extensions;
 
@@ -21,21 +21,21 @@ public static class ServiceCollectionExtensions
         services.AddDomainServices();
         services.AddApplicationServices();
         services.AddPersistenceEntityFrameworkServices(connectionString);
-        services.AddSnowflakeIdGeneratorServices();
-        services.AddDefaultApplicationsServices();
+        services.AddSnowflakeIdGeneratorServices(); 
         services.AddBackgroundJobs();
     }
 
     private static void AddDomainServices(this IServiceCollection services)
     {
-        services.AddScoped<IPaymentProcessingService, PaymentProcessingService>();
+        services.AddScoped<ICreatePaymentDomianService, CreatePaymentDomianService>();
     }
 
     private static void AddApplicationServices(this IServiceCollection services)
     {
+        services.AddDefaultApplicationsServices();
+
         services.AddSingleton<IPaymentGatewayProviderFactory, PaymentGatewayProviderFactory>();
 
-        services.AddDefaultApplicationsServices();
 
         services.AddCommandHandler<CreateReceiptRequestCommand,
             CreateReceiptRequestCommandHandler,

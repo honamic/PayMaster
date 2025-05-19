@@ -28,12 +28,12 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
 
     public async Task<CreateReceiptRequestCommandResult> HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        string? defaultIsssuerCode = "Default";
+        string? defaultIssuerCode = "Default";
         string? defaultGatewayProviderCode = "Default";
 
         string[] supportedCurrenciesOption = ["IRR", "USD"];
 
-        ReceiptIssuer receiptIssuer = await GetReceiptIssuer(command, defaultIsssuerCode);
+        ReceiptIssuer receiptIssuer = await GetReceiptIssuer(command, defaultIssuerCode);
 
         PaymentGatewayProvider paymentGatewayProvider = await GetPaymentGatewayProvider(command, defaultGatewayProviderCode);
 

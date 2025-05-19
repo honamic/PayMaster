@@ -2,6 +2,8 @@
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.PaymentProviders;
+using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Core.ReceiptRequests;
 
@@ -90,6 +92,38 @@ public class ReceiptRequest : AggregateRoot<long>
 
     public ReceiptRequestGatewayPayment? GetPayableGatewayPayment()
     {
-       return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+        return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+    }
+
+    public async Task<CreateResult> CreatePaymentByGatewayProviderAsync(
+        ReceiptRequestGatewayPayment gatewayPayment,
+        IPaymentGatewayProvider provider,
+        IClock clock,
+        string callbackUrl)
+    {
+        var createResult = await provider.CreateAsync(new CreateRequest
+        {
+            Amount = gatewayPayment.Amount,
+            Currency = gatewayPayment.Currency,
+            UniqueRequestId = gatewayPayment.Id,
+            CallbackUrl = callbackUrl,
+        });
+
+
+        if (createResult.Success)
+        {
+            gatewayPayment.SetWaitingStatus(
+                createResult.CreateReference,
+                createResult.Error,
+                clock.NowWithOffset);
+        }
+        else
+        {
+            gatewayPayment.SetFailedStatus(
+                PaymentGatewayFailedReason.CreateFailed,
+                createResult.Error);
+        }
+
+        return createResult;
     }
 }
