@@ -15,7 +15,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     public string Currency { get; private set; } = default!;
 
     public PaymentGatewayStatus Status { get; private set; }
-    
+
     public string? StatusDescription { get; private set; }
 
     public PaymentGatewayFailedReason FailedReason { get; private set; }
@@ -92,5 +92,34 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         };
 
         return newReceiptRequestGatewayPayment;
+    }
+
+    public void SetWaitingStatus(string? createReference, string? statusDescription, DateTimeOffset redirectAt)
+    {
+        Status = PaymentGatewayStatus.Waiting;
+        RedirectAt = redirectAt;
+
+        if (createReference?.Length > 128)
+        {
+            throw new ArgumentException("The number of CreateReference cannot be more than 128 characters.");
+        }
+
+        CreateReference = createReference;
+        StatusDescription = ApplyStatusDescriptionMaxLength(statusDescription);
+    }
+
+    public void SetFailedStatus(PaymentGatewayFailedReason reason, string? statusDescription)
+    {
+        Status = PaymentGatewayStatus.Failed;
+        FailedReason = reason;
+        StatusDescription = ApplyStatusDescriptionMaxLength(statusDescription);
+    }
+
+    private static string? ApplyStatusDescriptionMaxLength(string? statusDescription)
+    {
+        if (statusDescription?.Length > 256)
+            statusDescription = statusDescription.Substring(0, 256);
+
+        return statusDescription;
     }
 }

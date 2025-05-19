@@ -13,4 +13,6 @@ public class ReceiptIssuerParameters
     public required string Title { get; set; }
     
     public required bool Enabled { get; set; }
+
+    public string? WebHookUrl { get;  set; }
 }

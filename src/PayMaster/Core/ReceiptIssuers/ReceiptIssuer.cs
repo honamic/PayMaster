@@ -30,6 +30,7 @@ public class ReceiptIssuer: AggregateRoot<long>
         {
             Id = create.Id,
             CallbackUrl = create.CallbackUrl,
+            WebHookUrl= create.WebHookUrl,
             Code = create.Code,
             Title = create.Title,
             Enabled = create.Enabled,
