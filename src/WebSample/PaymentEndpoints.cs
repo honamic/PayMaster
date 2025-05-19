@@ -25,7 +25,7 @@ public static class PaymentEndpoints
 
             var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, PayReceiptRequestCommandResult>(paycommand, cancellationToken);
 
-            if(paycommandResult.PayUrl != null)
+            if (paycommandResult.PayUrl != null)
             {
                 return Results.Redirect(paycommandResult.PayUrl);
             }
@@ -110,7 +110,7 @@ public static class PaymentEndpoints
         var queryObjectDict = (IDictionary<string, object>)queryObject;
 
 
-        if (context.Request.Method == "Post")
+        if (HttpMethods.IsPost(context.Request.Method))
         {
             foreach (var param in context.Request.Form)
             {

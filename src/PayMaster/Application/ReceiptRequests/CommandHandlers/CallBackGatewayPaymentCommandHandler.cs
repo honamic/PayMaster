@@ -100,7 +100,7 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
                 gatewayPaymentId = ExtractCallBackDataResult.UniqueRequestId;
                 receiptRequest = await _receiptRequestRepository.GetByGatewayPaymentIDAsync(gatewayPaymentId.Value);
             }
-            else if (string.IsNullOrEmpty(ExtractCallBackDataResult.CreateReference))
+            else if (!string.IsNullOrEmpty(ExtractCallBackDataResult.CreateReference))
             {
                 receiptRequest = await _receiptRequestRepository
                     .GetByGatewayPaymentCreateReferenceAsync
