@@ -1,7 +1,7 @@
 ﻿using Honamic.Framework.Commands;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
-public class CreateReceiptRequestCommand : ICommand
+public class CreateReceiptRequestCommand : ICommand<CreateReceiptRequestCommandResult>
 {
     public decimal Amount { get; set; }
     public string Currency { get; set; } = default!;
@@ -22,4 +22,9 @@ public class CreateReceiptRequestCommand : ICommand
     public bool? IsLegal { get; set; }
 
     public string? AdditionalData { get; set; }
+}
+
+public class CreateReceiptRequestCommandResult
+{
+    public string Id { get; set; }
 }

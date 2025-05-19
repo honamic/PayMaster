@@ -15,6 +15,8 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     public string Currency { get; private set; } = default!;
 
     public PaymentGatewayStatus Status { get; private set; }
+    
+    public string? StatusDescription { get; private set; }
 
     public PaymentGatewayFailedReason FailedReason { get; private set; }
 

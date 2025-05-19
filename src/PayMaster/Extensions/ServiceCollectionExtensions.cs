@@ -25,7 +25,11 @@ public static class ServiceCollectionExtensions
 
     private static void AddApplicationServices(this IServiceCollection services)
     {
-        services.AddCommandHandler<CreateReceiptRequestCommand, CreateReceiptRequestCommandHandler>();
+        services.AddDefaultApplicationsServices();
+
+        services.AddCommandHandler<CreateReceiptRequestCommand,
+            CreateReceiptRequestCommandHandler,
+            CreateReceiptRequestCommandResult>();
     }
 
     private static void AddBackgroundJobs(this IServiceCollection services)

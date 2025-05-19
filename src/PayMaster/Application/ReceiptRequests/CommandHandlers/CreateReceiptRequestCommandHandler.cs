@@ -5,9 +5,10 @@ using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceiptRequestCommand>
+internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IReceiptIssuerRepository _receiptIssuerRepository;
@@ -25,10 +26,10 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
         _paymentGatewayProviderRepository = paymentGatewayProviderRepository;
     }
 
-    public async Task HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
+    public async Task<CreateReceiptRequestCommandResult> HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        string? defaultIsssuerCode = "Defaul";
-        string? defaultGatewayProviderCode = "Defaul";
+        string? defaultIsssuerCode = "Default";
+        string? defaultGatewayProviderCode = "Default";
 
         string[] supportedCurrenciesOption = ["IRR", "USD"];
 
@@ -71,6 +72,10 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
 
         await _receiptRequestRepository.InsertAsync(newReceiptRequest);
 
+        return new CreateReceiptRequestCommandResult
+        {
+            Id = newReceiptRequest.Id.ToString(CultureInfo.InvariantCulture),
+        };
     }
 
     private async Task<ReceiptIssuer> GetReceiptIssuer(CreateReceiptRequestCommand command, string defaultIsssuerCode)

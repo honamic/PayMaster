@@ -1,10 +1,6 @@
-﻿using Honamic.PayMaster.Core.ReceiptRequests;
-using Honamic.PayMaster.PaymentProvider.PayPal;
-using Honamic.PayMaster.PaymentProvider.ZarinPal;
-using Honamic.PayMaster.PaymentProviders;
-using Honamic.PayMaster.PaymentProviders.Models;
-using System.Dynamic;
-using System.Text.Json;
+﻿using Honamic.Framework.Commands;
+using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebSample;
 
@@ -12,49 +8,21 @@ public static class PaymentEndpoints
 {
     public static void MapPaymentEndpoints(IEndpointRouteBuilder app)
     {
-        var payGroup = app.MapGroup("Payment");
+        var payGroup = app.MapGroup("PaymentMaster");
 
 
-        //payGroup.MapPost("/Payment/create/", async (HttpContext context, IServiceProvider services, decimal amount) =>
-        //{
-        //    var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
+        payGroup.MapPost("/receipt/create/", async (HttpContext context,
+                IServiceProvider services,
+               [FromServices] ICommandBus commandBus,
+                [AsParameters] CreateReceiptRequestCommand model,
+                  CancellationToken cancellationToken) =>
+        {
+            var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
 
-        //    IPaymentGatewayProvider provider = PaymentFacoty.GetSampleProvider(services);
+            var commandResult =await commandBus.DispatchAsync<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>(model, cancellationToken);
 
-        //    var newPayment = PaymentStorage.Create(amount, "USD");
-
-        //    var newGatewayPayment = PaymentStorage.CreateGatewayPayment(newPayment.Id);
-
-        //    var createProviderResult = await provider.CreateAsync(new CreateRequest()
-        //    {
-        //        Amount = newPayment.Amount,
-        //        Currency = newPayment.Currency,
-        //        UniqueRequestId = newGatewayPayment.Id,
-        //        CallbackUrl = callbackUrl,
-        //    });
-
-        //    PaymentStorage.SetCreateProviderRestul(newGatewayPayment.Id,
-        //        createProviderResult.Success,
-        //        createProviderResult.CreateReference);
-
-        //    if (createProviderResult.Success)
-        //    {
-        //        var redirectUrl = new Uri(createProviderResult.PayUrl!);
-
-        //        if (createProviderResult.PayVerb == PayVerb.Get)
-        //            foreach (var param in createProviderResult.PayParams)
-        //            {
-        //                redirectUrl = new Uri(redirectUrl + $"?{param.Key}={param.Value}");
-        //            }
-
-        //        return Results.Ok(new { redirectUrl, newPayment, createProviderResult });
-
-        //        //todo add param to pay url 
-        //        //return Results.Redirect(redirectUrl.ToString());
-        //    }
-
-        //    return Results.Ok(new { newPayment, createProviderResult });
-        //});
+            return Results.Ok(commandResult);
+        });
 
         //app.MapGet("/Payment/callback/{providerCode}", async (string providerCode, HttpContext context, IServiceProvider services) =>
         //{
