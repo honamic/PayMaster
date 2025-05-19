@@ -44,6 +44,10 @@ public static class ServiceCollectionExtensions
         services.AddCommandHandler<PayReceiptRequestCommand,
             PayReceiptRequestCommandHandler,
             PayReceiptRequestCommandResult>();
+
+        services.AddCommandHandler<CallBackGatewayPaymentCommand,
+            CallBackGatewayPaymentCommandHandler,
+            CallBackGatewayPaymentCommandResult>();
     }
 
     private static void AddBackgroundJobs(this IServiceCollection services)

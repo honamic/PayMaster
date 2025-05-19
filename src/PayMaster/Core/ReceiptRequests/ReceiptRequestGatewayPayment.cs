@@ -2,6 +2,7 @@
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Core.ReceiptRequests;
 
@@ -121,5 +122,40 @@ public class ReceiptRequestGatewayPayment : Entity<long>
             statusDescription = statusDescription.Substring(0, 256);
 
         return statusDescription;
+    }
+
+    internal void StartCallBack(DateTimeOffset nowWithOffset)
+    {
+        if (Status != PaymentGatewayStatus.Waiting)
+        {
+            throw new InvalidOperationException("Status Invalid");
+        }
+
+        CallBackAt = nowWithOffset;
+
+        Status = PaymentGatewayStatus.Settlement;
+    }
+
+    internal void SuccessCallBack(SupplementaryPaymentInformation? supplementaryPaymentInformation)
+    {
+        Status = PaymentGatewayStatus.Success;
+        FailedReason = PaymentGatewayFailedReason.None;
+
+        if (supplementaryPaymentInformation is not null)
+        {
+            TrackingNumber = supplementaryPaymentInformation?.TrackingNumber;
+            ReferenceRetrievalNumber = supplementaryPaymentInformation?.ReferenceRetrievalNumber;
+            Pan = supplementaryPaymentInformation?.Pan;
+            SuccessReference =supplementaryPaymentInformation?.SuccessReference;
+            MerchantId = supplementaryPaymentInformation?.MerchantId ?? MerchantId;
+            TerminalId = supplementaryPaymentInformation?.TerminalId ?? TerminalId;
+        }
+    }
+   
+    internal void FailedCallBack(PaymentGatewayFailedReason paymentFailedReason, string? statusDescription)
+    {
+        Status = PaymentGatewayStatus.Failed;
+        StatusDescription = statusDescription;
+        FailedReason = paymentFailedReason;
     }
 }

@@ -13,12 +13,18 @@ public enum PaymentGatewayStatus
     [Display(Name = "ناموفق")]
     Failed = 2,
 
-    [Display(Name = "موفق")]
-    Success = 3,
-
     [Display(Name = "انتظار پرداخت")]
-    Waiting = 4,
+    Waiting = 3,
 
     [Display(Name = "درحال تایید")]
-    Settlement = 5,
+    Settlement = 4,
+
+    [Display(Name = "موفق")]
+    Success = 5,
+
+    [Display(Name = "درحال برگشت")]
+    Reversing = 6,
+
+    [Display(Name = "برگشت خورده")]
+    Reversed = 7,
 }

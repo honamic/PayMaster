@@ -1,6 +1,5 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
@@ -52,6 +51,10 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
         {
             throw new InvalidOperationException("درگاه پرداخت ساخته نشد.");
         }
+
+        callbackUrl = callbackUrl
+            .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
+            .Replace(Constants.GatewayProviderIdParameter, gatewayPayment.GatewayProviderId.ToString());
 
         var createResult = await receiptRequest
             .CreatePaymentByGatewayProviderAsync(gatewayPayment, provider, _clock, callbackUrl);

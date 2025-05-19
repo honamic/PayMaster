@@ -95,6 +95,11 @@ public class ReceiptRequest : AggregateRoot<long>
         return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
     }
 
+    public ReceiptRequestGatewayPayment? GetGatewayPayment(long id)
+    {
+        return GatewayPayments.FirstOrDefault(c => c.Id == id);
+    }
+
     public async Task<CreateResult> CreatePaymentByGatewayProviderAsync(
         ReceiptRequestGatewayPayment gatewayPayment,
         IPaymentGatewayProvider provider,
@@ -125,5 +130,43 @@ public class ReceiptRequest : AggregateRoot<long>
         }
 
         return createResult;
+    }
+
+    public async Task<VerifyResult?> StartCallBackForGatewayPayment(ReceiptRequestGatewayPayment gatewayPayment,
+        IPaymentGatewayProvider paymentGatewayProvider,
+        IClock clock,
+        ExtractCallBackDataResult extractCallBackDataResult)
+    {
+        gatewayPayment.StartCallBack(clock.NowWithOffset);
+
+        if (!extractCallBackDataResult.Success)
+        {
+            gatewayPayment.FailedCallBack(extractCallBackDataResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, extractCallBackDataResult?.Error);
+            return null ;
+        }
+
+        VerifyRequest verifyRequest = new()
+        {
+            PatmentInfo = new VerifyRequestPatmentInfo
+            {
+                Amount = gatewayPayment!.Amount,
+                UniqueRequestId = gatewayPayment.Id,
+                CreateReference = gatewayPayment.CreateReference,
+            },
+            CallBackData = extractCallBackDataResult.CallBack
+        };
+
+        var verifyResult = await paymentGatewayProvider.VerifyAsync(verifyRequest);
+
+        if (verifyResult.Success)
+        {
+            gatewayPayment.SuccessCallBack(verifyResult.SupplementaryPaymentInformation);
+        }
+        else
+        {
+            gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.Error);
+        }
+
+        return verifyResult;
     }
 }
