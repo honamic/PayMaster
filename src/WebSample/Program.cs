@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.Application.Options;
+﻿using Honamic.Framework.Applications.Authorizes;
+using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
@@ -29,6 +30,8 @@ internal class Program
         {
             options.UseSqlServer(sqlServerConnection);
         });
+
+        builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
 
         builder.Services.AddPayMasterServices(sqlServerConnection);
 

@@ -1,11 +1,12 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Core.ReceiptRequests.Services;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptRequestCommand, PayReceiptRequestCommandResult>
+internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly ICreatePaymentDomainService _createPaymentDomainService;
@@ -18,7 +19,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
         _createPaymentDomainService = createPaymentDomainService;
     }
 
-    public async Task<PayReceiptRequestCommandResult> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
+    public async Task<Result<PayReceiptRequestCommandResult>> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
     {
         var receiptRequest = await _receiptRequestRepository
                         .GetAsync(c => c.Id == command.GetReceiptRequestIdAsLong());
@@ -41,9 +42,10 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
             };
         }
 
-        return new PayReceiptRequestCommandResult
-        {
-            ReceiptRequestId = receiptRequest.Id.ToString(CultureInfo.InvariantCulture)
-        };
+        var result = new Result<PayReceiptRequestCommandResult>();
+
+        result.AppendError("خطا در آماده سازی برای ارسال به درگاه.");
+
+        return  result;
     }
 }

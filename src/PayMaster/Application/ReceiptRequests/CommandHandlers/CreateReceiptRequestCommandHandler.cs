@@ -1,4 +1,5 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>
+internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IReceiptIssuerRepository _receiptIssuerRepository;
@@ -31,7 +32,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
         _payMasterOptions = payMasterOptions;
     }
 
-    public async Task<CreateReceiptRequestCommandResult> HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreateReceiptRequestCommandResult>> HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
     {
         ReceiptIssuer receiptIssuer = await GetReceiptIssuer(command);
 

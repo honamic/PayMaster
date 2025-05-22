@@ -1,8 +1,9 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
-public class PayReceiptRequestCommand : ICommand<PayReceiptRequestCommandResult>
+public class PayReceiptRequestCommand : ICommand<Result<PayReceiptRequestCommandResult>>
 {
     public required string ReceiptRequestId { get; set; }
 

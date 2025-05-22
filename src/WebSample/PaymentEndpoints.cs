@@ -1,4 +1,5 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Microsoft.AspNetCore.Mvc;
 using System.Dynamic;
@@ -16,21 +17,28 @@ public static class PaymentEndpoints
           [AsParameters] CreateReceiptRequestCommand model,
           CancellationToken cancellationToken) =>
         {
-            var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>(model, cancellationToken);
+            var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
+
+
+            if (createResult.Status != ResultStatus.Ok)
+            {
+                return Results.BadRequest(createResult);
+            }
 
             var paycommand = new PayReceiptRequestCommand
             {
-                ReceiptRequestId = createResult.Id,
+                ReceiptRequestId = createResult.Data!.Id,
             };
 
-            var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, PayReceiptRequestCommandResult>(paycommand, cancellationToken);
+            var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(paycommand, cancellationToken);
 
-            if (paycommandResult.PayUrl != null)
+            if (paycommandResult.Status==ResultStatus.Ok 
+                && paycommandResult.Data?.PayUrl != null)
             {
-                return Results.Redirect(paycommandResult.PayUrl);
+                return Results.Redirect(paycommandResult.Data.PayUrl);
             }
 
-            return Results.Ok(paycommandResult);
+            return Results.BadRequest(paycommandResult);
         });
 
         var payGroup = app.MapGroup("PaymentMaster");
@@ -42,7 +50,7 @@ public static class PaymentEndpoints
                 [AsParameters] CreateReceiptRequestCommand model,
                   CancellationToken cancellationToken) =>
         {
-            var commandResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, CreateReceiptRequestCommandResult>(model, cancellationToken);
+            var commandResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
 
             return Results.Ok(commandResult);
         });
@@ -55,7 +63,7 @@ public static class PaymentEndpoints
         {
             var callbackUrl = $"{context.Request.Scheme}://{context.Request.Host}/Payment/callback/providerSmapleId";
 
-            var commandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, PayReceiptRequestCommandResult>(model, cancellationToken);
+            var commandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(model, cancellationToken);
 
             return Results.Ok(commandResult);
         });
@@ -69,7 +77,7 @@ public static class PaymentEndpoints
         {
             string callBackData = ExtractCallBack(context);
 
-            CallBackGatewayPaymentCommandResult commandResult = await SendCallbackCommand(GatewayProviderId, GatewayPaymentId, commandBus, callBackData, cancellationToken);
+            var commandResult = await SendCallbackCommand(GatewayProviderId, GatewayPaymentId, commandBus, callBackData, cancellationToken);
 
             return Results.Ok(commandResult);
         });
@@ -83,14 +91,14 @@ public static class PaymentEndpoints
         {
             string callBackData = ExtractCallBack(context);
 
-            CallBackGatewayPaymentCommandResult commandResult = await SendCallbackCommand(GatewayProviderId, GatewayPaymentId, commandBus, callBackData, cancellationToken);
+            var commandResult = await SendCallbackCommand(GatewayProviderId, GatewayPaymentId, commandBus, callBackData, cancellationToken);
 
             return Results.Ok(commandResult);
         });
 
     }
 
-    private static async Task<CallBackGatewayPaymentCommandResult> SendCallbackCommand(string GatewayProviderId, string? GatewayPaymentId, ICommandBus commandBus, string callBackData, CancellationToken cancellationToken)
+    private static async Task<Result<CallBackGatewayPaymentCommandResult>> SendCallbackCommand(string GatewayProviderId, string? GatewayPaymentId, ICommandBus commandBus, string callBackData, CancellationToken cancellationToken)
     {
         var command = new CallBackGatewayPaymentCommand
         {
@@ -99,7 +107,8 @@ public static class PaymentEndpoints
             CallBackData = callBackData,
         };
 
-        var commandResult = await commandBus.DispatchAsync<CallBackGatewayPaymentCommand, CallBackGatewayPaymentCommandResult>
+        var commandResult = await commandBus.DispatchAsync<CallBackGatewayPaymentCommand,
+            Result<CallBackGatewayPaymentCommandResult>>
         (command, cancellationToken);
         return commandResult;
     }
