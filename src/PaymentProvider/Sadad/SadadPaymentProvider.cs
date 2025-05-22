@@ -54,13 +54,15 @@ public class SadadPaymentProvider : PaymentGatewayProviderBase
                 SignData = SadadPaymentProviderHelpers.CreateSign(request, Configurations),
             };
 
-            result.LogData.Request = apiRequest;
+            result.LogData.Start(apiRequest, Configurations.PaymentRequestUri);
 
             var apiResponse = await client.PostAsJsonAsync(Configurations.PaymentRequestUri, apiRequest);
 
+            result.LogData.End();
+
             var rawResponse = await apiResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = rawResponse;
+            result.LogData.SetResponse(rawResponse);
 
             if (apiResponse.IsSuccessStatusCode)
             {

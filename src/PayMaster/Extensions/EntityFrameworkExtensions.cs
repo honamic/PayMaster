@@ -1,11 +1,11 @@
-﻿using Honamic.PayMaster.Persistence.EntityConfigurations;
+﻿using Honamic.Chaparak.Entities.ShortMessages.Configurations;
+using Honamic.PayMaster.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Honamic.PayMaster.Extensions;
 
 public static class EntityFrameworkExtensions
 {
-
     [Obsolete("use the last version [Version1] and Create migration.", true)]
     public static ModelBuilder AddPayMasterModelsVersion0(this ModelBuilder modelBuilder)
     {
@@ -30,6 +30,9 @@ public static class EntityFrameworkExtensions
 
         modelBuilder.ApplyConfiguration(
             new ReceiptRequestGatewayPaymentEntityConfiguration(Constants.Schema));
+
+        modelBuilder.ApplyConfiguration(
+            new ReceiptRequestTryLogEntityTypeConfigurations(Constants.Schema));
 
         return modelBuilder;
     }

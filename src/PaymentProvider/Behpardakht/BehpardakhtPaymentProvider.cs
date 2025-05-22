@@ -1,10 +1,9 @@
 ﻿using Honamic.PayMaster.Enums;
-using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos; 
+using Honamic.PayMaster.PaymentProvider.Behpardakht.Dtos;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -54,13 +53,15 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
                 orderId = request.UniqueRequestId,
             };
 
-            result.LogData.Request = apiRequest;
+            result.LogData.Start(apiRequest, url.ToString());
 
             var apiResponse = await client.PostAsJsonAsync(url, apiRequest);
 
+            result.LogData.End();
+
             var rawResponse = await apiResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = rawResponse;
+            result.LogData.SetMessage(rawResponse);
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -155,14 +156,15 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
                 saleReferenceId = long.Parse(callbackData?.SaleReferenceId!),
             };
 
-            result.LogData.Request = apiVerfiyRequest;
-
             var client = CreateClient();
+
+            result.VerifyLogData.Start(apiVerfiyRequest, "bpVerifyRequestAsync()");
 
             var verifyResponse = await client.bpVerifyRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
                 apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
 
-            result.LogData.Response = verifyResponse.Body.@return;
+            result.VerifyLogData.SetResponse(verifyResponse.Body.@return);
+
             var VerifyResultCode = verifyResponse.Body.@return;
 
             if (VerifyResultCode != "0")
@@ -172,10 +174,13 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
                 return result;
             }
 
+            result.StartSettlement();
+            result.SettlementLogData!.Start(apiVerfiyRequest, "bpSettleRequestAsync()");
+
             var settlmentResponse = await client.bpSettleRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
                 apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
 
-            result.LogData.Response = new { verify = verifyResponse, settlment = settlmentResponse.Body.@return };
+            result.SettlementLogData.SetResponse(settlmentResponse.Body.@return);
 
             var settlmentResultCode = verifyResponse.Body.@return;
 

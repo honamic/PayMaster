@@ -61,5 +61,10 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
             .WithOne()
             .HasForeignKey("PaymentRequestId")
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(c => c.TryLogs)
+            .WithOne()
+            .HasForeignKey(c => c.ReceiptRequestId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
