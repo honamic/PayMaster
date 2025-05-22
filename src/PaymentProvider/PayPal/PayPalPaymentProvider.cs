@@ -76,13 +76,15 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
             HttpRequestMessage httpRequest = CreateHttpRequest(apiRequest);
 
-            result.LogData.Request = apiRequest;
+            result.LogData.Start(apiRequest, httpRequest.RequestUri?.ToString());
 
             HttpResponseMessage apiResponse = await client.SendAsync(httpRequest);
 
+            result.LogData.End();
+
             var rawResponse = await apiResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = rawResponse;
+            result.LogData.SetResponse(rawResponse);
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -176,13 +178,15 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
             //------------------- Get Order -----------
             HttpRequestMessage httpRequestGetOrder = CreateGetOrderHttpRequest(orderId);
 
-            result.LogData.Request = httpRequestGetOrder.RequestUri?.ToString();
+            result.VerifyLogData.Start(orderId, httpRequestGetOrder.RequestUri?.ToString());
 
             var getOrderResponse = await client.SendAsync(httpRequestGetOrder);
 
+            result.VerifyLogData.End();
+
             var getOrderResponseString = await getOrderResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = getOrderResponseString;
+            result.VerifyLogData.SetResponse(getOrderResponseString);
 
             if (getOrderResponse.IsSuccessStatusCode)
             {
@@ -208,13 +212,16 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
             HttpRequestMessage httpRequest = CreateCaptureHttpRequest(orderId);
 
-            result.LogData.Request = httpRequest.RequestUri?.ToString();
+            result.StartSettlement();
+            result.SettlementLogData!.Start(orderId, httpRequest.RequestUri?.ToString());
 
             var verifyResponse = await client.SendAsync(httpRequest);
 
+            result.SettlementLogData.End();
+
             var verifyResponseString = await verifyResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = new { Get = getOrderResponseString, Capture = verifyResponseString };
+            result.SettlementLogData.SetResponse(verifyResponseString);
 
             if (!verifyResponse.IsSuccessStatusCode)
             {

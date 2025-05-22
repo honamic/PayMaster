@@ -49,13 +49,15 @@ public class ZarinPalPaymentProvider(
                 }
             };
 
-            result.LogData.Request = apiRequest;
+            result.LogData.Start(apiRequest, url.ToString());
 
             var apiResponse = await client.PostAsJsonAsync(url, apiRequest);
 
+            result.LogData.End();
+
             var rawResponse = await apiResponse.Content.ReadAsStringAsync();
 
-            result.LogData.Response = rawResponse;
+            result.LogData.SetResponse(rawResponse);
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -150,15 +152,21 @@ public class ZarinPalPaymentProvider(
                 amount = request.PatmentInfo.Amount,
                 authority = callbackData!.Authority
             };
-            result.LogData.Request = verificationRequest;
 
             var json = JsonSerializer.Serialize(verificationRequest);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var client = httpClientFactory.CreateClient(Constants.HttpClientName);
             var url = new Uri(new Uri(_configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
+
+            result.VerifyLogData.Start(verificationRequest, url.ToString());
+
             var response = await client.PostAsync(url, content);
+
+            result.VerifyLogData.End();
+
             var responseString = await response.Content.ReadAsStringAsync();
-            result.LogData.Response = responseString;
+
+            result.VerifyLogData.SetResponse(responseString);
 
             var paymentVerificationResponse = JsonSerializer.Deserialize<ZarinPalResult<PaymentVerificationResponse>>
                 (responseString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

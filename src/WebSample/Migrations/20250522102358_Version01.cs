@@ -34,8 +34,8 @@ namespace WebSample.Migrations
                     ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Version = table.Column<long>(type: "bigint", nullable: false),
-                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -60,8 +60,8 @@ namespace WebSample.Migrations
                     ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Version = table.Column<long>(type: "bigint", nullable: false),
-                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,8 +91,8 @@ namespace WebSample.Migrations
                     ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Version = table.Column<long>(type: "bigint", nullable: false),
-                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CreatedSources = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedSources = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -152,6 +152,37 @@ namespace WebSample.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ReceiptRequestTryLog",
+                schema: "PayMaster",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReceiptRequestId = table.Column<long>(type: "bigint", nullable: false),
+                    CreateAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ReceiptRequestGatewayPaymentId = table.Column<long>(type: "bigint", nullable: true),
+                    TryType = table.Column<int>(type: "int", nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Success = table.Column<bool>(type: "bit", nullable: false),
+                    ExpiredAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReceiptRequestTryLog", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReceiptRequestTryLog_ReceiptRequest_ReceiptRequestId",
+                        column: x => x.ReceiptRequestId,
+                        principalSchema: "PayMaster",
+                        principalTable: "ReceiptRequest",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ReceiptRequest_IssuerId",
                 schema: "PayMaster",
@@ -169,6 +200,12 @@ namespace WebSample.Migrations
                 schema: "PayMaster",
                 table: "ReceiptRequestGatewayPayment",
                 column: "PaymentRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptRequestTryLog_ReceiptRequestId",
+                schema: "PayMaster",
+                table: "ReceiptRequestTryLog",
+                column: "ReceiptRequestId");
         }
 
         /// <inheritdoc />
@@ -176,6 +213,10 @@ namespace WebSample.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ReceiptRequestGatewayPayment",
+                schema: "PayMaster");
+
+            migrationBuilder.DropTable(
+                name: "ReceiptRequestTryLog",
                 schema: "PayMaster");
 
             migrationBuilder.DropTable(

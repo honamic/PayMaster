@@ -12,7 +12,7 @@ using WebSample.Entities;
 namespace WebSample.Migrations
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20250519083459_Version01")]
+    [Migration("20250522102358_Version01")]
     partial class Version01
     {
         /// <inheritdoc />
@@ -323,6 +323,57 @@ namespace WebSample.Migrations
                     b.ToTable("ReceiptRequestGatewayPayment", "PayMaster");
                 });
 
+            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestTryLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset>("CreateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ExpiredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long?>("ReceiptRequestGatewayPaymentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ReceiptRequestId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TryType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiptRequestId");
+
+                    b.ToTable("ReceiptRequestTryLog", "PayMaster");
+                });
+
             modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.HasOne("Honamic.PayMaster.Core.ReceiptIssuers.ReceiptIssuer", "Issuer")
@@ -350,9 +401,20 @@ namespace WebSample.Migrations
                     b.Navigation("GatewayProvider");
                 });
 
+            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestTryLog", b =>
+                {
+                    b.HasOne("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", null)
+                        .WithMany("TryLogs")
+                        .HasForeignKey("ReceiptRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.Navigation("GatewayPayments");
+
+                    b.Navigation("TryLogs");
                 });
 #pragma warning restore 612, 618
         }

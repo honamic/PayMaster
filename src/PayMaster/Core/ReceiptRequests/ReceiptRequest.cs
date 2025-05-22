@@ -12,6 +12,7 @@ public class ReceiptRequest : AggregateRoot<long>
     public ReceiptRequest()
     {
         GatewayPayments = [];
+        TryLogs = [];
     }
 
     public ReceiptRequestStatus Status { get; private set; }
@@ -37,6 +38,8 @@ public class ReceiptRequest : AggregateRoot<long>
     public long IssuerId { get; set; }
 
     public List<ReceiptRequestGatewayPayment> GatewayPayments { get; set; }
+
+    public List<ReceiptRequestTryLog> TryLogs { get; set; }
 
     public static ReceiptRequest Create(CreateReceiptRequestParameters createParameters,
         IIdGenerator idGenerator)
@@ -137,35 +140,71 @@ public class ReceiptRequest : AggregateRoot<long>
         IClock clock,
         ExtractCallBackDataResult extractCallBackDataResult)
     {
-        gatewayPayment.StartCallBack(clock.NowWithOffset);
 
-        if (!extractCallBackDataResult.Success)
+        var tryLog = new ReceiptRequestTryLog()
         {
-            gatewayPayment.FailedCallBack(extractCallBackDataResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, extractCallBackDataResult?.Error);
-            return null ;
-        }
-
-        VerifyRequest verifyRequest = new()
-        {
-            PatmentInfo = new VerifyRequestPatmentInfo
-            {
-                Amount = gatewayPayment!.Amount,
-                UniqueRequestId = gatewayPayment.Id,
-                CreateReference = gatewayPayment.CreateReference,
-            },
-            CallBackData = extractCallBackDataResult.CallBack
+            CreateAt = DateTimeOffset.Now,
+            TryType = Enums.ReceiptRequestTryLogType.VerifyPaymentProvider,
+            ReceiptRequestId = Id,
+            ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
         };
 
-        var verifyResult = await paymentGatewayProvider.VerifyAsync(verifyRequest);
+        VerifyResult verifyResult;
 
-        if (verifyResult.Success)
+        try
         {
-            gatewayPayment.SuccessCallBack(verifyResult.SupplementaryPaymentInformation);
+            gatewayPayment.StartCallBack(clock.NowWithOffset);
+
+            if (!extractCallBackDataResult.Success)
+            {
+                gatewayPayment.FailedCallBack(extractCallBackDataResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, extractCallBackDataResult?.Error);
+                return null;
+            }
+
+            VerifyRequest verifyRequest = new()
+            {
+                PatmentInfo = new VerifyRequestPatmentInfo
+                {
+                    Amount = gatewayPayment!.Amount,
+                    UniqueRequestId = gatewayPayment.Id,
+                    CreateReference = gatewayPayment.CreateReference,
+                },
+                CallBackData = extractCallBackDataResult.CallBack
+            };
+
+            verifyResult = await paymentGatewayProvider.VerifyAsync(verifyRequest);
+
+            if (verifyResult.Success)
+            {
+                gatewayPayment.SuccessCallBack(verifyResult.SupplementaryPaymentInformation);
+            }
+            else
+            {
+                gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.Error);
+            }
+
+            tryLog.Success = verifyResult.Success;
+            tryLog.Data = verifyResult.VerifyLogData;
+
+            if (verifyResult.SettlementLogData is not null)
+            {
+                TryLogs.Add(new ReceiptRequestTryLog
+                {
+                    CreateAt = DateTimeOffset.Now,
+                    TryType = Enums.ReceiptRequestTryLogType.SettlementPaymentProvider,
+                    ReceiptRequestId = Id,
+                    ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
+                    Data = verifyResult.SettlementLogData,
+                });
+            }
         }
-        else
+        catch (Exception ex)
         {
-            gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.Error);
+            tryLog.Data.SetException(ex);
+            throw;
         }
+
+        TryLogs.Add(tryLog);
 
         return verifyResult;
     }

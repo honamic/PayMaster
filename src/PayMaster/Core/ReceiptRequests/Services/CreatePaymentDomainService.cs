@@ -32,34 +32,58 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
 
     public async Task<CreateResult> CreatePaymentAsync(ReceiptRequest receiptRequest)
     {
-        var gatewayPayment = receiptRequest.GetPayableGatewayPayment();
+        CreateResult createResult;
 
-        if (gatewayPayment is null)
+        var tryLog = new ReceiptRequestTryLog()
         {
-            throw new InvalidOperationException("پرداخت درگاهی آماده پرداخت وجود ندارد.");
+            CreateAt = DateTimeOffset.Now,
+            TryType = Enums.ReceiptRequestTryLogType.CreatePaymentProvider,
+            ReceiptRequestId = receiptRequest.Id,
+        };
+
+        try
+        {
+            var gatewayPayment = receiptRequest.GetPayableGatewayPayment();
+
+            if (gatewayPayment is null)
+            {
+                throw new InvalidOperationException("پرداخت درگاهی آماده پرداخت وجود ندارد.");
+            }
+
+            tryLog.ReceiptRequestGatewayPaymentId = gatewayPayment.Id;
+
+            var gatewayProvider = await _repository
+                .GetAsync(c => c.Id == gatewayPayment.GatewayProviderId);
+
+            if (gatewayProvider == null)
+            {
+                throw new InvalidOperationException("درگاه پرداخت شناسایی نشد.");
+            }
+
+            var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
+
+            if (provider == null)
+            {
+                throw new InvalidOperationException("درگاه پرداخت ساخته نشد.");
+            }
+
+            var callbackUrl = _payMasterOptions.Value.CallBackUrl
+                .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
+                .Replace(Constants.GatewayProviderIdParameter, gatewayPayment.GatewayProviderId.ToString());
+
+            createResult = await receiptRequest
+                .CreatePaymentByGatewayProviderAsync(gatewayPayment, provider, _clock, callbackUrl);
+
+            tryLog.Success = createResult.Success;
+            tryLog.Data = createResult.LogData;
+        }
+        catch (Exception ex)
+        {
+            tryLog.Data.SetException(ex);
+            throw;
         }
 
-        var gatewayProvider = await _repository
-            .GetAsync(c => c.Id == gatewayPayment.GatewayProviderId);
-
-        if (gatewayProvider == null)
-        {
-            throw new InvalidOperationException("درگاه پرداخت شناسایی نشد.");
-        }
-
-        var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
-
-        if (provider == null)
-        {
-            throw new InvalidOperationException("درگاه پرداخت ساخته نشد.");
-        }
-
-        var callbackUrl = _payMasterOptions.Value.CallBackUrl
-            .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
-            .Replace(Constants.GatewayProviderIdParameter, gatewayPayment.GatewayProviderId.ToString());
-
-        var createResult = await receiptRequest
-            .CreatePaymentByGatewayProviderAsync(gatewayPayment, provider, _clock, callbackUrl);
+        receiptRequest.TryLogs.Add(tryLog);
 
         return createResult;
     }
