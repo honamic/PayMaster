@@ -31,7 +31,9 @@ public class ReceiptRequest : AggregateRoot<long>
     public string? NationalityCode { get; private set; }
     public string? Email { get; private set; }
     public bool? IsLegal { get; private set; }
-    public string? PartyIdentity { get; private set; }
+    public string? IssuerReference { get; private set; }
+    public string? PartyReference { get; private set; }
+
     public long? PartyId { get; private set; }
 
     public ReceiptIssuer Issuer { get; set; }
@@ -73,7 +75,8 @@ public class ReceiptRequest : AggregateRoot<long>
             Mobile = createParameters.Mobile,
 
             PartyId = createParameters.PartyId,
-            PartyIdentity = createParameters.PartyIdentity,
+            PartyReference = createParameters.PartyReference,
+            IssuerReference = createParameters.IssuerReference,
             NationalityCode = createParameters.NationalityCode,
             IssuerId = createParameters.Issuer.Id,
         };

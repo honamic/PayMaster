@@ -65,7 +65,7 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
 
         builder.Property(x => x.RedirectAt);
 
-        builder.Property(x => x.CallBackAt);
+        builder.Property(x => x.CallbackAt);
 
         builder.HasOne(x => x.GatewayProvider)
             .WithMany()

@@ -37,7 +37,9 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     /// <summary>
     /// زمان برگشت از درگاه
     /// </summary>
-    public DateTimeOffset? CallBackAt { get; private set; }
+    public DateTimeOffset? CallbackAt { get; private set; }
+
+    public string? CallbackData { get; private set; }
 
     /// <summary>
     /// بعضی از درگاه ها هنگام پرداخت موفق یه شناسه پرداخت موفق جدا می دهند
@@ -63,6 +65,8 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     public string? TerminalId { get; private set; }
 
     public string? MerchantId { get; private set; }
+    
+    public long ReceiptRequestId { get;  set; }
 
     internal static ReceiptRequestGatewayPayment Create(CreateGatewayPaymentParameters parameters)
     {
@@ -131,7 +135,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
             throw new InvalidOperationException("Status Invalid");
         }
 
-        CallBackAt = nowWithOffset;
+        CallbackAt = nowWithOffset;
 
         Status = PaymentGatewayStatus.Settlement;
     }
