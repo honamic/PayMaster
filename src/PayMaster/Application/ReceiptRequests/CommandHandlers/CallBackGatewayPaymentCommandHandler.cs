@@ -1,4 +1,5 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
@@ -8,7 +9,7 @@ using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGatewayPaymentCommand, CallBackGatewayPaymentCommandResult>
+internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGatewayPaymentCommand, Result<CallBackGatewayPaymentCommandResult>>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly ICreatePaymentDomainService _createPaymentDomainService;
@@ -30,7 +31,7 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
         _clock = clock;
     }
 
-    public async Task<CallBackGatewayPaymentCommandResult> HandleAsync(CallBackGatewayPaymentCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CallBackGatewayPaymentCommandResult>> HandleAsync(CallBackGatewayPaymentCommand command, CancellationToken cancellationToken)
     {
         ReceiptRequest? receiptRequest = null;
         ReceiptRequestGatewayPayment? gatewayPayment = null;

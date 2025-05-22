@@ -1,7 +1,8 @@
-﻿using Honamic.Framework.Commands;
+﻿using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Commands;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
-public class CreateReceiptRequestCommand : ICommand<CreateReceiptRequestCommandResult>
+public class CreateReceiptRequestCommand : ICommand<Result<CreateReceiptRequestCommandResult>>
 {
     public decimal Amount { get; set; }
     public string Currency { get; set; } = default!;

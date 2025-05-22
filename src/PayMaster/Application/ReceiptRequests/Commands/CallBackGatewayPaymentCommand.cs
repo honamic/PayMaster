@@ -1,7 +1,11 @@
 ﻿using Honamic.Framework.Commands;
+using Honamic.Framework.Applications.Authorizes;
+using Honamic.Framework.Applications.Results;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
-public class CallBackGatewayPaymentCommand : ICommand<CallBackGatewayPaymentCommandResult>
+
+[DynamicAuthorize]
+public class CallBackGatewayPaymentCommand : ICommand<Result<CallBackGatewayPaymentCommandResult>>
 {
     public required string GatewayProviderId { get; set; }
     public required string CallBackData { get; set; }

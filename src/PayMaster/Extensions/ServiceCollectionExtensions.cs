@@ -11,6 +11,7 @@ using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.Core.ReceiptRequests.Services;
+using Honamic.Framework.Applications.Results;
 
 namespace Honamic.PayMaster.Extensions;
 
@@ -39,15 +40,15 @@ public static class ServiceCollectionExtensions
 
         services.AddCommandHandler<CreateReceiptRequestCommand,
             CreateReceiptRequestCommandHandler,
-            CreateReceiptRequestCommandResult>();
+            Result<CreateReceiptRequestCommandResult>>();
 
         services.AddCommandHandler<PayReceiptRequestCommand,
             PayReceiptRequestCommandHandler,
-            PayReceiptRequestCommandResult>();
+            Result<PayReceiptRequestCommandResult>>();
 
         services.AddCommandHandler<CallBackGatewayPaymentCommand,
             CallBackGatewayPaymentCommandHandler,
-            CallBackGatewayPaymentCommandResult>();
+            Result<CallBackGatewayPaymentCommandResult>>();
     }
 
     private static void AddBackgroundJobs(this IServiceCollection services)
@@ -67,12 +68,10 @@ public static class ServiceCollectionExtensions
             DebuggerConsoleLog(options);
         });
 
-        //for default DbContext in framework
-        services.AddScoped<DbContext>((sp) => sp.GetRequiredService<PaymasterDbContext>());
         services.AddTransient<IPaymentGatewayProviderRepository, PaymentGatewayProviderRepository>();
         services.AddTransient<IReceiptIssuerRepository, ReceiptIssuerRepository>();
         services.AddTransient<IReceiptRequestRepository, ReceiptRequestRepository>();
-        services.AddUnitOfWorkByEntityFramework();
+        services.AddUnitOfWorkByEntityFramework<PaymasterDbContext>();
     }
 
     private static void DebuggerConnectionStringLog(string? SqlServerConnection)
