@@ -108,15 +108,19 @@ public class ZarinPalPaymentProvider(
 
             if (callbackData is { Status: "OK" })
             {
-                //زرین پال توی callback فقط یک status میده و یک authority که شناسه ای هست که باهاش رفتیم درگاه
-                //result.UniqueRequestId = ;
+                result.UniqueRequestId = null;
                 result.CreateReference = callbackData.Authority;
                 result.CallBack = callbackData;
                 result.Success = true;
             }
+            else if (callbackData is { Status: "NOK" })
+            {
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
+            }
             else
             {
-                result.Error = "Status is not OK!";
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Other;
+                result.Error = $"Status is not valid! [{callbackData?.Status}]";
             }
         }
         catch (Exception ex)

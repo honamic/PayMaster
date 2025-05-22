@@ -1,4 +1,6 @@
-﻿namespace Honamic.PayMaster.PaymentProviders.Models;
+﻿using Honamic.PayMaster.Enums;
+
+namespace Honamic.PayMaster.PaymentProviders.Models;
 
 public class ExtractCallBackDataResult
 {
@@ -11,4 +13,6 @@ public class ExtractCallBackDataResult
     public string? CreateReference { get; set; }
 
     public object? CallBack { get; set; }
+
+    public PaymentGatewayFailedReason? PaymentFailedReason { get; set; }
 }

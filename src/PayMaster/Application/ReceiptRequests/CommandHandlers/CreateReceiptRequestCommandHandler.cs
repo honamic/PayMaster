@@ -1,10 +1,12 @@
 ﻿using Honamic.Framework.Commands;
 using Honamic.Framework.Domain;
+using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Core.PaymentGatewayProviders;
 using Honamic.PayMaster.Core.ReceiptIssuers;
 using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
@@ -14,28 +16,26 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
     private readonly IReceiptIssuerRepository _receiptIssuerRepository;
     private readonly IPaymentGatewayProviderRepository _paymentGatewayProviderRepository;
     private readonly IIdGenerator _idGenerator;
+    private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
     public CreateReceiptRequestCommandHandler(IIdGenerator idGenerator,
         IReceiptRequestRepository receiptRequestRepository,
         IReceiptIssuerRepository receiptIssuerRepository,
-        IPaymentGatewayProviderRepository paymentGatewayProviderRepository)
+        IPaymentGatewayProviderRepository paymentGatewayProviderRepository,
+        IOptions<PayMasterOptions> payMasterOptions)
     {
         _idGenerator = idGenerator;
         _receiptRequestRepository = receiptRequestRepository;
         _receiptIssuerRepository = receiptIssuerRepository;
         _paymentGatewayProviderRepository = paymentGatewayProviderRepository;
+        _payMasterOptions = payMasterOptions;
     }
 
     public async Task<CreateReceiptRequestCommandResult> HandleAsync(CreateReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        string? defaultIssuerCode = "Default";
-        string? defaultGatewayProviderCode = "Default";
+        ReceiptIssuer receiptIssuer = await GetReceiptIssuer(command);
 
-        string[] supportedCurrenciesOption = ["IRR", "USD"];
-
-        ReceiptIssuer receiptIssuer = await GetReceiptIssuer(command, defaultIssuerCode);
-
-        PaymentGatewayProvider paymentGatewayProvider = await GetPaymentGatewayProvider(command, defaultGatewayProviderCode);
+        PaymentGatewayProvider paymentGatewayProvider = await GetPaymentGatewayProvider(command);
 
         var createParams = new CreateReceiptRequestParameters
         {
@@ -65,7 +65,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
                 MaximumAmount = paymentGatewayProvider.MaximumAmount,
             },
 
-            SupportedCurrencies = supportedCurrenciesOption
+            SupportedCurrencies = _payMasterOptions.Value.SupportedCurrencies,
         };
 
         var newReceiptRequest = ReceiptRequest.Create(createParams, _idGenerator);
@@ -78,12 +78,12 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
         };
     }
 
-    private async Task<ReceiptIssuer> GetReceiptIssuer(CreateReceiptRequestCommand command, string defaultIsssuerCode)
+    private async Task<ReceiptIssuer> GetReceiptIssuer(CreateReceiptRequestCommand command)
     {
         ReceiptIssuer? receiptIssuer = null;
 
         if (string.IsNullOrEmpty(command.IssuerCode)
-                && string.IsNullOrEmpty(defaultIsssuerCode))
+                && string.IsNullOrEmpty(_payMasterOptions.Value.DefaultIssuerCode))
         {
             throw new ArgumentException("صادر کننده فیش مشخص نشده است و پیش فرض هم مشخص نشده است.");
         }
@@ -93,10 +93,10 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
             receiptIssuer = await _receiptIssuerRepository
                .GetAsync(c => c.Code == command.IssuerCode);
         }
-        else if (!string.IsNullOrEmpty(defaultIsssuerCode))
+        else if (!string.IsNullOrEmpty(_payMasterOptions.Value.DefaultIssuerCode))
         {
             receiptIssuer = await _receiptIssuerRepository
-                           .GetAsync(c => c.Code == defaultIsssuerCode);
+                           .GetAsync(c => c.Code == _payMasterOptions.Value.DefaultIssuerCode);
         }
 
         if (receiptIssuer is null)
@@ -108,12 +108,12 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
         return receiptIssuer;
     }
 
-    private async Task<PaymentGatewayProvider> GetPaymentGatewayProvider(CreateReceiptRequestCommand command, string defaultGatewayProviderCode)
+    private async Task<PaymentGatewayProvider> GetPaymentGatewayProvider(CreateReceiptRequestCommand command)
     {
         PaymentGatewayProvider? paymentGatewayProvider = null;
         if (!command.GatewayProviderId.HasValue
                    && string.IsNullOrEmpty(command.GatewayProviderCode)
-                    && string.IsNullOrEmpty(defaultGatewayProviderCode))
+                    && string.IsNullOrEmpty(_payMasterOptions.Value.DefaultGatewayProviderCode))
         {
             throw new ArgumentException("درگاه پرداخت مشخص نشده است و پیش فرض هم مشخص نشده است.");
         }
@@ -133,7 +133,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
                && string.IsNullOrEmpty(command.GatewayProviderCode))
         {
             paymentGatewayProvider = await _paymentGatewayProviderRepository
-                .GetAsync(c => c.Code == defaultGatewayProviderCode);
+                .GetAsync(c => c.Code == _payMasterOptions.Value.DefaultGatewayProviderCode);
         }
 
         if (paymentGatewayProvider is null)

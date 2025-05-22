@@ -20,9 +20,6 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 
     public async Task<PayReceiptRequestCommandResult> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        // todo move to config
-        var callbackUrl = "https://localhost:7121/PayMaster/Callback/";
-
         var receiptRequest = await _receiptRequestRepository
                         .GetAsync(c => c.Id == command.GetReceiptRequestIdAsLong());
 
@@ -31,7 +28,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
             throw new ArgumentException("فیش وجود ندارد.");
         }
 
-        var createResult =await _createPaymentDomainService.CreatePaymentAsync(receiptRequest, callbackUrl);
+        var createResult =await _createPaymentDomainService.CreatePaymentAsync(receiptRequest);
 
         if (createResult.Success)
         {
