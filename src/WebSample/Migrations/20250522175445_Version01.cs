@@ -83,7 +83,8 @@ namespace WebSample.Migrations
                     NationalityCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     IsLegal = table.Column<bool>(type: "bit", nullable: true),
-                    PartyIdentity = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    IssuerReference = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    PartyReference = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     PartyId = table.Column<long>(type: "bigint", nullable: true),
                     IssuerId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -120,14 +121,15 @@ namespace WebSample.Migrations
                     GatewayProviderId = table.Column<long>(type: "bigint", nullable: false),
                     CreateReference = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     RedirectAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    CallBackAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CallbackAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CallbackData = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SuccessReference = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     ReferenceRetrievalNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     TrackingNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     Pan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     TerminalId = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     MerchantId = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
-                    PaymentRequestId = table.Column<long>(type: "bigint", nullable: true),
+                    ReceiptRequestId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ModifiedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -144,8 +146,8 @@ namespace WebSample.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ReceiptRequestGatewayPayment_ReceiptRequest_PaymentRequestId",
-                        column: x => x.PaymentRequestId,
+                        name: "FK_ReceiptRequestGatewayPayment_ReceiptRequest_ReceiptRequestId",
+                        column: x => x.ReceiptRequestId,
                         principalSchema: "PayMaster",
                         principalTable: "ReceiptRequest",
                         principalColumn: "Id",
@@ -196,10 +198,10 @@ namespace WebSample.Migrations
                 column: "GatewayProviderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptRequestGatewayPayment_PaymentRequestId",
+                name: "IX_ReceiptRequestGatewayPayment_ReceiptRequestId",
                 schema: "PayMaster",
                 table: "ReceiptRequestGatewayPayment",
-                column: "PaymentRequestId");
+                column: "ReceiptRequestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReceiptRequestTryLog_ReceiptRequestId",

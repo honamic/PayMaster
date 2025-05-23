@@ -195,6 +195,10 @@ namespace WebSample.Migrations
                     b.Property<long>("IssuerId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("IssuerReference")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<string>("Mobile")
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
@@ -216,7 +220,7 @@ namespace WebSample.Migrations
                     b.Property<long?>("PartyId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PartyIdentity")
+                    b.Property<string>("PartyReference")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -242,8 +246,11 @@ namespace WebSample.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTimeOffset?>("CallBackAt")
+                    b.Property<DateTimeOffset?>("CallbackAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CallbackData")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreateReference")
                         .HasMaxLength(128)
@@ -282,7 +289,7 @@ namespace WebSample.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<long?>("PaymentRequestId")
+                    b.Property<long>("ReceiptRequestId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTimeOffset?>("RedirectAt")
@@ -315,7 +322,7 @@ namespace WebSample.Migrations
 
                     b.HasIndex("GatewayProviderId");
 
-                    b.HasIndex("PaymentRequestId");
+                    b.HasIndex("ReceiptRequestId");
 
                     b.ToTable("ReceiptRequestGatewayPayment", "PayMaster");
                 });
@@ -392,8 +399,9 @@ namespace WebSample.Migrations
 
                     b.HasOne("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", null)
                         .WithMany("GatewayPayments")
-                        .HasForeignKey("PaymentRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ReceiptRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GatewayProvider");
                 });

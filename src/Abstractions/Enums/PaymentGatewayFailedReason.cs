@@ -11,7 +11,7 @@ public enum PaymentGatewayFailedReason
     CreateFailed = 1,
 
     [Display(Name = "خطا در برگشت از بانک")]
-    CallBackFailed = 2,
+    CallbackFailed = 2,
 
     [Display(Name = "انصراف کاربر")]
     Canceled = 3,

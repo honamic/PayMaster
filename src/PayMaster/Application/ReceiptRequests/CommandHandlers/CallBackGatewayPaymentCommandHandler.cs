@@ -7,6 +7,8 @@ using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Core.ReceiptRequests.Services;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
+using IdGen;
+using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGatewayPaymentCommand, Result<CallBackGatewayPaymentCommandResult>>
@@ -106,7 +108,7 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
                 receiptRequest = await _receiptRequestRepository
                     .GetByGatewayPaymentCreateReferenceAsync
                     (ExtractCallBackDataResult.CreateReference, gatewayProviderId);
-                
+
                 gatewayPaymentId = receiptRequest?.GatewayPayments
                     .First(c => c.CreateReference == ExtractCallBackDataResult.CreateReference)
                     .Id;
@@ -134,7 +136,31 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
 
         return new CallBackGatewayPaymentCommandResult
         {
-
+            ReceiptRequestId = receiptRequest.Id.ToString(CultureInfo.InvariantCulture),
+            Status = receiptRequest.Status,
+            IssuerReference = receiptRequest.IssuerReference,
+            PartyReference = receiptRequest.PartyReference,
+            Amount = receiptRequest.Amount,
+            Currency = receiptRequest.Currency,
+            AdditionalData = receiptRequest.AdditionalData,
+            GatewayPayments = new List<CallBackGatewayPaymentGatewayPaymentsCommandResult>
+            {
+                new CallBackGatewayPaymentGatewayPaymentsCommandResult
+                {
+                   Id= gatewayPayment.Id.ToString(CultureInfo.InvariantCulture),
+                   Amount= gatewayPayment.Amount,
+                   Currency= gatewayPayment.Currency,
+                   Status= gatewayPayment.Status,
+                   StatusDescription= gatewayPayment.StatusDescription,
+                   FailedReason= gatewayPayment.FailedReason,
+                }
+            },
+            Issuer = new
+            {
+                //todo added issuer fields:
+                // CallbackUrl
+                // ShowPaymentResultPage
+            }
         };
     }
 }

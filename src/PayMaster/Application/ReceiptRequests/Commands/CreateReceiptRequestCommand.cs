@@ -14,11 +14,12 @@ public class CreateReceiptRequestCommand : ICommand<Result<CreateReceiptRequestC
     public string? Description { get; set; }
 
     public string? IssuerCode { get; set; }
+    public string? IssuerReference { get; set; }
 
     public string? Email { get; set; }
     public string? Mobile { get; set; }
     public string? NationalityCode { get; set; }
-    public string? PartyIdentity { get; set; }
+    public string? PartyReference { get; set; }
     public long? PartyId { get; set; }
     public bool? IsLegal { get; set; }
 

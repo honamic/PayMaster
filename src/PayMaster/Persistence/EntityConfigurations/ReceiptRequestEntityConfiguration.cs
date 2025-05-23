@@ -27,7 +27,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
         builder.Property(p => p.Amount)
             .IsRequired()
             .HasPrecision(18, 2);
-        
+
 
         builder.Property(p => p.Currency)
             .IsRequired()
@@ -48,8 +48,11 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
         builder.Property(p => p.Email)
             .HasMaxLength(256);
 
-        builder.Property(p => p.PartyIdentity)
+        builder.Property(p => p.PartyReference)
             .HasMaxLength(128);
+
+        builder.Property(p => p.IssuerReference)
+            .HasMaxLength(64);
 
         // Relationships
         builder.HasOne(p => p.Issuer)
@@ -59,7 +62,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
 
         builder.HasMany(p => p.GatewayPayments)
             .WithOne()
-            .HasForeignKey("PaymentRequestId")
+            .HasForeignKey(c => c.ReceiptRequestId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(c => c.TryLogs)
