@@ -1,8 +1,8 @@
 ﻿using Honamic.Framework.Applications.Results;
 using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
-using Honamic.PayMaster.Core.ReceiptRequests;
-using Honamic.PayMaster.Core.ReceiptRequests.Services;
+using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domains.ReceiptRequests.Services;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;

@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+﻿namespace Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 public class CreateReceiptRequestParameters
 {
     public required decimal Amount { get; set; }

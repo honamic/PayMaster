@@ -1,10 +1,10 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
 
-namespace Honamic.PayMaster.Core.ReceiptRequests;
+namespace Honamic.PayMaster.Domains.ReceiptRequests;
 
 public class ReceiptRequestGatewayPayment : Entity<long>
 {

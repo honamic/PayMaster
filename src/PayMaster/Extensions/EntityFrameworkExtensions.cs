@@ -1,5 +1,4 @@
-﻿using Honamic.Chaparak.Entities.ShortMessages.Configurations;
-using Honamic.PayMaster.Persistence.EntityConfigurations;
+﻿using Honamic.PayMaster.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Honamic.PayMaster.Extensions;

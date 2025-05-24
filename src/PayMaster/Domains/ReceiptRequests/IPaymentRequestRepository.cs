@@ -1,6 +1,6 @@
 ﻿using Honamic.Framework.Persistence.EntityFramework;
 
-namespace Honamic.PayMaster.Core.ReceiptRequests;
+namespace Honamic.PayMaster.Domains.ReceiptRequests;
 
 public interface IReceiptRequestRepository
     : IRepositoryBase<ReceiptRequest, long>

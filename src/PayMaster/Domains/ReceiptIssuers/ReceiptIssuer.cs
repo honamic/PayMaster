@@ -1,7 +1,7 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
+using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
 
-namespace Honamic.PayMaster.Core.ReceiptIssuers;
+namespace Honamic.PayMaster.Domains.ReceiptIssuers;
 
 public class ReceiptIssuer: AggregateRoot<long>
 {

@@ -4,14 +4,14 @@ using Honamic.Framework.Persistence.EntityFramework.Extensions;
 using Honamic.Framework.Tools.IdGenerators;
 using Honamic.Framework.Applications.Extensions;
 using Honamic.PayMaster.Persistence;
-using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.ReceiptIssuers;
-using Honamic.PayMaster.Core.ReceiptRequests;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.PaymentProviders;
-using Honamic.PayMaster.Core.ReceiptRequests.Services;
 using Honamic.Framework.Applications.Results;
+using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptRequests.Services;
+using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domains.ReceiptIssuers;
 
 namespace Honamic.PayMaster.Extensions;
 

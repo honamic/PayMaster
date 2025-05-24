@@ -1,5 +1,4 @@
-﻿
-namespace Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
+﻿namespace Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
 public class ReceiptIssuerParameters
 {
     public required int Id { get; set; }

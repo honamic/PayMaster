@@ -1,8 +1,8 @@
 ﻿using Honamic.Framework.Applications.Authorizes;
 using Honamic.PayMaster.Application.Options;
-using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.ReceiptIssuers;
-using Honamic.PayMaster.Core.ReceiptIssuers.Parameters;
+using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptIssuers;
+using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;

@@ -2,9 +2,9 @@
 using Honamic.Framework.Commands;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
-using Honamic.PayMaster.Core.PaymentGatewayProviders;
-using Honamic.PayMaster.Core.ReceiptRequests;
-using Honamic.PayMaster.Core.ReceiptRequests.Services;
+using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domains.ReceiptRequests.Services;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using IdGen;

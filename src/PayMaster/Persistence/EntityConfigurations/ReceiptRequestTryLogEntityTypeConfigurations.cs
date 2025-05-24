@@ -1,10 +1,10 @@
-﻿using Honamic.PayMaster.Core.ReceiptRequests;
+﻿using Honamic.PayMaster.Domains.ReceiptRequests;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Text.Json;
 
-namespace Honamic.Chaparak.Entities.ShortMessages.Configurations;
+namespace Honamic.PayMaster.Persistence.EntityConfigurations;
 internal class ReceiptRequestTryLogEntityTypeConfigurations : IEntityTypeConfiguration<ReceiptRequestTryLog>
 {
     private string? _schema;

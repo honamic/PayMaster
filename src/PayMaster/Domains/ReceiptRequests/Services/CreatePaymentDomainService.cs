@@ -1,12 +1,13 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.Options;
-using Honamic.PayMaster.Core.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Honamic.PayMaster.Core.ReceiptRequests.Services;
+namespace Honamic.PayMaster.Domains.ReceiptRequests.Services;
 
 public class CreatePaymentDomainService : ICreatePaymentDomainService
 {
@@ -37,7 +38,7 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
         var tryLog = new ReceiptRequestTryLog()
         {
             CreateAt = DateTimeOffset.Now,
-            TryType = Enums.ReceiptRequestTryLogType.CreatePaymentProvider,
+            TryType = ReceiptRequestTryLogType.CreatePaymentProvider,
             ReceiptRequestId = receiptRequest.Id,
         };
 

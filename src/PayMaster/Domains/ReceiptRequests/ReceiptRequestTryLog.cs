@@ -1,8 +1,8 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Core.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
 
-namespace Honamic.PayMaster.Core.ReceiptRequests;
+namespace Honamic.PayMaster.Domains.ReceiptRequests;
 
 public class ReceiptRequestTryLog : Entity<long>
 {

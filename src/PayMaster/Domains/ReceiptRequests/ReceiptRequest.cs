@@ -1,11 +1,12 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Core.ReceiptIssuers;
-using Honamic.PayMaster.Core.ReceiptRequests.Parameters;
+using Honamic.PayMaster.Domains.ReceiptIssuers;
+using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 
-namespace Honamic.PayMaster.Core.ReceiptRequests;
+namespace Honamic.PayMaster.Domains.ReceiptRequests;
 
 public class ReceiptRequest : AggregateRoot<long>
 {
@@ -147,7 +148,7 @@ public class ReceiptRequest : AggregateRoot<long>
         var tryLog = new ReceiptRequestTryLog()
         {
             CreateAt = DateTimeOffset.Now,
-            TryType = Enums.ReceiptRequestTryLogType.VerifyPaymentProvider,
+            TryType = ReceiptRequestTryLogType.VerifyPaymentProvider,
             ReceiptRequestId = Id,
             ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
         };
@@ -194,7 +195,7 @@ public class ReceiptRequest : AggregateRoot<long>
                 TryLogs.Add(new ReceiptRequestTryLog
                 {
                     CreateAt = DateTimeOffset.Now,
-                    TryType = Enums.ReceiptRequestTryLogType.SettlementPaymentProvider,
+                    TryType = ReceiptRequestTryLogType.SettlementPaymentProvider,
                     ReceiptRequestId = Id,
                     ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
                     Data = verifyResult.SettlementLogData,

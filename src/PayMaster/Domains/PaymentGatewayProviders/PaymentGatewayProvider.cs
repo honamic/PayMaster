@@ -1,6 +1,6 @@
 ﻿using Honamic.Framework.Domain;
 
-namespace Honamic.PayMaster.Core.PaymentGatewayProviders;
+namespace Honamic.PayMaster.Domains.PaymentGatewayProviders;
 public class PaymentGatewayProvider : AggregateRoot<long>
 {
     public PaymentGatewayProvider()
