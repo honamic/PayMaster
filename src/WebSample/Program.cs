@@ -7,6 +7,7 @@ using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
+using Honamic.PayMaster.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebSample;
@@ -33,7 +34,8 @@ internal class Program
 
         builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
 
-        builder.Services.AddPayMasterServices(sqlServerConnection);
+        builder.Services.AddPayMasterServices();
+        builder.Services.AddPersistenceEntityFrameworkServices(sqlServerConnection);
 
         builder.Services.Configure<PayMasterOptions>(c =>
         {

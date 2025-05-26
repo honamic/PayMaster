@@ -2,7 +2,7 @@ using Honamic.PayMaster.Domains.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Honamic.PayMaster.Persistence.EntityConfigurations;
+namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 public class ReceiptRequestGatewayPaymentEntityConfiguration
     : IEntityTypeConfiguration<ReceiptRequestGatewayPayment>
 {

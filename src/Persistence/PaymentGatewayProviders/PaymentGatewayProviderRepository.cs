@@ -2,7 +2,7 @@
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using System.Linq.Expressions;
 
-namespace Honamic.PayMaster.Persistence;
+namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders;
 
 internal class PaymentGatewayProviderRepository 
     : RepositoryBase<PaymentGatewayProvider, long>

@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.Extensions;
+﻿using Honamic.PayMaster.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebSample.Entities;

@@ -2,7 +2,7 @@ using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Honamic.PayMaster.Persistence.EntityConfigurations;
+namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
 public class PaymentGatewayProviderEntityConfiguration : IEntityTypeConfiguration<PaymentGatewayProvider>
 {
     private string schema;
