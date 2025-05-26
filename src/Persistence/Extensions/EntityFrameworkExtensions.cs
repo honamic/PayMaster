@@ -1,7 +1,9 @@
-﻿using Honamic.PayMaster.Persistence.EntityConfigurations;
+﻿using Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
+using Honamic.PayMaster.Persistence.ReceiptIssuers.EntityConfigurations;
+using Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Honamic.PayMaster.Extensions;
+namespace Honamic.PayMaster.Persistence.Extensions;
 
 public static class EntityFrameworkExtensions
 {

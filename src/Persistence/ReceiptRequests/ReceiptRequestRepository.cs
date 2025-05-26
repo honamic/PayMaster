@@ -2,7 +2,7 @@
 using Honamic.PayMaster.Domains.ReceiptRequests;
 using System.Linq.Expressions;
 
-namespace Honamic.PayMaster.Persistence;
+namespace Honamic.PayMaster.Persistence.ReceiptRequests;
 
 internal class ReceiptRequestRepository
     : RepositoryBase<ReceiptRequest, long>
