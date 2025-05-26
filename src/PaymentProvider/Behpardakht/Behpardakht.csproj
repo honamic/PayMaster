@@ -4,7 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Honamic.PayMaster.PaymentProvider.Behpardakht</AssemblyName>
+	<IsPackable>false</IsPackable>
+	<AssemblyName>Honamic.PayMaster.PaymentProvider.Behpardakht</AssemblyName>
     <RootNamespace>Honamic.PayMaster.PaymentProvider.Behpardakht</RootNamespace>
   </PropertyGroup>
 
