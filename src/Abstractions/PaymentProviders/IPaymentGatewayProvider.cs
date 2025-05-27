@@ -9,7 +9,8 @@ public interface IPaymentGatewayProvider
     public Task<CreateResult> CreateAsync(CreateRequest request);
     
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
-
+    
     public Task<VerifyResult> VerifyAsync(VerifyRequest request);
 
+    TimeSpan GetCallbackValidityDuration();
 }

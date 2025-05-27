@@ -20,12 +20,9 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
         CancellationToken cancellationToken)
     {
         var gatewayPaymentId = command.GetGatewayPaymentIdAsLong();
-        var gatewayProviderId = command.GetGatewayProviderIdAsLong();
 
         var result = await _callBackGatewayPaymentDomainService.ProcessCallBackAsync(
-            gatewayPaymentId,
-            gatewayProviderId,
-            command.CallBackData);
+            gatewayPaymentId, command.CallBackData);
 
         return new CallBackGatewayPaymentCommandResult
         {

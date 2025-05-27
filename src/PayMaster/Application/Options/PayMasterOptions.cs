@@ -7,7 +7,7 @@ public class PayMasterOptions
         DefaultIssuerCode = "Default";
         DefaultGatewayProviderCode = "Default";
         SupportedCurrencies = ["IRR", "USD"];
-        CallBackUrl = "https://yoursite.com/PaymentMaster/callback/{GatewayProviderId}/{GatewayPaymentId}/";
+        CallBackUrl = "https://yoursite.com/PaymentMaster/callback/{GatewayPaymentId}/";
     }
 
     public string? DefaultIssuerCode { get; set; } = default!;

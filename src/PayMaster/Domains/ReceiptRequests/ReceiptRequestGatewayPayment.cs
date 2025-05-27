@@ -129,15 +129,20 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         return statusDescription;
     }
 
-    internal void StartCallBack(DateTimeOffset nowWithOffset)
+    internal bool CanProcessCallback()
     {
-        if (Status != PaymentGatewayStatus.Waiting)
+        return Status == PaymentGatewayStatus.Waiting;
+    }
+
+    internal void StartCallBack(DateTimeOffset nowWithOffset, string callBackData)
+    {
+        if (!CanProcessCallback())
         {
             throw new InvalidPaymentStatusException();
         }
 
         CallbackAt = nowWithOffset;
-
+        CallbackData= callBackData;
         Status = PaymentGatewayStatus.Settlement;
     }
 
