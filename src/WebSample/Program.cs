@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
+using Honamic.PayMaster.Web.Extensions;
 
 internal class Program
 {
@@ -39,8 +40,7 @@ internal class Program
 
         builder.Services.Configure<PayMasterOptions>(c =>
         {
-            c.CallBackUrl = "https://localhost:7121/PaymentMaster/callback/{GatewayProviderId}/{GatewayPaymentId}/";
-
+            c.CallBackUrl = "https://localhost:7121/Payments/callback/{GatewayProviderId}/{GatewayPaymentId}/";
         });
 
         var app = builder.Build();
@@ -52,6 +52,7 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UsePayMasterEndpoints();
 
         PaymentEndpoints.MapPaymentEndpoints(app);
 
@@ -99,7 +100,7 @@ internal class Program
                     MaximumAmount = null,
                     Order = 1,
                     ProviderType = typeof(ZarinPalPaymentProvider).FullName,
-                    LogoPath=null,
+                    LogoPath = null,
                 };
 
                 db.Set<PaymentGatewayProvider>().Add(zainpalProvider);

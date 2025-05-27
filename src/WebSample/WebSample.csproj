@@ -26,6 +26,7 @@
     <ProjectReference Include="..\PaymentProvider\PayPal\PayPal.csproj" />
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
     <ProjectReference Include="..\Persistence\Honamic.PayMaster.Persistence.csproj" />
+    <ProjectReference Include="..\Web\Honamic.PayMaster.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
