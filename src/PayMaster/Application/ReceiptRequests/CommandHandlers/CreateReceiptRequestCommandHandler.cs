@@ -6,6 +6,7 @@ using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -87,7 +88,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
         if (string.IsNullOrEmpty(command.IssuerCode)
                 && string.IsNullOrEmpty(_payMasterOptions.Value.DefaultIssuerCode))
         {
-            throw new ArgumentException("صادر کننده فیش مشخص نشده است و پیش فرض هم مشخص نشده است.");
+            throw new NoIssuerSpecifiedException();
         }
 
         if (!string.IsNullOrEmpty(command.IssuerCode))
@@ -103,9 +104,8 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
 
         if (receiptIssuer is null)
         {
-            throw new ArgumentException($"کد صادرکننده فیش وجود ندارد [{command.IssuerCode}]");
+            throw new IssuerCodeNotFoundException(command.IssuerCode);
         }
-
 
         return receiptIssuer;
     }
@@ -117,7 +117,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
                    && string.IsNullOrEmpty(command.GatewayProviderCode)
                     && string.IsNullOrEmpty(_payMasterOptions.Value.DefaultGatewayProviderCode))
         {
-            throw new ArgumentException("درگاه پرداخت مشخص نشده است و پیش فرض هم مشخص نشده است.");
+            throw new NoDefaultGatewayProviderException();
         }
 
         if (command.GatewayProviderId.HasValue)
@@ -140,7 +140,7 @@ internal class CreateReceiptRequestCommandHandler : ICommandHandler<CreateReceip
 
         if (paymentGatewayProvider is null)
         {
-            throw new ArgumentException($"درگاه پرداخت مشخص شده وجود ندارد.");
+            throw new SpecifiedGatewayProviderNotFoundException();
         }
 
         return paymentGatewayProvider;

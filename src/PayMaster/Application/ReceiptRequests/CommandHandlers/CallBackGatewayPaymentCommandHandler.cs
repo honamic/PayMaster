@@ -4,6 +4,7 @@ using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Services;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
@@ -49,19 +50,19 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
 
             if (receiptRequest is null)
             {
-                throw new ArgumentException("پرداخت معتبر نیست.");
+                throw new InvalidPaymentException();
             }
 
             gatewayPayment = receiptRequest.GetGatewayPayment(gatewayPaymentId.Value);
 
             if (gatewayPayment is null)
             {
-                throw new ArgumentException("پرداخت معتبر نیست.");
+                throw new InvalidPaymentException();
             }
 
             if (gatewayPayment.GatewayProviderId != gatewayProviderId)
             {
-                throw new ArgumentException("پرداخت معتبر نیست.");
+                throw new InvalidPaymentException();
             }
 
             var gatewayProvider = await _repository.GetAsync(c => c.Id == gatewayProviderId);
