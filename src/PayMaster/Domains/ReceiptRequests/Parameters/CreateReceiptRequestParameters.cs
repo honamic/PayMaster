@@ -4,8 +4,14 @@ public class CreateReceiptRequestParameters
     public required decimal Amount { get; set; }
     public required string Currency { get; set; } = default!;
 
-    public string? Description { get; set; }
+    public required string? IssuerCode { get; init; }
+    public long? GatewayProviderId { get; internal set; }
+    public string? GatewayProviderCode { get; internal set; }
 
+    public required string? DefaultIssuerCode { get; init; }
+    public required string? DefaultGatewayProviderCode { get; init; }
+
+    public string? Description { get; set; }
     public string? Email { get; set; }
     public string? Mobile { get; set; }
     public string? NationalityCode { get; set; }
@@ -13,11 +19,10 @@ public class CreateReceiptRequestParameters
     public string? IssuerReference { get; set; }
     public long? PartyId { get; set; }
     public bool? IsLegal { get; set; }
-
     public string? AdditionalData { get; set; }
 
-    public required ReceiptRequestIssuerParameters Issuer { get; set; }
-    public required ReceiptRequestGatewayProviderParameters GatewayProvider { get; set; }
+    public  ReceiptRequestIssuerParameters Issuer { get; set; }
+    public  ReceiptRequestGatewayProviderParameters GatewayProvider { get; set; }
 
     public required string[] SupportedCurrencies;
 }
