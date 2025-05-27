@@ -36,7 +36,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 
         if (createResult.Success)
         {
-            return new PayReceiptRequestCommandResult
+            result.Data = new PayReceiptRequestCommandResult
             {
                 ReceiptRequestId = receiptRequest.Id.ToString(CultureInfo.InvariantCulture),
                 PayParams = createResult.PayParams,
@@ -44,8 +44,10 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
                 PayVerb = createResult.PayVerb,
             };
         }
-
-        result.SetStatusAsInvalidDomainState("خطا در آماده سازی برای ارسال به درگاه.");
+        else
+        {
+            result.SetStatusAsUnhandledException("خطا در آماده سازی برای ارسال به درگاه.");
+        }
 
         return result;
     }
