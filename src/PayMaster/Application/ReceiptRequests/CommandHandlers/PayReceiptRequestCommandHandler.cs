@@ -21,19 +21,22 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 
     public async Task<Result<PayReceiptRequestCommandResult>> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
     {
+        var result = new Result<PayReceiptRequestCommandResult>();
+
         var receiptRequest = await _receiptRequestRepository
                         .GetAsync(c => c.Id == command.GetReceiptRequestIdAsLong());
 
         if (receiptRequest is null)
         {
-            throw new ArgumentException("فیش وجود ندارد.");
+            result.SetStatusAsNotFound($"قبض با شناسه {command.ReceiptRequestId} وجود ندارد.");
+            return result;
         }
 
-        var createResult =await _createPaymentDomainService.CreatePaymentAsync(receiptRequest);
+        var createResult = await _createPaymentDomainService.CreatePaymentAsync(receiptRequest);
 
         if (createResult.Success)
         {
-            return new PayReceiptRequestCommandResult
+            result.Data = new PayReceiptRequestCommandResult
             {
                 ReceiptRequestId = receiptRequest.Id.ToString(CultureInfo.InvariantCulture),
                 PayParams = createResult.PayParams,
@@ -41,11 +44,11 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
                 PayVerb = createResult.PayVerb,
             };
         }
+        else
+        {
+            result.SetStatusAsUnhandledException("خطا در آماده سازی برای ارسال به درگاه.");
+        }
 
-        var result = new Result<PayReceiptRequestCommandResult>();
-
-        result.AppendError("خطا در آماده سازی برای ارسال به درگاه.");
-
-        return  result;
+        return result;
     }
 }

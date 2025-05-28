@@ -2,6 +2,7 @@
 using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
@@ -16,19 +17,22 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
     private readonly IClock _clock;
     private readonly ILogger<CreatePaymentDomainService> _logger;
     private readonly IOptions<PayMasterOptions> _payMasterOptions;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreatePaymentDomainService(
         IPaymentGatewayProviderRepository repository,
         IPaymentGatewayProviderFactory factory,
         IClock clock,
         ILogger<CreatePaymentDomainService> logger,
-        IOptions<PayMasterOptions> payMasterOptions)
+        IOptions<PayMasterOptions> payMasterOptions,
+        IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _factory = factory;
         _clock = clock;
         _logger = logger;
         _payMasterOptions = payMasterOptions;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<CreateResult> CreatePaymentAsync(ReceiptRequest receiptRequest)
@@ -48,7 +52,7 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
 
             if (gatewayPayment is null)
             {
-                throw new InvalidOperationException("پرداخت درگاهی آماده پرداخت وجود ندارد.");
+                throw new PayableGatewayPaymentNotFoundException();
             }
 
             tryLog.ReceiptRequestGatewayPaymentId = gatewayPayment.Id;
@@ -58,14 +62,14 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
 
             if (gatewayProvider == null)
             {
-                throw new InvalidOperationException("درگاه پرداخت شناسایی نشد.");
+                throw new GatewayProviderNotFoundException();
             }
 
             var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
 
             if (provider == null)
             {
-                throw new InvalidOperationException("درگاه پرداخت ساخته نشد.");
+                throw new GatewayProviderCreationException();
             }
 
             var callbackUrl = _payMasterOptions.Value.CallBackUrl
@@ -83,8 +87,13 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
             tryLog.Data.SetException(ex);
             throw;
         }
-
-        receiptRequest.TryLogs.Add(tryLog);
+        finally
+        {
+            receiptRequest.TryLogs.Add(tryLog);
+            // save or not save, problem is here!
+            // if you save here, the invalaid domain values may be saved.
+            // await _unitOfWork.SaveChangesAsync();
+        }
 
         return createResult;
     }

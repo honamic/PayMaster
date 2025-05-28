@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Honamic.Framework.Tools.IdGenerators;
 using Honamic.Framework.Applications.Extensions;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
@@ -16,13 +15,14 @@ public static class ServiceCollectionExtensions
     {
         services.AddDomainServices();
         services.AddApplicationServices();
-        services.AddSnowflakeIdGeneratorServices(); 
-        services.AddBackgroundJobs();
+        services.AddSnowflakeIdGeneratorServices();
     }
 
     private static void AddDomainServices(this IServiceCollection services)
     {
         services.AddScoped<ICreatePaymentDomainService, CreatePaymentDomainService>();
+        services.AddScoped<ICreateReceiptRequestDomainService, CreateReceiptRequestDomainService>();
+        services.AddScoped<ICallbackGatewayPaymentDomainService, CallbackGatewayPaymentDomainService>();
     }
 
     private static void AddApplicationServices(this IServiceCollection services)
@@ -30,7 +30,6 @@ public static class ServiceCollectionExtensions
         services.AddDefaultApplicationsServices();
 
         services.AddSingleton<IPaymentGatewayProviderFactory, PaymentGatewayProviderFactory>();
-
 
         services.AddCommandHandler<CreateReceiptRequestCommand,
             CreateReceiptRequestCommandHandler,
@@ -43,25 +42,5 @@ public static class ServiceCollectionExtensions
         services.AddCommandHandler<CallBackGatewayPaymentCommand,
             CallBackGatewayPaymentCommandHandler,
             Result<CallBackGatewayPaymentCommandResult>>();
-    }
-
-    private static void AddBackgroundJobs(this IServiceCollection services)
-    {
-
-    }
-
-    private static void DebuggerConnectionStringLog(string? SqlServerConnection)
-    {
-#if DEBUG
-        Console.WriteLine($"EF connection string:`{SqlServerConnection}`");
-#endif
-
-    }
-
-    private static void DebuggerConsoleLog(DbContextOptionsBuilder options)
-    {
-#if DEBUG
-        options.LogTo(c => Console.WriteLine(c));
-#endif
     }
 }

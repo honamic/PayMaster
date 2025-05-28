@@ -1,5 +1,6 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
@@ -72,19 +73,19 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     {
         if (!parameters.GatewayProvider.Enabled)
         {
-            throw new ArgumentException($"درگاه انتخاب شده غیرفعال است.");
+            throw new GatewayProviderDisabledException();
         }
 
         if (parameters.GatewayProvider.MinimumAmount.HasValue
            && parameters.Amount < parameters.GatewayProvider.MinimumAmount)
         {
-            throw new ArgumentException($"حداقل مبلغ برای پرداخت در این درگاه {parameters.GatewayProvider.MinimumAmount} است");
+            throw new GatewayMinAmountLimitException(parameters.GatewayProvider.MinimumAmount.Value);
         }
 
         if (parameters.GatewayProvider.MaximumAmount.HasValue
            && parameters.Amount > parameters.GatewayProvider.MaximumAmount)
         {
-            throw new ArgumentException($"حداکثر مبلغ برای پرداخت در این درگاه {parameters.GatewayProvider.MaximumAmount} است");
+            throw new GatewayMaxAmountLimitException(parameters.GatewayProvider.MaximumAmount.Value);
         }
 
         var newReceiptRequestGatewayPayment = new ReceiptRequestGatewayPayment()
@@ -97,7 +98,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         };
 
         return newReceiptRequestGatewayPayment;
-    }
+    } 
 
     public void SetWaitingStatus(string? createReference, string? statusDescription, DateTimeOffset redirectAt)
     {
@@ -106,7 +107,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
 
         if (createReference?.Length > 128)
         {
-            throw new ArgumentException("The number of CreateReference cannot be more than 128 characters.");
+            throw new CreateReferenceExceedsLimitException();
         }
 
         CreateReference = createReference;
@@ -132,7 +133,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     {
         if (Status != PaymentGatewayStatus.Waiting)
         {
-            throw new InvalidOperationException("Status Invalid");
+            throw new InvalidPaymentStatusException();
         }
 
         CallbackAt = nowWithOffset;
