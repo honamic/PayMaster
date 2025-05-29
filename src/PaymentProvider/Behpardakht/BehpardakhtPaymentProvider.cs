@@ -124,7 +124,7 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
 
             if (!InternalVerify(request, result, callbackData))
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerfiy;
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerify;
                 return result;
             }
             var resCode = callbackData?.ResCode ?? "";

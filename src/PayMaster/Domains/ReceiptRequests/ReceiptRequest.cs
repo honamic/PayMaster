@@ -157,7 +157,7 @@ public class ReceiptRequest : AggregateRoot<long>
 
         try
         {
-            gatewayPayment.StartCallBack(clock.NowWithOffset, callBackData);
+            gatewayPayment.StartCallback(clock.NowWithOffset, callBackData);
 
             var extractCallBackDataResult = paymentGatewayProvider.ExtractCallBackData(callBackData);
 
@@ -169,7 +169,7 @@ public class ReceiptRequest : AggregateRoot<long>
 
             var callbackValidityDuration = paymentGatewayProvider.GetCallbackValidityDuration();
 
-            InternalVerfiyCallbackData(gatewayPayment, extractCallBackDataResult, callbackValidityDuration);
+            InternalVerifyCallbackData(gatewayPayment, extractCallBackDataResult, callbackValidityDuration);
 
             if (gatewayPayment.Status == PaymentGatewayStatus.Failed)
             {
@@ -223,21 +223,21 @@ public class ReceiptRequest : AggregateRoot<long>
         return verifyResult;
     }
 
-    private static void InternalVerfiyCallbackData(ReceiptRequestGatewayPayment gatewayPayment,
+    private static void InternalVerifyCallbackData(ReceiptRequestGatewayPayment gatewayPayment,
         ExtractCallBackDataResult extractCallBackDataResult,
         TimeSpan callbackValidityDuration)
     {
         if (extractCallBackDataResult.UniqueRequestId is null
             && string.IsNullOrEmpty(extractCallBackDataResult.CreateReference))
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerfiy, $"UniqueRequestId and Id both is empty.");
+            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"Neither UniqueRequestId nor CreateReference was provided.");
             return;
         }
 
         if (extractCallBackDataResult.UniqueRequestId.HasValue
            && gatewayPayment.Id != extractCallBackDataResult.UniqueRequestId)
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerfiy, $"ID is not correct.");
+            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"ID is not correct.");
             return;
         }
 
@@ -246,13 +246,13 @@ public class ReceiptRequest : AggregateRoot<long>
              && !gatewayPayment.CreateReference.Equals
                    (extractCallBackDataResult.CreateReference, StringComparison.InvariantCultureIgnoreCase))
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerfiy, $"CreateReference is not correct");
+            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"CreateReference is not correct");
             return;
         }
 
         if (gatewayPayment.CallbackAt!.Value - gatewayPayment.RedirectAt!.Value > callbackValidityDuration)
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerfiy, $"It's late for callback.");
+            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"It's late for callback.");
             return;
         }
     }
