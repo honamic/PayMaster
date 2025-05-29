@@ -7,7 +7,13 @@ namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
 public class CallBackGatewayPaymentCommand : ICommand<Result<CallBackGatewayPaymentCommandResult>>
 {
     public required string CallBackData { get; set; }
+    public required string ReceiptRequestId { get; set; }
     public required string GatewayPaymentId { get; set; }
+
+    public long GetReceiptRequestIdAsLong()
+    {
+        return long.Parse(ReceiptRequestId);
+    }
 
     public long GetGatewayPaymentIdAsLong()
     {

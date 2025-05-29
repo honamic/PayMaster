@@ -40,7 +40,7 @@ internal class Program
 
         builder.Services.Configure<PayMasterOptions>(c =>
         {
-            c.CallBackUrl = "https://localhost:7121/Payments/callback/{GatewayPaymentId}/";
+            c.CallBackUrl = "https://localhost:7121/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
         });
 
         var app = builder.Build();

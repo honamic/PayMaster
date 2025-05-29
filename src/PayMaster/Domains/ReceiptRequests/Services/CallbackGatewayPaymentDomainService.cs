@@ -23,10 +23,10 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
         _clock = clock;
     }
 
-    public async Task<CallBackResult> ProcessCallBackAsync(long gatewayPaymentId, string callbackData)
+    public async Task<CallBackResult> ProcessCallBackAsync(long receiptRequestId, long gatewayPaymentId, string callbackData)
     {
         ReceiptRequest? receiptRequest = await _receiptRequestRepository
-            .GetByGatewayPaymentIDAsync(gatewayPaymentId);
+            .GetAsync(c=>c.Id== receiptRequestId);
 
         if (receiptRequest is null)
         {

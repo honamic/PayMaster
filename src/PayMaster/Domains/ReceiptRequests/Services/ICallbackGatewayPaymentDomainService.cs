@@ -5,7 +5,7 @@ namespace Honamic.PayMaster.Domains.ReceiptRequests.Services;
 // اینترفیس دامین سرویس
 public interface ICallbackGatewayPaymentDomainService
 {
-    Task<CallBackResult> ProcessCallBackAsync(long gatewayPaymentId, string callBackData);
+    Task<CallBackResult> ProcessCallBackAsync(long receiptRequestId, long gatewayPaymentId, string callBackData);
 }
 
 public class CallBackResult
