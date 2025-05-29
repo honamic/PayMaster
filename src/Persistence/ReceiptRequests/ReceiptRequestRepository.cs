@@ -21,7 +21,7 @@ internal class ReceiptRequestRepository
 
     public Task<ReceiptRequest?> GetByGatewayPaymentIDAsync(long gatewayPaymentId)
     {
-        return GetAsync(c => c.GatewayPayments.Any(c => c.Id == gatewayPaymentId));
+        return GetAsync(receipt => receipt.GatewayPayments.Any(pay => pay.Id == gatewayPaymentId));
     }
 
     protected override IList<Expression<Func<ReceiptRequest, object?>>> GetIncludes()

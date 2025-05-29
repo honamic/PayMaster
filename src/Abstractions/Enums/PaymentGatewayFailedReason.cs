@@ -17,7 +17,7 @@ public enum PaymentGatewayFailedReason
     Canceled = 3,
 
     [Display(Name = "تایید داخلی ناموفق")]
-    InternalVerfiy = 4,
+    InternalVerify = 4,
 
     [Display(Name = "استعلام ناموفق")]
     Verfiy = 5,

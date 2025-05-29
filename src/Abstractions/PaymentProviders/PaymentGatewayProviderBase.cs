@@ -31,4 +31,9 @@ public abstract class PaymentGatewayProviderBase : IPaymentGatewayProvider
 
         return $"{obj} | {description}".TrimEnd(' ').TrimEnd('|');
     }
+
+    public virtual TimeSpan GetCallbackValidityDuration()
+    {
+        return TimeSpan.FromMinutes(30);
+    }
 }

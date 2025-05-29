@@ -5,4 +5,5 @@ public static class Constants
     public const string Schema = "PayMaster";
     public const string GatewayProviderIdParameter = "{GatewayProviderId}";
     public const string GatewayPaymentIdParameter = "{GatewayPaymentId}";
+    public const string ReceiptRequestIdParameter = "{ReceiptRequestId}";
 }

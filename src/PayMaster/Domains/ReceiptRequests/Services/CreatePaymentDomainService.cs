@@ -73,6 +73,7 @@ public class CreatePaymentDomainService : ICreatePaymentDomainService
             }
 
             var callbackUrl = _payMasterOptions.Value.CallBackUrl
+                .Replace(Constants.ReceiptRequestIdParameter, receiptRequest.Id.ToString())
                 .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
                 .Replace(Constants.GatewayProviderIdParameter, gatewayPayment.GatewayProviderId.ToString());
 

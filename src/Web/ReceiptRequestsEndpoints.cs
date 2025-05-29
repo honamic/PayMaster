@@ -39,11 +39,9 @@ public static class ReceiptRequestsEndpoints
             return Results.BadRequest(paycommandResult);
         });
 
-        payGroup.MapMethods("callback/{GatewayProviderId}/{GatewayPaymentId?}/",
+        payGroup.MapMethods("callback/{ReceiptRequestId}/{GatewayPaymentId}/",
              ["GET", "POST"]
-             , async (
-                        string GatewayProviderId,
-                        string? GatewayPaymentId,
+             , async (string ReceiptRequestId, string GatewayPaymentId,
                         HttpContext context,
                         [FromServices] ICommandBus commandBus,
                         CancellationToken cancellationToken) =>
@@ -52,8 +50,8 @@ public static class ReceiptRequestsEndpoints
 
             var command = new CallBackGatewayPaymentCommand
             {
-                GatewayProviderId = GatewayProviderId,
                 GatewayPaymentId = GatewayPaymentId,
+                ReceiptRequestId = ReceiptRequestId,
                 CallBackData = callBackData,
             };
 

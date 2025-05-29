@@ -24,6 +24,7 @@ public static class PaymentErrorCodes
     public const string AuthorityMismatch = "VRF005";
     public const string EmptyCallbackData = "VRF006";
     public const string InvalidPaymentStatus = "VRF007";
+    public const string PaymentStatusNotValidForProcessing = "VRF008";
 
     // Receipt Request Errors (RCT)
     public const string InvalidPayment = "RCT001";
