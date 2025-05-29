@@ -31,6 +31,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Persisten
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Web", "Web\Honamic.PayMaster.Web.csproj", "{81316450-0466-0BEF-2BE7-B9CC24794F86}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.ApplicationTests", "..\Tests\PayMaster.ApplicationTests\Honamic.PayMaster.ApplicationTests.csproj", "{0D831FE9-2A06-FD3E-C447-9D481F0A2110}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.DomainTests", "..\Tests\PayMaster.DomianTests\Honamic.PayMaster.DomainTests.csproj", "{E4870600-29B1-8458-6F07-CA650E905F38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +87,14 @@ Global
 		{81316450-0466-0BEF-2BE7-B9CC24794F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81316450-0466-0BEF-2BE7-B9CC24794F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81316450-0466-0BEF-2BE7-B9CC24794F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D831FE9-2A06-FD3E-C447-9D481F0A2110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D831FE9-2A06-FD3E-C447-9D481F0A2110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D831FE9-2A06-FD3E-C447-9D481F0A2110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D831FE9-2A06-FD3E-C447-9D481F0A2110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4870600-29B1-8458-6F07-CA650E905F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4870600-29B1-8458-6F07-CA650E905F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4870600-29B1-8458-6F07-CA650E905F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4870600-29B1-8458-6F07-CA650E905F38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +112,8 @@ Global
 		{127F286A-BEFF-F3EB-9E51-B001DCCDFB7E} = {8B7ABDA0-3EA4-41E8-9249-1273E49A2956}
 		{B09F08CD-BFA8-89D5-07CD-B346DC163144} = {27989A77-8151-49A2-A81D-990655154889}
 		{81316450-0466-0BEF-2BE7-B9CC24794F86} = {27989A77-8151-49A2-A81D-990655154889}
+		{0D831FE9-2A06-FD3E-C447-9D481F0A2110} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{E4870600-29B1-8458-6F07-CA650E905F38} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2395F65-A679-4732-A522-0C7D24F44238}

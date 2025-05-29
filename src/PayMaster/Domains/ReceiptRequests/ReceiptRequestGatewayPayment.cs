@@ -66,11 +66,16 @@ public class ReceiptRequestGatewayPayment : Entity<long>
     public string? TerminalId { get; private set; }
 
     public string? MerchantId { get; private set; }
-    
-    public long ReceiptRequestId { get;  set; }
+
+    public long ReceiptRequestId { get; set; }
 
     internal static ReceiptRequestGatewayPayment Create(CreateGatewayPaymentParameters parameters)
     {
+        if (string.IsNullOrEmpty(parameters.Currency))
+        {
+            throw new CurrencyRequiredException();
+        }
+
         if (!parameters.GatewayProvider.Enabled)
         {
             throw new GatewayProviderDisabledException();
@@ -98,7 +103,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         };
 
         return newReceiptRequestGatewayPayment;
-    } 
+    }
 
     public void SetWaitingStatus(string? createReference, string? statusDescription, DateTimeOffset redirectAt)
     {
@@ -142,12 +147,18 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         }
 
         CallbackAt = nowWithOffset;
-        CallbackData= callBackData;
+        CallbackData = callBackData;
         Status = PaymentGatewayStatus.Settlement;
     }
 
     internal void SuccessCallBack(SupplementaryPaymentInformation? supplementaryPaymentInformation)
     {
+        if (Status != PaymentGatewayStatus.Settlement &&
+            Status != PaymentGatewayStatus.Waiting)
+        {
+            throw new InvalidPaymentStatusException();
+        }
+
         Status = PaymentGatewayStatus.Success;
         FailedReason = PaymentGatewayFailedReason.None;
 
@@ -156,12 +167,12 @@ public class ReceiptRequestGatewayPayment : Entity<long>
             TrackingNumber = supplementaryPaymentInformation?.TrackingNumber;
             ReferenceRetrievalNumber = supplementaryPaymentInformation?.ReferenceRetrievalNumber;
             Pan = supplementaryPaymentInformation?.Pan;
-            SuccessReference =supplementaryPaymentInformation?.SuccessReference;
+            SuccessReference = supplementaryPaymentInformation?.SuccessReference;
             MerchantId = supplementaryPaymentInformation?.MerchantId ?? MerchantId;
             TerminalId = supplementaryPaymentInformation?.TerminalId ?? TerminalId;
         }
     }
-   
+
     internal void FailedCallBack(PaymentGatewayFailedReason paymentFailedReason, string? statusDescription)
     {
         Status = PaymentGatewayStatus.Failed;
