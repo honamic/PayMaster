@@ -76,8 +76,8 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
             }
             else
             {
-                var ticketfaieldResponse = JsonSerializer.Deserialize<TicketResponseDto?>(rawResponse);
-                var errorCode = ticketfaieldResponse?.Result.Status;
+                var ticketFailedResponse = JsonSerializer.Deserialize<TicketResponseDto?>(rawResponse);
+                var errorCode = ticketFailedResponse?.Result.Status;
 
                 if (errorCode != null)
                 {

@@ -26,12 +26,18 @@ public class TicketRequestDto
     /// </summary>
     public required string CallbackUrl { get; set; }
 
-    public TicketRequestBasketDetailsDto? BasketDetails { get; set; } // فقط برای خریدهای اعتباری و اقساطی اجباری است
-    
-    public List<TicketRequestSplitDetailsDto>? SplitDetailsList { get; set; } // برای خریدهای تسهیمی، حداکثر سایز لیست 2 می‌باشد
+    /// <summary>
+    /// فقط برای خریدهای اعتباری و اقساطی اجباری است
+    /// </summary>
+    public TicketRequestBasketDetailsDto? BasketDetails { get; set; } 
 
     /// <summary>
+    /// برای خریدهای تسهیمی، حداکثر سایز لیست 2 می‌باشد
+    /// </summary>
+    public List<TicketRequestSplitDetailsDto>? SplitDetailsList { get; set; } 
+    /// <summary>
+    /// توضیحات اضافه، مقداردهی اختیاری
     /// preferredGateway = PreferredGateway
     /// </summary>
-    public Dictionary<string, string>? AdditionalInfo { get; set; } // توضیحات اضافه، مقداردهی اختیاری
+    public Dictionary<string, string>? AdditionalInfo { get; set; } 
 }

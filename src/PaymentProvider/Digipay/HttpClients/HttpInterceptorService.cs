@@ -32,7 +32,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            await _bearerTokensStore.RemoveToken();
+            await _bearerTokensStore.RemoveTokenAsync();
         }
 
         return response;
@@ -94,7 +94,7 @@ public class HttpInterceptorService : DelegatingHandler
         if (!string.IsNullOrEmpty(tokenData?.AccessToken))
         {
             var expire = DateTime.Now.AddDays(tokenData.ExpiresIn);
-            await _bearerTokensStore.StoreToken(tokenData.AccessToken, expire);
+            await _bearerTokensStore.StoreTokenAsync(tokenData.AccessToken, expire);
             return tokenData.AccessToken;
         }
 
