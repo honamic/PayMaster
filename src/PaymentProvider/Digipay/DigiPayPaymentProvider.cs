@@ -1,13 +1,13 @@
 ﻿using Honamic.PayMaster.Enums;
-using Honamic.PayMaster.PaymentProvider.DigiPay.Models;
-using Honamic.PayMaster.PaymentProvider.DigiPay.Models.Enums;
+using Honamic.PayMaster.PaymentProvider.Digipay.Models;
+using Honamic.PayMaster.PaymentProvider.Digipay.Models.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay;
+namespace Honamic.PayMaster.PaymentProvider.Digipay;
 
 public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 {
@@ -43,7 +43,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
                 ProviderId = createRequest.UniqueRequestId.ToString(),
                 Amount = createRequest.Amount,
                 CallbackUrl = createRequest.CallbackUrl,
-                CellNumber = createRequest.CallbackUrl,
+                CellNumber = createRequest.MobileNumber ?? string.Empty,
             };
 
             var httpRequest = CreateHttpRequest(digipayRequest, createRequest);
@@ -252,6 +252,9 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
         {
             Content = new StringContent(apiRequestJsonData, Encoding.UTF8, "application/json")
         };
+
+        httpRequest.Headers.Add("Agent", Constants.DigiPayAgent);
+        httpRequest.Headers.Add("Digipay-Version", Constants.DigiPayVersion);
 
         var customOptionKey = new HttpRequestOptionsKey<DigipayConfigurations>(Constants.DigiPayRequestOptionsKey);
 

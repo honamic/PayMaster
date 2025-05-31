@@ -1,8 +1,8 @@
 ﻿using Honamic.PayMaster.Extensions;
-using Honamic.PayMaster.PaymentProvider.DigiPay.HttpClients;
+using Honamic.PayMaster.PaymentProvider.Digipay.HttpClients;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay.Extensions;
+namespace Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddPayPalPaymentProviderServices(this IServiceCollection services)

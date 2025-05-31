@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.DigiPay;
+﻿namespace Honamic.PayMaster.PaymentProvider.Digipay;
 
 public class DigipayConfigurations
 {

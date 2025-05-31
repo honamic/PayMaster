@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+﻿namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;
 
 /// <summary>
 /// جدول ۵- Request Fields

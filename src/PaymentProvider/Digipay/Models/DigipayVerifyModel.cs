@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;
 
 public class DigipayVerifyModel
 {
@@ -34,7 +34,7 @@ public class DigipayVerifyModel
     [JsonPropertyName("fpCode")]
     public string? FpCode { get; set; }
 
-    [JsonPropertyName("fpCode")]
+    [JsonPropertyName("fpName")]
     public string? FpName { get; set; }
 
     [JsonPropertyName("additionalInfo")]

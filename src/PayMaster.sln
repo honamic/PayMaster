@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Persisten
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Web", "Web\Honamic.PayMaster.Web.csproj", "{81316450-0466-0BEF-2BE7-B9CC24794F86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigiPay", "PaymentProvider\Digipay\DigiPay.csproj", "{F849FA03-5A83-099E-C8B2-369636930005}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digipay", "PaymentProvider\Digipay\Digipay.csproj", "{F849FA03-5A83-099E-C8B2-369636930005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

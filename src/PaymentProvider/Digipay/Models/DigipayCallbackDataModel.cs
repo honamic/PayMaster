@@ -1,7 +1,7 @@
-﻿using Honamic.PayMaster.PaymentProvider.DigiPay.Models.Enums;
+﻿using Honamic.PayMaster.PaymentProvider.Digipay.Models.Enums;
 using System.Text.Json.Serialization;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;
 public class DigipayCallbackDataModel
 {
     [JsonPropertyName("amount")]

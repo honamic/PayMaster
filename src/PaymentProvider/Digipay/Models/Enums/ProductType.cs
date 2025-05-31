@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.DigiPay.Models.Enums;
+﻿namespace Honamic.PayMaster.PaymentProvider.Digipay.Models.Enums;
 
 public enum ProductType
 {

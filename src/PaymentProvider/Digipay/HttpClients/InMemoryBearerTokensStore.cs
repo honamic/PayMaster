@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.DigiPay.HttpClients;
+﻿namespace Honamic.PayMaster.PaymentProvider.Digipay.HttpClients;
 
 public class InMemoryBearerTokensStore : IBearerTokensStore
 {

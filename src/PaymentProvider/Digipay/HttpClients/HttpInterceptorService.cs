@@ -1,9 +1,9 @@
-using Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+using Honamic.PayMaster.PaymentProvider.Digipay.Models;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay.HttpClients;
+namespace Honamic.PayMaster.PaymentProvider.Digipay.HttpClients;
 
 public class HttpInterceptorService : DelegatingHandler
 {
@@ -62,9 +62,6 @@ public class HttpInterceptorService : DelegatingHandler
 
         request.Headers.Authorization =
             token is not null ? new AuthenticationHeaderValue("Bearer", token) : null;
-
-        request.Headers.Add("Agent", Constants.DigiPayAgent);
-        request.Headers.Add("Digipay-Version", Constants.DigiPayVersion);
     }
 
     public async Task<string> Login(DigipayConfigurations configurations)
@@ -78,8 +75,8 @@ public class HttpInterceptorService : DelegatingHandler
         request.Headers.Add("Authorization", $"Basic {Convert.ToBase64String(authBytes)}");
 
         MultipartFormDataContent content = new MultipartFormDataContent();
-        content.Add(new StringContent("sampleUsername"), configurations.UserName);
-        content.Add(new StringContent("samplePassword"), configurations.Password);
+        content.Add(new StringContent(configurations.UserName),"username" );
+        content.Add(new StringContent(configurations.Password),"password");
         content.Add(new StringContent("password"), "grant_type");
         request.Content = content;
 
@@ -101,6 +98,6 @@ public class HttpInterceptorService : DelegatingHandler
             return tokenData.AccessToken;
         }
 
-        throw new Exception($"paypal login failed. result: {tokenResponseString}");
+        throw new Exception($"Digipay login failed. result: {tokenResponseString}");
     }
 }

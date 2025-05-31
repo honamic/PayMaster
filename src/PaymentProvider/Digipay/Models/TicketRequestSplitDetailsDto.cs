@@ -1,7 +1,6 @@
-﻿
-using Honamic.PayMaster.PaymentProvider.DigiPay.Models.Enums;
+﻿using Honamic.PayMaster.PaymentProvider.Digipay.Models.Enums;
 
-namespace Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;
 
 public class TicketRequestSplitDetailsDto
 {
