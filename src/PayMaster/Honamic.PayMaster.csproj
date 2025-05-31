@@ -7,6 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="Honamic.PayMaster.DomainTests" />
+		<InternalsVisibleTo Include="Honamic.PayMaster.ApplicationTests" /> 
+	</ItemGroup>
+	
+	<ItemGroup>
 		<PackageReference Include="Honamic.Framework.Applications" Version="1.0.2-Beta02" />
 		<PackageReference Include="Honamic.Framework.EntityFramework.Persistence" Version="1.0.3-Beta03" />
 		<PackageReference Include="Honamic.Framework.Tools.IdGenerators" Version="1.0.3-Beta03" />
