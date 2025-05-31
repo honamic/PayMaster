@@ -226,8 +226,8 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
     private HttpRequestMessage CreateVerifyHttpRequest(string trackingCode, TicketType type)
     {
-        var verfiyPath = Constants.CreatePath + $"/{trackingCode}/?type={(int)type}";
-        var url = new Uri(new Uri(_configurations.ApiAddress), verfiyPath);
+        var verifyPath = Constants.CreatePath + $"/{trackingCode}/?type={(int)type}";
+        var url = new Uri(new Uri(_configurations.ApiAddress), verifyPath);
 
         HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
         {

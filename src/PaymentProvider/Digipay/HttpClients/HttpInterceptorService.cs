@@ -93,7 +93,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (!string.IsNullOrEmpty(tokenData?.AccessToken))
         {
-            var expire = DateTime.Now.AddDays(tokenData.ExpiresIn);
+            var expire = DateTime.Now.AddSeconds(tokenData.ExpiresIn);
             await _bearerTokensStore.StoreTokenAsync(tokenData.AccessToken, expire);
             return tokenData.AccessToken;
         }
