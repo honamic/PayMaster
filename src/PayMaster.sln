@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{02EA681E-C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.ApplicationTests", "..\Tests\PayMaster.ApplicationTests\Honamic.PayMaster.ApplicationTests.csproj", "{0D831FE9-2A06-FD3E-C447-9D481F0A2110}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.DomainTests", "..\Tests\PayMaster.DomianTests\Honamic.PayMaster.DomainTests.csproj", "{E4870600-29B1-8458-6F07-CA650E905F38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.DomainTests", "..\Tests\PayMaster.DomainTests\Honamic.PayMaster.DomainTests.csproj", "{E4870600-29B1-8458-6F07-CA650E905F38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
