@@ -24,9 +24,9 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
     public override void Configure(string providerConfiguration)
     {
-        var zarinPalConfigurations = JsonSerializer.Deserialize<DigipayConfigurations>(providerConfiguration);
+        var digipayConfigurations = JsonSerializer.Deserialize<DigipayConfigurations>(providerConfiguration);
 
-        _configurations = zarinPalConfigurations ??
+        _configurations = digipayConfigurations ??
                          throw new ArgumentNullException(nameof(providerConfiguration));
     }
 
@@ -207,7 +207,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
         catch (Exception ex)
         {
             result.Error = ex.Message;
-            _logger.LogError(ex, "ExtractCallBackData Failed");
+            _logger.LogError(ex, "VerifyAsync failed.");
         }
 
         return result;

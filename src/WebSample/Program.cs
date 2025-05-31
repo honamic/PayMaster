@@ -13,6 +13,7 @@ using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
 using Honamic.PayMaster.Web.Extensions;
+using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 
 internal class Program
 {
@@ -25,6 +26,7 @@ internal class Program
 
         builder.Services.AddZarinPalPaymentProviderServices();
         builder.Services.AddPayPalPaymentProviderServices();
+        builder.Services.AddDigipayPaymentProviderServices();
         builder.Services.AddHttpClient();
 
         var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnectionString");
