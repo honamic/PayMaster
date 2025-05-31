@@ -7,8 +7,7 @@ using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
+using System.Text.Json; 
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal;
 public class PayPalPaymentProvider : PaymentGatewayProviderBase
