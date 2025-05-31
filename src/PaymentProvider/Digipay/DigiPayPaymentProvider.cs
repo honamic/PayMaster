@@ -1,10 +1,9 @@
-﻿using Honamic.PayMaster.PaymentProvider.DigiPay.Models;
+﻿using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.PaymentProvider.DigiPay.Models;
 using Honamic.PayMaster.PaymentProvider.DigiPay.Models.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
@@ -101,12 +100,145 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
     public override ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue)
     {
-        throw new NotImplementedException();
+        var result = new ExtractCallBackDataResult();
+
+        try
+        {
+            var callbackData = JsonSerializer.Deserialize<DigipayCallbackDataModel>(callBackJsonValue);
+
+            if (callbackData is { Result: "SUCCESS" })
+            {
+                result.UniqueRequestId = long.Parse(callbackData.ProviderId);
+                result.CreateReference = null;
+                result.CallBack = callbackData;
+                result.Success = true;
+            }
+            else if (callbackData is { Result: "CANCEL" })
+            {
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
+            }
+            else
+            {
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Other;
+                result.Error = $"Status is not valid! [{callbackData?.Result}]";
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+            _logger.LogError(ex, "ExtractCallBackData Failed");
+        }
+
+        return result;
     }
 
-    public override Task<VerifyResult> VerifyAsync(VerifyRequest request)
+    public override async Task<VerifyResult> VerifyAsync(VerifyRequest request)
     {
-        throw new NotImplementedException();
+        var result = new VerifyResult();
+
+        try
+        {
+            var callbackData = (DigipayCallbackDataModel?)request.CallBackData;
+
+            if (!InternalVerify(request, result, callbackData))
+            {
+                result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerify;
+                return result;
+            }
+
+            var client = _httpClientFactory.CreateClient(Constants.HttpClientName);
+
+            var trackingCode = callbackData?.TrackingCode ?? "";
+
+
+            HttpRequestMessage httpRequestGetOrder = CreateVerifyHttpRequest(trackingCode, callbackData.Type);
+
+            result.VerifyLogData.Start(trackingCode, httpRequestGetOrder.RequestUri?.ToString());
+
+            var verifyResponse = await client.SendAsync(httpRequestGetOrder);
+
+            result.VerifyLogData.End();
+
+            var verifyResponseString = await verifyResponse.Content.ReadAsStringAsync();
+
+            result.VerifyLogData.SetResponse(verifyResponseString);
+
+            if (verifyResponse.IsSuccessStatusCode)
+            {
+                var digipayVerify = JsonSerializer.Deserialize<DigipayVerifyModel>(verifyResponseString);
+
+                if (callbackData is not { Result: "SUCCESS" })
+                {
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
+                    result.Error = digipayVerify?.Result?.Message?.Trim();
+                    if (string.IsNullOrEmpty(result.Error))
+                    {
+                        result.Error = $"Status not Valid {digipayVerify?.Result.Status}";
+                    }
+                    return result;
+                }
+
+                if (digipayVerify?.Amount != request.PatmentInfo.Amount)
+                {
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
+                    result.Error = $"Amount not Valid [{digipayVerify?.Amount}]";
+                    return result;
+                }
+
+                result.SupplementaryPaymentInformation = new SupplementaryPaymentInformation
+                {
+                    SuccessReference = digipayVerify.TrackingCode,
+                    MerchantId = null,
+                    TerminalId = digipayVerify.TerminalId,
+                    Pan = digipayVerify.MaskedPan,
+                    ReferenceRetrievalNumber = digipayVerify.Rrn,
+                    TrackingNumber = null,
+                };
+
+                result.Success = true;
+            }
+            else
+            {
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
+                result.Error = verifyResponse.StatusCode.ToString();
+                return result;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+            _logger.LogError(ex, "ExtractCallBackData Failed");
+        }
+
+        return result;
+    }
+
+    private bool InternalVerify(VerifyRequest request, VerifyResult result, DigipayCallbackDataModel? callbackData)
+    {
+        if (callbackData is null)
+        {
+            result.Error = "Call Back is empty";
+            return false;
+        }
+
+        return true;
+    }
+
+    private HttpRequestMessage CreateVerifyHttpRequest(string trackingCode, TicketType type)
+    {
+        var verfiyPath = Constants.CreatePath + $"/{trackingCode}/?type={(int)type}";
+        var url = new Uri(new Uri(_configurations.ApiAddress), verfiyPath);
+
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        {
+            Content = new StringContent("", Encoding.UTF8, "application/json")
+        };
+
+        var customOptionKey = new HttpRequestOptionsKey<DigipayConfigurations>(Constants.DigiPayRequestOptionsKey);
+
+        httpRequest.Options.Set(customOptionKey, _configurations);
+
+        return httpRequest;
     }
 
     private HttpRequestMessage CreateHttpRequest(TicketRequestDto apiRequest, CreateRequest createRequest)
