@@ -14,7 +14,7 @@ public static class SandboxEndpoints
             async ([AsParameters] SanboxRequestDataModel request, CancellationToken cancellationToken) =>
              {
 
-                 var suceessCallbackData = new SanboxCallBackDataModel
+                 var successCallbackData = new SanboxCallBackDataModel
                  {
                      Status = "OK",
                      Amount = request.Amount,
@@ -26,7 +26,7 @@ public static class SandboxEndpoints
                      TrackingNumber = DateTime.Now.ToString("yyyyMMddHHmmss")
                  };
 
-                 var successUrl = AddParametersToUrl( request.CallbackUrl, suceessCallbackData);
+                 var successUrl = AddParametersToUrl( request.CallbackUrl, successCallbackData);
 
                  var cancelCallbackData = new SanboxCallBackDataModel
                  {

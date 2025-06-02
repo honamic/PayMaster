@@ -86,7 +86,7 @@ internal class Program
             var sandboxProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "sandbox");
             if (sandboxProvider == null)
             {
-                SanboxConfigurations sandboxConfig = new()
+                SandboxConfigurations sandboxConfig = new()
                 {
                     PayUrl = "https://localhost:7121/paymaster/sandbox/pay", 
                 };

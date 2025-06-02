@@ -63,7 +63,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
                 var ticketResponse = JsonSerializer.Deserialize<TicketResponseDto>(rawResponse);
                 if (ticketResponse is not { Result.Status: 0 })
                 {
-                    result.Error = GetDescriptionWithCode(ticketResponse?.Result?.Status);
+                    result.StatusDescription = GetDescriptionWithCode(ticketResponse?.Result?.Status);
                     return result;
                 }
 
@@ -81,11 +81,11 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
                 if (errorCode != null)
                 {
-                    result.Error = GetDescriptionWithCode(errorCode);
+                    result.StatusDescription = GetDescriptionWithCode(errorCode);
                 }
                 else
                 {
-                    result.Error = $"Status Code:{apiResponse.StatusCode}";
+                    result.StatusDescription = $"Status Code:{apiResponse.StatusCode}";
                 }
             }
         }
@@ -169,19 +169,19 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
                 if (callbackData is not { Result: "SUCCESS" })
                 {
-                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                    result.Error = digipayVerify?.Result?.Message?.Trim();
-                    if (string.IsNullOrEmpty(result.Error))
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                    result.StatusDescription = digipayVerify?.Result?.Message?.Trim();
+                    if (string.IsNullOrEmpty(result.StatusDescription))
                     {
-                        result.Error = $"Status not Valid {digipayVerify?.Result.Status}";
+                        result.StatusDescription = $"Status not Valid {digipayVerify?.Result.Status}";
                     }
                     return result;
                 }
 
-                if (digipayVerify?.Amount != request.PatmentInfo.Amount)
+                if (digipayVerify?.Amount != request.PaymentInfo.Amount)
                 {
-                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                    result.Error = $"Amount not Valid [{digipayVerify?.Amount}]";
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                    result.StatusDescription = $"Amount not Valid [{digipayVerify?.Amount}]";
                     return result;
                 }
 
@@ -199,14 +199,14 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
             }
             else
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                result.Error = verifyResponse.StatusCode.ToString();
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                result.StatusDescription = verifyResponse.StatusCode.ToString();
                 return result;
             }
         }
         catch (Exception ex)
         {
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             _logger.LogError(ex, "VerifyAsync failed.");
         }
 
@@ -217,7 +217,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
     {
         if (callbackData is null)
         {
-            result.Error = "Call Back is empty";
+            result.StatusDescription = "Call Back is empty";
             return false;
         }
 

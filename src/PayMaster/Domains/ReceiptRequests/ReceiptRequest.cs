@@ -126,14 +126,14 @@ public class ReceiptRequest : AggregateRoot<long>
         {
             gatewayPayment.SetWaitingStatus(
                 createResult.CreateReference,
-                createResult.Error,
+                createResult.StatusDescription,
                 clock.NowWithOffset);
         }
         else
         {
             gatewayPayment.SetFailedStatus(
                 PaymentGatewayFailedReason.CreateFailed,
-                createResult.Error);
+                createResult.StatusDescription);
         }
 
         return createResult;
@@ -178,7 +178,7 @@ public class ReceiptRequest : AggregateRoot<long>
 
             VerifyRequest verifyRequest = new()
             {
-                PatmentInfo = new VerifyRequestPatmentInfo
+                PaymentInfo = new VerifyRequestPatmentInfo
                 {
                     Amount = gatewayPayment!.Amount,
                     UniqueRequestId = gatewayPayment.Id,
@@ -195,7 +195,7 @@ public class ReceiptRequest : AggregateRoot<long>
             }
             else
             {
-                gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.Error);
+                gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.StatusDescription);
             }
 
             tryLog.Success = verifyResult.Success;

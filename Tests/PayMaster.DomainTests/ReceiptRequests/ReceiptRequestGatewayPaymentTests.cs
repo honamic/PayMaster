@@ -267,7 +267,7 @@ public class ReceiptRequestGatewayPaymentTests
         var payment = CreateValidGatewayPayment();
         payment.SetWaitingStatus("REF123", null, DateTimeOffset.Now);
         payment.StartCallback(DateTimeOffset.Now, "callback data");
-        var reason = PaymentGatewayFailedReason.Verfiy;
+        var reason = PaymentGatewayFailedReason.Verify;
         var errorMsg = "Verification failed with the gateway";
 
         // Act

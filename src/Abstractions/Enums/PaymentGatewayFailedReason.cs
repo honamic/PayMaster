@@ -20,7 +20,7 @@ public enum PaymentGatewayFailedReason
     InternalVerify = 4,
 
     [Display(Name = "استعلام ناموفق")]
-    Verfiy = 5,
+    Verify = 5,
 
     [Display(Name = "تسویه ناموفق")]
     Settlement = 6,

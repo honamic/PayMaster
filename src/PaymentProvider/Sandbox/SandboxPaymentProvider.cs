@@ -10,11 +10,11 @@ namespace Honamic.PayMaster.PaymentProvider.Sandbox;
 
 public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : PaymentGatewayProviderBase
 {
-    private SanboxConfigurations _configurations = new SanboxConfigurations();
+    private SandboxConfigurations _configurations = new SandboxConfigurations();
 
     public override void Configure(string jsonConfiguration)
     {
-        var options = JsonSerializer.Deserialize<SanboxConfigurations>(jsonConfiguration);
+        var options = JsonSerializer.Deserialize<SandboxConfigurations>(jsonConfiguration);
 
         if (options == null)
         {
@@ -114,27 +114,27 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
             if (callbackData.Amount == null || callbackData.Amount <= 0)
             {
                 result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerify;
-                result.Error = "callback data not valid";
+                result.StatusDescription = "callback data not valid";
                 return Task.FromResult(result);
             }
 
             if (callbackData.Currency == null || callbackData.Currency != "IRR")
             {
                 result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerify;
-                result.Error = "callback data not valid";
+                result.StatusDescription = "callback data not valid";
                 return Task.FromResult(result);
             }
 
             result.VerifyLogData.Start(callbackData, "");
 
-            var VerfiyResult = CreateToken(callbackData.Amount, callbackData.Currency);
+            var VerifyResult = CreateToken(callbackData.Amount, callbackData.Currency);
 
-            result.VerifyLogData.SetResponse(new { VerfiyResult });
+            result.VerifyLogData.SetResponse(new { VerifyResult });
 
-            if (VerfiyResult != callbackData.Token)
+            if (VerifyResult != callbackData.Token)
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                result.Error = "callback data not valid";
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                result.StatusDescription = "callback data not valid";
                 return Task.FromResult(result);
             }
 
@@ -152,7 +152,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         }
         catch (Exception ex)
         {
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             logger.LogError(ex, "Verify Failed");
         }
 

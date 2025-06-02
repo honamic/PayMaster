@@ -11,7 +11,7 @@ public class VerifyResult
 
     public bool Success { get; set; }
 
-    public string? Error { get; set; }
+    public string? StatusDescription { get; set; }
 
     public PaymentProviderLogData VerifyLogData { get; }
 

@@ -135,33 +135,33 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
                 {
                     case "17":
                         result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
-                        result.Error = ResultCodeDescription(resCode);
+                        result.StatusDescription = ResultCodeDescription(resCode);
                         break;
                     default:
                         result.PaymentFailedReason = PaymentGatewayFailedReason.Other;
-                        result.Error = ResultCodeDescription(resCode);
+                        result.StatusDescription = ResultCodeDescription(resCode);
                         break;
                 }
                 return result;
             }
 
-            var apiVerfiyRequest = new bpVerifyRequestBody
+            var apiVerifyRequest = new bpVerifyRequestBody
             {
                 terminalId = Configurations.TerminalId,
                 userName = Configurations.UserName,
                 userPassword = Configurations.Password,
 
-                orderId = request.PatmentInfo.UniqueRequestId,
-                saleOrderId = request.PatmentInfo.UniqueRequestId,
+                orderId = request.PaymentInfo.UniqueRequestId,
+                saleOrderId = request.PaymentInfo.UniqueRequestId,
                 saleReferenceId = long.Parse(callbackData?.SaleReferenceId!),
             };
 
             var client = CreateClient();
 
-            result.VerifyLogData.Start(apiVerfiyRequest, "bpVerifyRequestAsync()");
+            result.VerifyLogData.Start(apiVerifyRequest, "bpVerifyRequestAsync()");
 
-            var verifyResponse = await client.bpVerifyRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
-                apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
+            var verifyResponse = await client.bpVerifyRequestAsync(apiVerifyRequest.terminalId, apiVerifyRequest.userName,
+                apiVerifyRequest.userPassword, apiVerifyRequest.orderId, apiVerifyRequest.saleOrderId, apiVerifyRequest.saleReferenceId);
 
             result.VerifyLogData.SetResponse(verifyResponse.Body.@return);
 
@@ -169,16 +169,16 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
 
             if (VerifyResultCode != "0")
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                result.Error = ResultCodeDescription(VerifyResultCode);
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                result.StatusDescription = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
 
             result.StartSettlement();
-            result.SettlementLogData!.Start(apiVerfiyRequest, "bpSettleRequestAsync()");
+            result.SettlementLogData!.Start(apiVerifyRequest, "bpSettleRequestAsync()");
 
-            var settlmentResponse = await client.bpSettleRequestAsync(apiVerfiyRequest.terminalId, apiVerfiyRequest.userName,
-                apiVerfiyRequest.userPassword, apiVerfiyRequest.orderId, apiVerfiyRequest.saleOrderId, apiVerfiyRequest.saleReferenceId);
+            var settlmentResponse = await client.bpSettleRequestAsync(apiVerifyRequest.terminalId, apiVerifyRequest.userName,
+                apiVerifyRequest.userPassword, apiVerifyRequest.orderId, apiVerifyRequest.saleOrderId, apiVerifyRequest.saleReferenceId);
 
             result.SettlementLogData.SetResponse(settlmentResponse.Body.@return);
 
@@ -187,7 +187,7 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
             if (settlmentResultCode != "0")
             {
                 result.PaymentFailedReason = PaymentGatewayFailedReason.Settlement;
-                result.Error = ResultCodeDescription(VerifyResultCode);
+                result.StatusDescription = ResultCodeDescription(VerifyResultCode);
                 return result;
             }
 
@@ -201,7 +201,7 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
         }
         catch (Exception ex)
         {
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             _logger.LogError(ex, "ExtractCallBackData Failed");
         }
 
@@ -212,27 +212,27 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
     {
         if (callbackData is null)
         {
-            result.Error = "Call Back is empty";
+            result.StatusDescription = "Call Back is empty";
             return false;
         }
 
         // todo: invariant Cultuer fix!
-        if (callbackData.FinalAmount != request.PatmentInfo.Amount.ToString())
+        if (callbackData.FinalAmount != request.PaymentInfo.Amount.ToString())
         {
-            result.Error = "مغایرت در مبلغ";
+            result.StatusDescription = "مغایرت در مبلغ";
             return false;
         }
 
-        if (callbackData.RefId != request.PatmentInfo.CreateReference)
+        if (callbackData.RefId != request.PaymentInfo.CreateReference)
         {
-            result.Error = "مغایرت در RefId";
+            result.StatusDescription = "مغایرت در RefId";
             return false;
         }
 
         if (callbackData.SaleOrderId
-                != request.PatmentInfo.UniqueRequestId.ToString(CultureInfo.InvariantCulture))
+                != request.PaymentInfo.UniqueRequestId.ToString(CultureInfo.InvariantCulture))
         {
-            result.Error = "مغایرت در شناسه درخواست";
+            result.StatusDescription = "مغایرت در شناسه درخواست";
             return false;
         }
 

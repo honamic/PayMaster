@@ -2,7 +2,7 @@
 
 public class VerifyRequest
 {
-    public required VerifyRequestPatmentInfo PatmentInfo { get; init; }
+    public required VerifyRequestPatmentInfo PaymentInfo { get; init; }
 
     public object? CallBackData { get; init; }
 }

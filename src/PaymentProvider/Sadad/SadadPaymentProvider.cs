@@ -79,14 +79,14 @@ public class SadadPaymentProvider : PaymentGatewayProviderBase
                 }
                 else
                 {
-                    result.Error = response?.Description;
+                    result.StatusDescription = response?.Description;
                 }
             }
         }
         catch (Exception ex)
         {
             result.LogData.SetException(ex);
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             _logger.LogError(ex, "PrePay Failed");
         }
 

@@ -1,8 +1,8 @@
 ﻿namespace Honamic.PayMaster.PaymentProvider.Sandbox;
 
-public class SanboxConfigurations
+public class SandboxConfigurations
 {
-    public SanboxConfigurations()
+    public SandboxConfigurations()
     {
         PayUrl = "https://yoursite.com//paymaster/sandbox/pay";
     }

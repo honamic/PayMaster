@@ -10,7 +10,7 @@ public class CreateResult
 
     public bool Success { get; set; }
     
-    public string? Error { get; set; }
+    public string? StatusDescription { get; set; }
     
     public string? CreateReference { get; set; }
 

@@ -65,7 +65,7 @@ public class ZarinPalPaymentProvider(
                     (rawResponse);
                 if (zarinPalResult is not { data.Code: 100 })
                 {
-                    result.Error = GetDescriptionFromCode(zarinPalResult?.data?.Code);
+                    result.StatusDescription = GetDescriptionFromCode(zarinPalResult?.data?.Code);
                     return result;
                 }
 
@@ -83,11 +83,11 @@ public class ZarinPalPaymentProvider(
 
                 if (error != null)
                 {
-                    result.Error = error.message + " | " + GetDescriptionFromCode(error.code);
+                    result.StatusDescription = error.message + " | " + GetDescriptionFromCode(error.code);
                 }
                 else
                 {
-                    result.Error = $"Status Code:{apiResponse.StatusCode}";
+                    result.StatusDescription = $"Status Code:{apiResponse.StatusCode}";
                 }
             }
         }
@@ -149,7 +149,7 @@ public class ZarinPalPaymentProvider(
             var verificationRequest = new PaymentVerificationRequest
             {
                 merchant_id = _configurations.MerchantId,
-                amount = request.PatmentInfo.Amount,
+                amount = request.PaymentInfo.Amount,
                 authority = callbackData!.Authority
             };
 
@@ -176,8 +176,8 @@ public class ZarinPalPaymentProvider(
                 && paymentVerificationResponse.data.code != 101)
                 )
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                result.Error = GetDescriptionFromCode(paymentVerificationResponse?.data.code);
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                result.StatusDescription = GetDescriptionFromCode(paymentVerificationResponse?.data.code);
                 return result;
             }
 
@@ -194,7 +194,7 @@ public class ZarinPalPaymentProvider(
         }
         catch (Exception ex)
         {
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             logger.LogError(ex, "Verify Failed");
         }
 
@@ -243,19 +243,19 @@ public class ZarinPalPaymentProvider(
     {
         if (callbackData is null)
         {
-            result.Error = "Call Back is empty";
+            result.StatusDescription = "Call Back is empty";
             return false;
         }
 
-        if (callbackData.Authority != request.PatmentInfo.CreateReference)
+        if (callbackData.Authority != request.PaymentInfo.CreateReference)
         {
-            result.Error = "مغایرت در مقدار Authority";
+            result.StatusDescription = "مغایرت در مقدار Authority";
             return false;
         }
 
         if (callbackData.Status != "OK")
         {
-            result.Error = "وضعیت نامعتبر";
+            result.StatusDescription = "وضعیت نامعتبر";
             return false;
         }
 

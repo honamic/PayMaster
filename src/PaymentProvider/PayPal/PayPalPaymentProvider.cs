@@ -193,16 +193,16 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
                 if (payPalOrder?.Status != PayPalOrderStatus.Approved)
                 {
-                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                    result.Error = $"Status not Valid {payPalOrder?.Status}";
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                    result.StatusDescription = $"Status not Valid {payPalOrder?.Status}";
                     return result;
                 }
 
                 var amount = decimal.Parse(payPalOrder?.PurchaseUnits[0].Amount?.Value ?? "0");
-                if (amount != request.PatmentInfo.Amount)
+                if (amount != request.PaymentInfo.Amount)
                 {
-                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                    result.Error = $"Amount not Valid [{amount}]";
+                    result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                    result.StatusDescription = $"Amount not Valid [{amount}]";
                     return result;
                 }
             }
@@ -224,8 +224,8 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
             if (!verifyResponse.IsSuccessStatusCode)
             {
-                result.PaymentFailedReason = PaymentGatewayFailedReason.Verfiy;
-                result.Error = verifyResponse.StatusCode.ToString();
+                result.PaymentFailedReason = PaymentGatewayFailedReason.Verify;
+                result.StatusDescription = verifyResponse.StatusCode.ToString();
                 return result;
             }
 
@@ -243,7 +243,7 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
         }
         catch (Exception ex)
         {
-            result.Error = ex.Message;
+            result.StatusDescription = ex.Message;
             _logger.LogError(ex, "ExtractCallBackData Failed");
         }
 
@@ -287,13 +287,13 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
     {
         if (callbackData is null)
         {
-            result.Error = "Call Back is empty";
+            result.StatusDescription = "Call Back is empty";
             return false;
         }
 
-        if (callbackData.Token != request.PatmentInfo.CreateReference)
+        if (callbackData.Token != request.PaymentInfo.CreateReference)
         {
-            result.Error = "مغایرت در OrderId";
+            result.StatusDescription = "مغایرت در OrderId";
             return false;
         }
 
