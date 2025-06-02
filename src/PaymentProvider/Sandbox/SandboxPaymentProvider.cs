@@ -39,7 +39,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         {
             PayId = createResult.CreateReference,
             Amount = (long)createRequest.Amount,
-            Token = CRC32(CreateToken(createRequest.Amount, createRequest.Currency)),
+            Token = HashCode(CreateToken(createRequest.Amount, createRequest.Currency)),
             Currency = createRequest.Currency,
             CallbackUrl = createRequest.CallbackUrl,
             GatewayNote = createRequest.GatewayNote ?? string.Empty,
@@ -162,10 +162,10 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
 
     private static string CreateToken(decimal amount, string currency)
     {
-        return CRC32($"{amount}|{currency}");
+        return HashCode($"{amount}|{currency}");
     }
 
-    private static string CRC32(string input)
+    private static string HashCode(string input)
     {
         using var sha256 = SHA256.Create();
         var bytes = System.Text.Encoding.UTF8.GetBytes(input);

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using System.Web;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Honamic.PayMaster.PaymentProvider.Sandbox.Web;
 
@@ -48,7 +48,7 @@ public static class SandboxEndpoints
     public static string AddParametersToUrl(this string baseUrl, SanboxCallBackDataModel dataModel)
     {
         var uriBuilder = new UriBuilder(baseUrl);
-        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        var query = QueryHelpers.ParseQuery(uriBuilder.Query);
 
         query[nameof(dataModel.Status)] = dataModel.Status;
         query[nameof(dataModel.Amount)] = dataModel.Amount.ToString();

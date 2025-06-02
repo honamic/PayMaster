@@ -83,21 +83,21 @@ internal class Program
                 db.Set<ReceiptIssuer>().Add(defaultIssuer!);
             }
 
-            var sanboxProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "sandbox");
-            if (sanboxProvider == null)
+            var sandboxProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "sandbox");
+            if (sandboxProvider == null)
             {
-                SanboxConfigurations sanboxConfig = new()
+                SanboxConfigurations sandboxConfig = new()
                 {
                     PayUrl = "https://localhost:7121/paymaster/sandbox/pay", 
                 };
 
-                sanboxProvider = new PaymentGatewayProvider
+                sandboxProvider = new PaymentGatewayProvider
                 {
                     Id = 1000,
                     Code = "sandbox",
                     Title = "تست پرداخت",
                     Enabled = true,
-                    Configurations = JsonSerializer.Serialize(sanboxConfig),
+                    Configurations = JsonSerializer.Serialize(sandboxConfig),
                     MinimumAmount = 1000,
                     MaximumAmount = null,
                     Order = 1,
@@ -105,7 +105,7 @@ internal class Program
                     LogoPath = null,
                 };
 
-                db.Set<PaymentGatewayProvider>().Add(sanboxProvider);
+                db.Set<PaymentGatewayProvider>().Add(sandboxProvider);
             }
 
             var zainpalProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "Default");
