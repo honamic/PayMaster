@@ -66,7 +66,7 @@ public class HttpInterceptorService : DelegatingHandler
             new AuthenticationHeaderValue("Bearer", tokenModel.AccessToken) : null;
     }
 
-    public async Task<BearerTokenModel> Login(DigipayConfigurations configurations, Uri? requestUri = null)
+    public async Task<BearerTokenModel> Login(DigipayConfigurations configurations, Uri requestUri)
     {
         using var client = _HttpClientFactory.CreateClient(Constants.HttpClientName);
         var loginUrl = new Uri(new Uri(configurations.ApiAddress), Constants.DigiPayAuthPath);

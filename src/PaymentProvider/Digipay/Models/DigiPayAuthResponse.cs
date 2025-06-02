@@ -23,7 +23,7 @@ public class DigiPayAuthResponse
     [JsonPropertyName("jti")]
     public string? JTI { get; set; }
 
-    internal BearerTokenModel ToBearerToken()
+    public BearerTokenModel ToBearerToken()
     {
         return new BearerTokenModel
         {
