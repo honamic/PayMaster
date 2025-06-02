@@ -37,7 +37,7 @@ public class InMemoryBearerTokensStore : IBearerTokensStore
             throw new ArgumentNullException(nameof(bearerToken), "Bearer token cannot be null.");
         }
 
-        bearerToken.SetExpireAtNow();
+        bearerToken.SetExpiryFromNow();
 
         Tokens[host] = bearerToken;
         return Task.CompletedTask;

@@ -24,7 +24,7 @@ public class BearerTokenModel
 
     public DateTime? ExpiresAt { get; private set; }
 
-    public void SetExpireAtNow()
+    public void SetExpiryFromNow()
     {
         ExpiresAt = DateTime.Now.AddSeconds(ExpiresIn);
     }

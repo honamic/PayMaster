@@ -1,3 +1,4 @@
+using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.HttpClients;
 using Honamic.PayMaster.PaymentProvider.Digipay.Models;
 using System.Net.Http.Headers;
@@ -33,7 +34,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri!.Host);
+            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri.GetOrigin());
         }
 
         return response;
@@ -47,7 +48,7 @@ public class HttpInterceptorService : DelegatingHandler
             return;
         }
 
-        var tokenModel = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri!.Host);
+        var tokenModel = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri.GetOrigin());
 
         if (tokenModel == null)
         {
@@ -97,7 +98,7 @@ public class HttpInterceptorService : DelegatingHandler
         {
             var bearerTokenModel = tokenData.ToBearerToken();
 
-            await _bearerTokensStore.StoreTokenAsync(request.RequestUri!.Host, bearerTokenModel);
+            await _bearerTokensStore.StoreTokenAsync(request.RequestUri.GetOrigin(), bearerTokenModel);
 
             return bearerTokenModel;
         }

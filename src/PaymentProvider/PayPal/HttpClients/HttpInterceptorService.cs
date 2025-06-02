@@ -1,3 +1,4 @@
+using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.HttpClients;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models;
 using System.Net.Http.Headers;
@@ -33,7 +34,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri!.Host);
+            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri.GetOrigin());
         }
 
         return response;
@@ -53,11 +54,11 @@ public class HttpInterceptorService : DelegatingHandler
             throw new Exception($"get PayPalConfigurations failed.");
         }
 
-        var token = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri!.Host);
+        var token = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri.GetOrigin());
 
         if (token == null && options.AutoLogin)
         {
-            token = await Login(options, request.RequestUri);
+            token = await Login(options, request.RequestUri!);
         }
 
         request.Headers.Authorization =
@@ -92,7 +93,7 @@ public class HttpInterceptorService : DelegatingHandler
         {
             var bearerToken = tokenData.ToBearerToken();
 
-            await _bearerTokensStore.StoreTokenAsync(requestUri.Host, bearerToken);
+            await _bearerTokensStore.StoreTokenAsync(requestUri.GetOrigin(), bearerToken);
 
             return bearerToken;
         }
