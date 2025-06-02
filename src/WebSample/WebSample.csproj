@@ -23,8 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PayMaster\Honamic.PayMaster.csproj" />
+    <ProjectReference Include="..\PaymentProvider\All\All.csproj" />
     <ProjectReference Include="..\PaymentProvider\Digipay\Digipay.csproj" />
     <ProjectReference Include="..\PaymentProvider\PayPal\PayPal.csproj" />
+    <ProjectReference Include="..\PaymentProvider\Sandbox.Web\Sandbox.Web.csproj" />
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
     <ProjectReference Include="..\Persistence\Honamic.PayMaster.Persistence.csproj" />
     <ProjectReference Include="..\Web\Honamic.PayMaster.Web.csproj" />
