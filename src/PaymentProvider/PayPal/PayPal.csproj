@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+	  <Version>1.0.0-Alpha</Version>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>Honamic.PayMaster.PaymentProvider.PayPal</AssemblyName>
     <RootNamespace>Honamic.PayMaster.PaymentProvider.PayPal</RootNamespace>
