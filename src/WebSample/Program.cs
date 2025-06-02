@@ -4,16 +4,17 @@ using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Extensions;
-using Honamic.PayMaster.PaymentProvider.PayPal.Extensions;
+using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
+using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
+using Honamic.PayMaster.PaymentProvider.Sandbox;
+using Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
-using Honamic.PayMaster.PaymentProvider.ZarinPal.Extensions;
 using Honamic.PayMaster.Persistence.Extensions;
+using Honamic.PayMaster.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
-using Honamic.PayMaster.Web.Extensions;
-using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 
 internal class Program
 {
@@ -24,9 +25,9 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddZarinPalPaymentProviderServices();
-        builder.Services.AddPayPalPaymentProviderServices();
+        builder.Services.AddAllPaymentProviderServices();
         builder.Services.AddDigipayPaymentProviderServices();
+        builder.Services.AddSandboxWebPaymentProviderServices();
         builder.Services.AddHttpClient();
 
         var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnectionString");
@@ -55,6 +56,7 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UsePayMasterEndpoints();
+        app.UseSandboxPayEndpoints();
 
         PaymentEndpoints.MapPaymentEndpoints(app);
 
@@ -79,6 +81,31 @@ internal class Program
                 defaultIssuer = ReceiptIssuer.Create(parameters);
 
                 db.Set<ReceiptIssuer>().Add(defaultIssuer!);
+            }
+
+            var sandboxProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "sandbox");
+            if (sandboxProvider == null)
+            {
+                SanboxConfigurations sandboxConfig = new()
+                {
+                    PayUrl = "https://localhost:7121/paymaster/sandbox/pay", 
+                };
+
+                sandboxProvider = new PaymentGatewayProvider
+                {
+                    Id = 1000,
+                    Code = "sandbox",
+                    Title = "تست پرداخت",
+                    Enabled = true,
+                    Configurations = JsonSerializer.Serialize(sandboxConfig),
+                    MinimumAmount = 1000,
+                    MaximumAmount = null,
+                    Order = 1,
+                    ProviderType = typeof(SandboxPaymentProvider).FullName,
+                    LogoPath = null,
+                };
+
+                db.Set<PaymentGatewayProvider>().Add(sandboxProvider);
             }
 
             var zainpalProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "Default");
@@ -107,6 +134,9 @@ internal class Program
 
                 db.Set<PaymentGatewayProvider>().Add(zainpalProvider);
             }
+
+
+
             db.SaveChanges();
         }
 
