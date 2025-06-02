@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Honamic.PayMaster.HttpClients;
+using System.Text.Json.Serialization;
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal.Models;
 
@@ -21,4 +22,17 @@ public class PayPalAuthResponse
 
     [JsonPropertyName("nonce")]
     public string? Nonce { get; set; }
+
+    public BearerTokenModel ToBearerToken()
+    {
+        return new BearerTokenModel
+        {
+            AccessToken = AccessToken,
+            ExpiresIn = ExpiresIn,
+            RefreshToken = null,
+            TokenType = TokenType,
+            Scope = Scope,
+            TokenId = null,
+        };
+    }
 }

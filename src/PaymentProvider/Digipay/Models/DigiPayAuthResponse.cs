@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Honamic.PayMaster.HttpClients;
+using System.Text.Json.Serialization;
 
 namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;
 
@@ -21,4 +22,17 @@ public class DigiPayAuthResponse
 
     [JsonPropertyName("jti")]
     public string? JTI { get; set; }
+
+    public BearerTokenModel ToBearerToken()
+    {
+        return new BearerTokenModel
+        {
+            AccessToken = AccessToken,
+            ExpiresIn = ExpiresIn,
+            RefreshToken = RefreshToken,
+            TokenType = TokenType,
+            Scope = Scope,
+            TokenId = JTI,
+        };
+    }
 }

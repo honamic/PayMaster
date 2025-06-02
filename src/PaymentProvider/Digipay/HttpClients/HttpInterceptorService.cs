@@ -1,3 +1,5 @@
+using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.HttpClients;
 using Honamic.PayMaster.PaymentProvider.Digipay.Models;
 using System.Net.Http.Headers;
 using System.Text;
@@ -32,7 +34,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            await _bearerTokensStore.RemoveTokenAsync();
+            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri.GetOrigin());
         }
 
         return response;
@@ -46,9 +48,9 @@ public class HttpInterceptorService : DelegatingHandler
             return;
         }
 
-        var token = await _bearerTokensStore.GetBearerTokenAsync();
+        var tokenModel = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri.GetOrigin());
 
-        if (token == null)
+        if (tokenModel == null)
         {
             var optionsKey = new HttpRequestOptionsKey<DigipayConfigurations>(Constants.DigiPayRequestOptionsKey);
 
@@ -57,14 +59,15 @@ public class HttpInterceptorService : DelegatingHandler
                 throw new Exception($"get {nameof(DigipayConfigurations)} failed.");
             }
 
-            token = await Login(options);
+            tokenModel = await Login(options, request.RequestUri);
         }
 
         request.Headers.Authorization =
-            token is not null ? new AuthenticationHeaderValue("Bearer", token) : null;
+            tokenModel?.AccessToken is not null ?
+            new AuthenticationHeaderValue("Bearer", tokenModel.AccessToken) : null;
     }
 
-    public async Task<string> Login(DigipayConfigurations configurations)
+    public async Task<BearerTokenModel> Login(DigipayConfigurations configurations, Uri requestUri)
     {
         using var client = _HttpClientFactory.CreateClient(Constants.HttpClientName);
         var loginUrl = new Uri(new Uri(configurations.ApiAddress), Constants.DigiPayAuthPath);
@@ -75,8 +78,8 @@ public class HttpInterceptorService : DelegatingHandler
         request.Headers.Add("Authorization", $"Basic {Convert.ToBase64String(authBytes)}");
 
         MultipartFormDataContent content = new MultipartFormDataContent();
-        content.Add(new StringContent(configurations.UserName),"username" );
-        content.Add(new StringContent(configurations.Password),"password");
+        content.Add(new StringContent(configurations.UserName), "username");
+        content.Add(new StringContent(configurations.Password), "password");
         content.Add(new StringContent("password"), "grant_type");
         request.Content = content;
 
@@ -93,9 +96,11 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (!string.IsNullOrEmpty(tokenData?.AccessToken))
         {
-            var expire = DateTime.Now.AddSeconds(tokenData.ExpiresIn);
-            await _bearerTokensStore.StoreTokenAsync(tokenData.AccessToken, expire);
-            return tokenData.AccessToken;
+            var bearerTokenModel = tokenData.ToBearerToken();
+
+            await _bearerTokensStore.StoreTokenAsync(request.RequestUri.GetOrigin(), bearerTokenModel);
+
+            return bearerTokenModel;
         }
 
         throw new Exception($"Digipay login failed. result: {tokenResponseString}");

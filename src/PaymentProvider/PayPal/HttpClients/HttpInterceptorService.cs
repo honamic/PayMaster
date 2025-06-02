@@ -1,3 +1,5 @@
+using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.HttpClients;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models;
 using System.Net.Http.Headers;
 using System.Text;
@@ -32,7 +34,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            await _bearerTokensStore.RemoveToken();
+            await _bearerTokensStore.RemoveTokenAsync(request.RequestUri.GetOrigin());
         }
 
         return response;
@@ -52,18 +54,20 @@ public class HttpInterceptorService : DelegatingHandler
             throw new Exception($"get PayPalConfigurations failed.");
         }
 
-        var token = await _bearerTokensStore.GetBearerTokenAsync();
+        var token = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri.GetOrigin());
 
         if (token == null && options.AutoLogin)
         {
-            token = await Login(options);
+            token = await Login(options, request.RequestUri!);
         }
 
         request.Headers.Authorization =
-            token is not null ? new AuthenticationHeaderValue("Bearer", token) : null;
+            token is not null
+            ? new AuthenticationHeaderValue("Bearer", token.AccessToken)
+            : null;
     }
 
-    public async Task<string> Login(PayPalConfigurations payPalConfigurations)
+    public async Task<BearerTokenModel> Login(PayPalConfigurations payPalConfigurations, Uri requestUri)
     {
         using var client = _HttpClientFactory.CreateClient(Constants.HttpClientName);
         var authBytes = Encoding.UTF8.GetBytes($"{payPalConfigurations.ClientId}:{payPalConfigurations.Secret}");
@@ -87,9 +91,11 @@ public class HttpInterceptorService : DelegatingHandler
 
         if (!string.IsNullOrEmpty(tokenData?.AccessToken))
         {
-            var expire = DateTime.Now.AddSeconds(tokenData.ExpiresIn);
-            await _bearerTokensStore.StoreToken(tokenData.AccessToken, expire);
-            return tokenData.AccessToken;
+            var bearerToken = tokenData.ToBearerToken();
+
+            await _bearerTokensStore.StoreTokenAsync(requestUri.GetOrigin(), bearerToken);
+
+            return bearerToken;
         }
 
         throw new Exception($"paypal login failed. result: {tokenResponseString}");

@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.PaymentProviders;
+﻿using Honamic.PayMaster.HttpClients;
+using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Honamic.PayMaster.Extensions;
@@ -14,5 +15,11 @@ public static class ServiceCollectionExtensions
         var providerName = typeof(TProvider).Name.Replace("PaymentProvider", "", StringComparison.InvariantCultureIgnoreCase);
 
         Providers.Add(new KeyValuePair<string, string>(typeof(TProvider).FullName!, providerName));
+    }
+
+    public static IServiceCollection AddInMemoryBearerTokensStoreService(this IServiceCollection services)
+    {
+        services.AddSingleton<IBearerTokensStore, InMemoryBearerTokensStore>();
+        return services;
     }
 }
