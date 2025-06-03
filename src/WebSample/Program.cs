@@ -43,7 +43,7 @@ internal class Program
 
         builder.Services.Configure<PayMasterOptions>(c =>
         {
-            c.CallBackUrl = "https://localhost:7121/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
+            c.CallBackUrl = "https://localhost:7777/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
         });
 
         var app = builder.Build();
@@ -88,7 +88,7 @@ internal class Program
             {
                 SandboxConfigurations sandboxConfig = new()
                 {
-                    PayUrl = "https://localhost:7121/paymaster/sandbox/pay", 
+                    PayUrl = "https://localhost:7777/paymaster/sandbox/pay", 
                 };
 
                 sandboxProvider = new PaymentGatewayProvider

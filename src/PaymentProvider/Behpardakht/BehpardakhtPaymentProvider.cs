@@ -8,31 +8,17 @@ using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.Behpardakht;
-public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
+public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase<BehpardakhtConfigurations>
 {
     private const string ParamsForGatewayPath = "/pgwchannel/services/pgw";
     private readonly ILogger<BehpardakhtPaymentProvider> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-
-    private BehpardakhtConfigurations Configurations = new BehpardakhtConfigurations();
 
     public BehpardakhtPaymentProvider(ILogger<BehpardakhtPaymentProvider> logger,
         IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-    }
-
-    public override void Configure(string jsonConfiguration)
-    {
-        var options = JsonSerializer.Deserialize<BehpardakhtConfigurations>(jsonConfiguration);
-
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(jsonConfiguration));
-        }
-
-        Configurations = options;
     }
 
     public override async Task<CreateResult> CreateAsync(CreateRequest request)
@@ -246,7 +232,7 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
             Configurations.ApiAddress);
     }
 
-    public static string ResultCodeDescription(string result) => result switch
+    private static string ResultCodeDescription(string result) => result switch
     {
         "0" => "تراكنش با موفقيت انجام شد",
         "11" => "شماره كارت نامعتبر است",
@@ -295,4 +281,5 @@ public class BehpardakhtPaymentProvider : PaymentGatewayProviderBase
         "61" => "خطا در واريز",
         _ => $"UnexpectedError, Response: {result}"
     };
+
 }

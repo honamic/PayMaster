@@ -5,34 +5,19 @@ using System.Text.Json;
 using Honamic.PayMaster.PaymentProvider.Sadad.Extensions;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.PaymentProviders;
-using System.Net.Http;
 
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
-public class SadadPaymentProvider : PaymentGatewayProviderBase
+public class SadadPaymentProvider : PaymentGatewayProviderBase<SadadConfigurations>
 {
     private const string PaymentRequestPath = "/api/v0/Request/PaymentRequest";
     private readonly ILogger<SadadPaymentProvider> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-
-    private SadadConfigurations Configurations = new SadadConfigurations();
 
     public SadadPaymentProvider(ILogger<SadadPaymentProvider> logger,
         IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-    }
-
-    public override void Configure(string jsonConfiguration)
-    {
-        var options = JsonSerializer.Deserialize<SadadConfigurations>(jsonConfiguration);
-
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(jsonConfiguration));
-        }
-
-        Configurations = options;
     }
 
     public override async Task<CreateResult> CreateAsync(CreateRequest request)

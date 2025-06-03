@@ -7,34 +7,20 @@ using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;
-using System.Text.Json; 
+using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.PayPal;
-public class PayPalPaymentProvider : PaymentGatewayProviderBase
+public class PayPalPaymentProvider : PaymentGatewayProviderBase<PayPalConfigurations>
 {
-    private const string checkoutOrdersPath = "/v2/checkout/orders";
     private readonly ILogger<PayPalPaymentProvider> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    private PayPalConfigurations Configurations = new PayPalConfigurations();
 
     public PayPalPaymentProvider(ILogger<PayPalPaymentProvider> logger,
         IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
-    }
-
-    public override void Configure(string jsonConfiguration)
-    {
-        var options = JsonSerializer.Deserialize<PayPalConfigurations>(jsonConfiguration);
-
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(jsonConfiguration));
-        }
-
-        Configurations = options;
     }
 
     public override async Task<CreateResult> CreateAsync(CreateRequest request)
@@ -107,24 +93,6 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
         }
 
         return result;
-    }
-
-    private HttpRequestMessage CreateHttpRequest(PaypalCreateOrder apiRequest)
-    {
-        var url = new Uri(new Uri(Configurations.ApiAddress), checkoutOrdersPath);
-
-        string apiRequestJsonData = JsonSerializer.Serialize(apiRequest);
-
-        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
-        {
-            Content = new StringContent(apiRequestJsonData, Encoding.UTF8, "application/json")
-        };
-
-        var customOptionKey = new HttpRequestOptionsKey<PayPalConfigurations>(Constants.PayPalRequestOptionsKey);
-
-        httpRequest.Options.Set(customOptionKey, Configurations);
-
-        return httpRequest;
     }
 
     public override ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue)
@@ -250,10 +218,27 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
         return result;
     }
 
+    private HttpRequestMessage CreateHttpRequest(PaypalCreateOrder apiRequest)
+    {
+        var url = new Uri(new Uri(Configurations.ApiAddress), Constants.CheckoutOrdersPath);
+
+        string apiRequestJsonData = JsonSerializer.Serialize(apiRequest);
+
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        {
+            Content = new StringContent(apiRequestJsonData, Encoding.UTF8, "application/json")
+        };
+
+        var customOptionKey = new HttpRequestOptionsKey<PayPalConfigurations>(Constants.PayPalRequestOptionsKey);
+
+        httpRequest.Options.Set(customOptionKey, Configurations);
+
+        return httpRequest;
+    }
 
     private HttpRequestMessage CreateCaptureHttpRequest(string orderId)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), $"{checkoutOrdersPath.TrimEnd('/')}/{orderId}/capture");
+        var url = new Uri(new Uri(Configurations.ApiAddress), $"{Constants.CheckoutOrdersPath.TrimEnd('/')}/{orderId}/capture");
 
         HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
         {
@@ -269,7 +254,7 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
     private HttpRequestMessage CreateGetOrderHttpRequest(string orderId)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), $"{checkoutOrdersPath.TrimEnd('/')}/{orderId}");
+        var url = new Uri(new Uri(Configurations.ApiAddress), $"{Constants.CheckoutOrdersPath.TrimEnd('/')}/{orderId}");
 
         HttpRequestMessage httpRequest = new(HttpMethod.Get, url)
         {
@@ -299,5 +284,4 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase
 
         return true;
     }
-
 }

@@ -1,15 +1,12 @@
-﻿
+﻿using Honamic.PayMaster.PaymentProviders;
+
 namespace Honamic.PayMaster.PaymentProvider.Sadad;
 
-public class SadadConfigurations
+public class SadadConfigurations : IPaymentGatewayProviderConfiguration
 {
     public SadadConfigurations()
     {
-        PaymentRequestUri = "https://sadad.shaparak.ir/api/v0/Request/PaymentRequest";
-        PurchasePage = "https://sadad.shaparak.ir/Purchase";
-        TerminalId = "YourTerminalId";
-        MerchantId = "YourMerchantId";
-        MerchantKey = "YourMerchantKey";
+        SetDefaultConfiguration();
     }
 
     /// <summary>
@@ -31,5 +28,60 @@ public class SadadConfigurations
     /// <summary>
     /// شماره پذيرنده : شماره يکتا به منظور مشخص شدن پذيرنده
     /// </summary>
-    public string MerchantId { get;  set; }
+    public string MerchantId { get; set; }
+
+    public void SetDefaultConfiguration(bool sandbox = false)
+    {
+        MerchantId = "YourMerchantId";
+        MerchantKey = "YourMerchantKey";
+        TerminalId = "YourTerminalId";
+
+        PaymentRequestUri = sandbox
+        ? "https://sandbox.sadad.shaparak.ir/api/v0/Request/PaymentRequest"
+        : "https://sadad.shaparak.ir/api/v0/Request/PaymentRequest";
+
+        PurchasePage = sandbox
+        ? "https://sandbox.sadad.shaparak.ir/api/v0/Request/PaymentRequest"
+        : "https://sadad.shaparak.ir/api/v0/Request/PaymentRequest";
+    }
+
+    public List<string> IsValid()
+    {
+        var errors = new List<string>();
+
+        if (string.IsNullOrEmpty(this.TerminalId))
+        {
+            errors.Add("TerminalId is required.");
+        }
+
+        if (string.IsNullOrEmpty(this.MerchantId))
+        {
+            errors.Add("MerchantId is required.");
+        }
+
+        if (string.IsNullOrEmpty(this.MerchantKey))
+        {
+            errors.Add("MerchantKey is required.");
+        }
+
+        if (string.IsNullOrEmpty(this.PaymentRequestUri))
+        {
+            errors.Add("PaymentRequestUri is required.");
+        }
+        else if (!Uri.IsWellFormedUriString(this.PaymentRequestUri, UriKind.Absolute))
+        {
+            errors.Add("PaymentRequestUri is not a valid URI.");
+        }
+
+        if (string.IsNullOrEmpty(this.PurchasePage))
+        {
+            errors.Add("PurchasePage is required.");
+        }
+        else if (!Uri.IsWellFormedUriString(this.PurchasePage, UriKind.Absolute))
+        {
+            errors.Add("PurchasePage is not a valid URI.");
+        }
+
+        return errors;
+    }
 }

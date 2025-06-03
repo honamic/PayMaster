@@ -8,29 +8,15 @@ using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.Sandbox;
 
-public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : PaymentGatewayProviderBase
+public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : PaymentGatewayProviderBase<SandboxConfigurations>
 {
-    private SandboxConfigurations _configurations = new SandboxConfigurations();
-
-    public override void Configure(string jsonConfiguration)
-    {
-        var options = JsonSerializer.Deserialize<SandboxConfigurations>(jsonConfiguration);
-
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(jsonConfiguration));
-        }
-
-        _configurations = options;
-    }
-
     public override Task<CreateResult> CreateAsync(CreateRequest createRequest)
     {
         var createResult = new CreateResult
         {
             Success = true,
             CreateReference = DateTime.Now.Ticks.ToString(),
-            PayUrl = _configurations.PayUrl,
+            PayUrl = Configurations.PayUrl,
             PayVerb = PayVerb.Get
         };
 
@@ -69,7 +55,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         {
             var callbackData = JsonSerializer.Deserialize<SanboxCallBackDataModel>(callBackJsonValue, new JsonSerializerOptions
             {
-                NumberHandling=System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
             });
 
             if (callbackData is { Status: "OK" })
@@ -158,7 +144,6 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
 
         return Task.FromResult(result);
     }
-
 
     private static string CreateToken(decimal amount, string currency)
     {

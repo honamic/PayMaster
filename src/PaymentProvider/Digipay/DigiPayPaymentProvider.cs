@@ -9,25 +9,15 @@ using System.Text.Json;
 
 namespace Honamic.PayMaster.PaymentProvider.Digipay;
 
-public class DigiPayPaymentProvider : PaymentGatewayProviderBase
+public class DigiPayPaymentProvider : PaymentGatewayProviderBase<DigipayConfigurations>
 {
     private readonly ILogger<DigiPayPaymentProvider> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-    private DigipayConfigurations _configurations = new DigipayConfigurations();
 
     public DigiPayPaymentProvider(IHttpClientFactory httpClientFactory, ILogger<DigiPayPaymentProvider> logger)
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
-    }
-
-
-    public override void Configure(string providerConfiguration)
-    {
-        var digipayConfigurations = JsonSerializer.Deserialize<DigipayConfigurations>(providerConfiguration);
-
-        _configurations = digipayConfigurations ??
-                         throw new ArgumentNullException(nameof(providerConfiguration));
     }
 
     public override async Task<CreateResult> CreateAsync(CreateRequest createRequest)
@@ -227,7 +217,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
     private HttpRequestMessage CreateVerifyHttpRequest(string trackingCode, TicketType type)
     {
         var verifyPath = Constants.CreatePath + $"/{trackingCode}/?type={(int)type}";
-        var url = new Uri(new Uri(_configurations.ApiAddress), verifyPath);
+        var url = new Uri(new Uri(Configurations.ApiAddress), verifyPath);
 
         HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
         {
@@ -236,7 +226,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
         var customOptionKey = new HttpRequestOptionsKey<DigipayConfigurations>(Constants.DigiPayRequestOptionsKey);
 
-        httpRequest.Options.Set(customOptionKey, _configurations);
+        httpRequest.Options.Set(customOptionKey, Configurations);
 
         return httpRequest;
     }
@@ -244,7 +234,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
     private HttpRequestMessage CreateHttpRequest(TicketRequestDto apiRequest, CreateRequest createRequest)
     {
         var createPath = Constants.CreatePath + $"?type={MapTicketType(createRequest)}";
-        var url = new Uri(new Uri(_configurations.ApiAddress), createPath);
+        var url = new Uri(new Uri(Configurations.ApiAddress), createPath);
 
         string apiRequestJsonData = JsonSerializer.Serialize(apiRequest);
 
@@ -258,7 +248,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase
 
         var customOptionKey = new HttpRequestOptionsKey<DigipayConfigurations>(Constants.DigiPayRequestOptionsKey);
 
-        httpRequest.Options.Set(customOptionKey, _configurations);
+        httpRequest.Options.Set(customOptionKey, Configurations);
 
         return httpRequest;
     }
