@@ -57,4 +57,14 @@ public class ZarinPalConfigurations : IPaymentGatewayProviderConfiguration
 
         return errors;
     }
+
+    public Uri PaymentRequestUrl()
+    {
+        return PayMaster.Extensions.UriExtensions.Combine(ApiAddress, Constants.PAYMENT_REQUEST_URL);
+    }
+
+    public Uri PaymentVerificationUrl()
+    {
+        return PayMaster.Extensions.UriExtensions.Combine(ApiAddress, Constants.PAYMENT_VERIFICATION_URL);
+    }
 }

@@ -216,10 +216,7 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase<DigipayConfigur
 
     private HttpRequestMessage CreateVerifyHttpRequest(string trackingCode, TicketType type)
     {
-        var verifyPath = Constants.CreatePath + $"/{trackingCode}/?type={(int)type}";
-        var url = new Uri(new Uri(Configurations.ApiAddress), verifyPath);
-
-        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, Configurations.VerifyUrl(trackingCode, (int)type))
         {
             Content = new StringContent("", Encoding.UTF8, "application/json")
         };
@@ -233,12 +230,9 @@ public class DigiPayPaymentProvider : PaymentGatewayProviderBase<DigipayConfigur
 
     private HttpRequestMessage CreateHttpRequest(TicketRequestDto apiRequest, CreateRequest createRequest)
     {
-        var createPath = Constants.CreatePath + $"?type={MapTicketType(createRequest)}";
-        var url = new Uri(new Uri(Configurations.ApiAddress), createPath);
-
         string apiRequestJsonData = JsonSerializer.Serialize(apiRequest);
 
-        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, Configurations.CreateUrl(MapTicketType(createRequest)))
         {
             Content = new StringContent(apiRequestJsonData, Encoding.UTF8, "application/json")
         };
