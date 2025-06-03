@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
-using System.Text;
 using System.Globalization;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.PaymentProviders;
@@ -21,9 +20,6 @@ public class ZarinPalPaymentProvider(
 
         try
         {
-            var url = new Uri(new Uri(Configurations.ApiAddress), Constants.PAYMENT_REQUEST_URL);
-
-            var client = httpClientFactory.CreateClient(Constants.HttpClientName);
             var apiRequest = new PaymentRequest
             {
                 merchant_id = Configurations.MerchantId,
@@ -39,9 +35,13 @@ public class ZarinPalPaymentProvider(
                 }
             };
 
-            result.LogData.Start(apiRequest, url.ToString());
+            var paymentRequestUrl = Configurations.PaymentRequestUrl();
+            
+            var client = httpClientFactory.CreateClient(Constants.HttpClientName);
 
-            var apiResponse = await client.PostAsJsonAsync(url, apiRequest);
+            result.LogData.Start(apiRequest, paymentRequestUrl.ToString());
+
+            var apiResponse = await client.PostAsJsonAsync(paymentRequestUrl, apiRequest);
 
             result.LogData.End();
 
@@ -143,14 +143,13 @@ public class ZarinPalPaymentProvider(
                 authority = callbackData!.Authority
             };
 
-            var json = JsonSerializer.Serialize(verificationRequest);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
             var client = httpClientFactory.CreateClient(Constants.HttpClientName);
-            var url = new Uri(new Uri(Configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
 
-            result.VerifyLogData.Start(verificationRequest, url.ToString());
+            var paymentVerificationUrl = Configurations.PaymentVerificationUrl();
 
-            var response = await client.PostAsync(url, content);
+            result.VerifyLogData.Start(verificationRequest, paymentVerificationUrl.ToString());
+
+            var response = await client.PostAsJsonAsync(paymentVerificationUrl, verificationRequest);
 
             result.VerifyLogData.End();
 

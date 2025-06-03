@@ -60,4 +60,21 @@ public class PayPalConfigurations : IPaymentGatewayProviderConfiguration
 
         return errors;
     }
+
+    public Uri CreateOrderUrl()
+    {
+        return PayMaster.Extensions.UriExtensions.Combine(ApiAddress, Constants.CheckoutOrdersPath);
+    }
+
+    public Uri CaptureUrl(string orderId)
+    {
+        var path = PayMaster.Extensions.UriExtensions.JoinUrlSegments(Constants.CheckoutOrdersPath, $"/{orderId}/capture");
+        return PayMaster.Extensions.UriExtensions.Combine(ApiAddress, path);
+    }
+
+    public Uri GetOrderUrl(string orderId)
+    {
+        var path = PayMaster.Extensions.UriExtensions.JoinUrlSegments(Constants.CheckoutOrdersPath, orderId);
+        return PayMaster.Extensions.UriExtensions.Combine(ApiAddress, path);
+    }
 }

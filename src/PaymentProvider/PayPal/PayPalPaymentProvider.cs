@@ -220,11 +220,9 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase<PayPalConfigurat
 
     private HttpRequestMessage CreateHttpRequest(PaypalCreateOrder apiRequest)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), Constants.CheckoutOrdersPath);
-
         string apiRequestJsonData = JsonSerializer.Serialize(apiRequest);
 
-        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, Configurations.CreateOrderUrl())
         {
             Content = new StringContent(apiRequestJsonData, Encoding.UTF8, "application/json")
         };
@@ -238,9 +236,7 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase<PayPalConfigurat
 
     private HttpRequestMessage CreateCaptureHttpRequest(string orderId)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), $"{Constants.CheckoutOrdersPath.TrimEnd('/')}/{orderId}/capture");
-
-        HttpRequestMessage httpRequest = new(HttpMethod.Post, url)
+        HttpRequestMessage httpRequest = new(HttpMethod.Post, Configurations.CaptureUrl(orderId))
         {
             Content = new StringContent("", Encoding.UTF8, "application/json")
         };
@@ -254,9 +250,7 @@ public class PayPalPaymentProvider : PaymentGatewayProviderBase<PayPalConfigurat
 
     private HttpRequestMessage CreateGetOrderHttpRequest(string orderId)
     {
-        var url = new Uri(new Uri(Configurations.ApiAddress), $"{Constants.CheckoutOrdersPath.TrimEnd('/')}/{orderId}");
-
-        HttpRequestMessage httpRequest = new(HttpMethod.Get, url)
+        HttpRequestMessage httpRequest = new(HttpMethod.Get, Configurations.GetOrderUrl(orderId))
         {
             Content = new StringContent("", Encoding.UTF8, "application/json")
         };

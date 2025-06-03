@@ -1,8 +1,9 @@
-﻿using Honamic.PayMaster.PaymentProviders;
+﻿using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.PaymentProviders;
 
 namespace Honamic.PayMaster.PaymentProvider.Digipay;
 
-public class DigipayConfigurations: IPaymentGatewayProviderConfiguration
+public class DigipayConfigurations : IPaymentGatewayProviderConfiguration
 {
     public DigipayConfigurations()
     {
@@ -29,7 +30,7 @@ public class DigipayConfigurations: IPaymentGatewayProviderConfiguration
     }
 
     public List<string> GetValidationErrors()
-    {   
+    {
         var errors = new List<string>();
 
         if (string.IsNullOrWhiteSpace(ClientId))
@@ -56,11 +57,23 @@ public class DigipayConfigurations: IPaymentGatewayProviderConfiguration
         {
             errors.Add("ApiAddress is required.");
         }
-        else if ( !Uri.TryCreate(ApiAddress, UriKind.Absolute, out _))
+        else if (!Uri.TryCreate(ApiAddress, UriKind.Absolute, out _))
         {
             errors.Add("ApiAddress is not a valid URL.");
         }
 
         return errors;
+    }
+
+    public Uri CreateUrl(int type)
+    {
+        return UriExtensions.Combine(ApiAddress, Constants.CreatePath).AppendQueryParams($"type={type}");
+    }
+
+    public Uri VerifyUrl(string trackingCode, int type)
+    {
+        var path = UriExtensions.JoinUrlSegments(Constants.VerifyPath, trackingCode);
+
+        return UriExtensions.Combine(ApiAddress, path).AppendQueryParams($"type={type}");
     }
 }
