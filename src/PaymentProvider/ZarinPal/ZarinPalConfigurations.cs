@@ -28,7 +28,7 @@ public class ZarinPalConfigurations : IPaymentGatewayProviderConfiguration
             : "https://www.zarinpal.com/pg/StartPay/";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {
         var errors = new List<string>();
 

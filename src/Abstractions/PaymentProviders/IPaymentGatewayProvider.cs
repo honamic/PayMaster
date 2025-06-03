@@ -6,6 +6,8 @@ public interface IPaymentGatewayProvider
 {
     void ParseConfiguration(string providerJsonConfiguration);
 
+    ValidationConfigurationResult ValidationConfiguration(string providerJsonConfiguration);
+
     public Task<CreateResult> CreateAsync(CreateRequest request);
 
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);

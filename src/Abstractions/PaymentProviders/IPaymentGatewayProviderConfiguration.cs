@@ -4,5 +4,5 @@ public interface IPaymentGatewayProviderConfiguration
 {
     void SetDefaultConfiguration(bool sandbox = false);
 
-    List<string> IsValid();
+    List<string> GetValidationErrors();
 }

@@ -22,11 +22,7 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
 
     public virtual void ParseConfiguration(string providerConfiguration)
     {
-        var configurations = JsonSerializer.Deserialize<TConfiguration>(providerConfiguration, new JsonSerializerOptions
-        {
-            NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
-            PropertyNameCaseInsensitive = true
-        });
+        var configurations = JsonSerializer.Deserialize<TConfiguration>(providerConfiguration, GetJsonSerializerOptions());
 
         InternalValidation(configurations);
 
@@ -46,6 +42,28 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
         return ToJson(configurations);
     }
 
+    public ValidationConfigurationResult ValidationConfiguration(string providerJsonConfiguration)
+    {
+        var configurations = JsonSerializer.Deserialize<TConfiguration>(providerJsonConfiguration, GetJsonSerializerOptions());
+
+        if (configurations is null)
+        {
+            return new ValidationConfigurationResult
+            {
+                Success = false,
+                ValidationErrors = ["Provider configuration is invalid or empty."]
+            };
+        }
+
+        var validation = configurations.GetValidationErrors();
+
+        return new ValidationConfigurationResult
+        {
+            Success = validation.Count == 0,
+            ValidationErrors = validation.ToArray()
+        };
+    }
+
     protected string ToJson(object obj)
     {
         return JsonSerializer.Serialize(obj, new JsonSerializerOptions
@@ -53,6 +71,15 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
             IncludeFields = true,
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
         });
+    }
+
+    private static JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        return new JsonSerializerOptions
+        {
+            NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
+            PropertyNameCaseInsensitive = true
+        };
     }
 
     protected string EnumToStringWithDescription(Enum? obj)
@@ -77,7 +104,7 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
             throw new ArgumentException("Provider configuration is invalid or empty.");
         }
 
-        var errors = configurations.IsValid();
+        var errors = configurations.GetValidationErrors();
 
         if (errors.Count > 0)
             throw new ArgumentException($"Invalid provider configuration: {string.Join(",", errors)}");

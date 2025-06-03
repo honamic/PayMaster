@@ -16,7 +16,7 @@ public class SandboxConfigurations : IPaymentGatewayProviderConfiguration
         PayUrl = "https://yoursite.com/paymaster/sandbox/pay";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {
         if (string.IsNullOrEmpty(PayUrl))
         {

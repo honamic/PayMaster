@@ -28,7 +28,7 @@ public class DigipayConfigurations: IPaymentGatewayProviderConfiguration
         UserName = "YourUserName";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {   
         var errors = new List<string>();
 

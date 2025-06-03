@@ -26,7 +26,7 @@ public class PayPalConfigurations : IPaymentGatewayProviderConfiguration
         Secret = "YOUR_SECRET";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {
         List<string> errors = new List<string>();
 

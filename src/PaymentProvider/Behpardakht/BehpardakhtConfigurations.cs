@@ -34,7 +34,7 @@ public class BehpardakhtConfigurations : IPaymentGatewayProviderConfiguration
             : "https://bpm.shaparak.ir/pgwchannel/startpay.mellat";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {
         var errors = new List<string>();
 

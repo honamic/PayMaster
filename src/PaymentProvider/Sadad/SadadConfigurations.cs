@@ -45,7 +45,7 @@ public class SadadConfigurations : IPaymentGatewayProviderConfiguration
         : "https://sadad.shaparak.ir/api/v0/Request/PaymentRequest";
     }
 
-    public List<string> IsValid()
+    public List<string> GetValidationErrors()
     {
         var errors = new List<string>();
 
