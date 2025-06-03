@@ -13,30 +13,20 @@ namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 public class ZarinPalPaymentProvider(
     IHttpClientFactory httpClientFactory,
     ILogger<ZarinPalPaymentProvider> logger)
-    : PaymentGatewayProviderBase
+    : PaymentGatewayProviderBase<ZarinPalConfigurations>
 {
-    private ZarinPalConfigurations _configurations = new ZarinPalConfigurations();
-
-    public override void Configure(string providerConfiguration)
-    {
-        var zarinPalConfigurations = JsonSerializer.Deserialize<ZarinPalConfigurations>(providerConfiguration);
-
-        _configurations = zarinPalConfigurations ??
-                         throw new ArgumentNullException(nameof(providerConfiguration));
-    }
-
     public override async Task<CreateResult> CreateAsync(CreateRequest prePayRequest)
     {
         var result = new CreateResult();
 
         try
         {
-            var url = new Uri(new Uri(_configurations.ApiAddress), Constants.PAYMENT_REQUEST_URL);
+            var url = new Uri(new Uri(Configurations.ApiAddress), Constants.PAYMENT_REQUEST_URL);
 
             var client = httpClientFactory.CreateClient(Constants.HttpClientName);
             var apiRequest = new PaymentRequest
             {
-                merchant_id = _configurations.MerchantId,
+                merchant_id = Configurations.MerchantId,
                 amount = prePayRequest.Amount,
                 callback_url = prePayRequest.CallbackUrl,
                 description = prePayRequest.GatewayNote ?? $"درخواست شماره {prePayRequest.UniqueRequestId}",
@@ -69,7 +59,7 @@ public class ZarinPalPaymentProvider(
                     return result;
                 }
 
-                var payUrl = $"{_configurations.PayUrl.TrimEnd('/')}/{zarinPalResult.data.Authority}";
+                var payUrl = $"{Configurations.PayUrl.TrimEnd('/')}/{zarinPalResult.data.Authority}";
                 result.PayUrl = payUrl;
                 result.PayVerb = PayVerb.Get;
                 result.CreateReference = zarinPalResult.data.Authority;
@@ -148,7 +138,7 @@ public class ZarinPalPaymentProvider(
 
             var verificationRequest = new PaymentVerificationRequest
             {
-                merchant_id = _configurations.MerchantId,
+                merchant_id = Configurations.MerchantId,
                 amount = request.PaymentInfo.Amount,
                 authority = callbackData!.Authority
             };
@@ -156,7 +146,7 @@ public class ZarinPalPaymentProvider(
             var json = JsonSerializer.Serialize(verificationRequest);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var client = httpClientFactory.CreateClient(Constants.HttpClientName);
-            var url = new Uri(new Uri(_configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
+            var url = new Uri(new Uri(Configurations.ApiAddress), Constants.PAYMENT_VERIFICATION_URL);
 
             result.VerifyLogData.Start(verificationRequest, url.ToString());
 
@@ -200,7 +190,6 @@ public class ZarinPalPaymentProvider(
 
         return result;
     }
-
 
     #region Private methods
 

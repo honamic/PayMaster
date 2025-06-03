@@ -56,7 +56,7 @@ public class HttpInterceptorService : DelegatingHandler
 
         var token = await _bearerTokensStore.GetBearerTokenAsync(request.RequestUri.GetOrigin());
 
-        if (token == null && options.AutoLogin)
+        if (token == null)
         {
             token = await Login(options, request.RequestUri!);
         }

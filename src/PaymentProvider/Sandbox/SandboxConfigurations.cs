@@ -1,11 +1,32 @@
-﻿namespace Honamic.PayMaster.PaymentProvider.Sandbox;
+﻿using Honamic.PayMaster.PaymentProviders;
 
-public class SandboxConfigurations
+namespace Honamic.PayMaster.PaymentProvider.Sandbox;
+
+public class SandboxConfigurations : IPaymentGatewayProviderConfiguration
 {
     public SandboxConfigurations()
     {
-        PayUrl = "https://yoursite.com//paymaster/sandbox/pay";
+        SetDefaultConfiguration();
     }
 
-    public string PayUrl { get;  set; }
+    public string PayUrl { get; set; }
+
+    public void SetDefaultConfiguration(bool sandbox = false)
+    {
+        PayUrl = "https://yoursite.com/paymaster/sandbox/pay";
+    }
+
+    public List<string> GetValidationErrors()
+    {
+        if (string.IsNullOrEmpty(PayUrl))
+        {
+            return ["PayUrl is required"];
+        }
+        else if (!Uri.IsWellFormedUriString(PayUrl, UriKind.Absolute))
+        {
+            return ["PayUrl is not a valid URL"];
+        }
+
+        return [];
+    }
 }

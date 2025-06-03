@@ -17,7 +17,7 @@ public class PaymentGatewayProviderFactory : IPaymentGatewayProviderFactory
     {
         var provider = _services.GetRequiredKeyedService<IPaymentGatewayProvider>(ProviderType);
 
-        provider.Configure(providerConfiguration);
+        provider.ParseConfiguration(providerConfiguration);
 
         return provider;
     }

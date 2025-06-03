@@ -4,12 +4,14 @@ namespace Honamic.PayMaster.PaymentProviders;
 
 public interface IPaymentGatewayProvider
 {
-    void Configure(string providerJsonConfiguration);
+    void ParseConfiguration(string providerJsonConfiguration);
+
+    ValidationConfigurationResult ValidationConfiguration(string providerJsonConfiguration);
 
     public Task<CreateResult> CreateAsync(CreateRequest request);
-    
+
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);
-    
+
     public Task<VerifyResult> VerifyAsync(VerifyRequest request);
 
     TimeSpan GetCallbackValidityDuration();
