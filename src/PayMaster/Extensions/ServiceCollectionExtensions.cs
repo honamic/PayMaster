@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
 
     private static void AddDomainServices(this IServiceCollection services)
     {
-        services.AddScoped<ICreatePaymentDomainService, CreatePaymentDomainService>();
+        services.AddScoped<IPaymentGatewayInitializationService, PaymentGatewayInitializationService>();
         services.AddScoped<ICreateReceiptRequestDomainService, CreateReceiptRequestDomainService>();
         services.AddScoped<ICallbackGatewayPaymentDomainService, CallbackGatewayPaymentDomainService>();
     }

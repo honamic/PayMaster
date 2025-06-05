@@ -21,8 +21,8 @@ public class CreateReceiptRequestParameters
     public bool? IsLegal { get; set; }
     public string? AdditionalData { get; set; }
 
-    public  ReceiptRequestIssuerParameters Issuer { get; set; }
-    public  ReceiptRequestGatewayProviderParameters GatewayProvider { get; set; }
+    public ReceiptRequestIssuerParameters? Issuer { get; set; }
+    public ReceiptRequestGatewayProviderParameters? GatewayProvider { get; set; }
 
     public required string[] SupportedCurrencies;
 }

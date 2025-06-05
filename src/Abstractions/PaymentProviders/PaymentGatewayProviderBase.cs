@@ -101,12 +101,12 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
     {
         if (configurations is null)
         {
-            throw new ArgumentException("Provider configuration is invalid or empty.");
+            throw new Exceptions.PaymentProviderConfigurationException();
         }
 
         var errors = configurations.GetValidationErrors();
 
         if (errors.Count > 0)
-            throw new ArgumentException($"Invalid provider configuration: {string.Join(",", errors)}");
+            throw new Exceptions.PaymentProviderConfigurationException(errors);
     }
 }

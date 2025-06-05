@@ -1,6 +1,7 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
@@ -57,7 +58,11 @@ public class ReceiptRequest : AggregateRoot<long>
             throw new ArgumentException($"واحد پولی {createParameters.Currency} مجاز نیست.");
         }
 
-        if (!createParameters.Issuer.Enabled)
+        if (createParameters.Issuer is null)
+        {
+            throw new ArgumentException($"صادرکننده مشخص نشده است.");
+        }
+        else if (!createParameters.Issuer.Enabled)
         {
             throw new ArgumentException($"صادرکننده فیش غیرفعال است.");
         }
@@ -99,44 +104,12 @@ public class ReceiptRequest : AggregateRoot<long>
 
     public ReceiptRequestGatewayPayment? GetPayableGatewayPayment()
     {
-        return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+       return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
     }
 
     public ReceiptRequestGatewayPayment? GetGatewayPayment(long id)
     {
         return GatewayPayments.FirstOrDefault(c => c.Id == id);
-    }
-
-    public async Task<CreateResult> CreatePaymentByGatewayProviderAsync(
-        ReceiptRequestGatewayPayment gatewayPayment,
-        IPaymentGatewayProvider provider,
-        IClock clock,
-        string callbackUrl)
-    {
-        var createResult = await provider.CreateAsync(new CreateRequest
-        {
-            Amount = gatewayPayment.Amount,
-            Currency = gatewayPayment.Currency,
-            UniqueRequestId = gatewayPayment.Id,
-            CallbackUrl = callbackUrl,
-        });
-
-
-        if (createResult.Success)
-        {
-            gatewayPayment.SetWaitingStatus(
-                createResult.CreateReference,
-                createResult.StatusDescription,
-                clock.NowWithOffset);
-        }
-        else
-        {
-            gatewayPayment.SetFailedStatus(
-                PaymentGatewayFailedReason.CreateFailed,
-                createResult.StatusDescription);
-        }
-
-        return createResult;
     }
 
     public async Task<VerifyResult?> StartCallbackForGatewayPayment(ReceiptRequestGatewayPayment gatewayPayment,
@@ -255,5 +228,16 @@ public class ReceiptRequest : AggregateRoot<long>
             gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"It's late for callback.");
             return;
         }
+    }
+
+    public void InitializeGatewayPayment()
+    {
+        if (Status != ReceiptRequestStatus.New
+            && Status != ReceiptRequestStatus.Doing)
+        {
+            throw new StatusNotValidForInitializeException();
+        }
+
+        Status = ReceiptRequestStatus.Doing;
     }
 }
