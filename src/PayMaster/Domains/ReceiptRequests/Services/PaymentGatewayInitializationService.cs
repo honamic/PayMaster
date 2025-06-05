@@ -77,7 +77,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
             CallbackUrl = callbackUrl,
         });
 
-        tryLog.SeSuccess(createResult.Success, createResult.LogData);
+        tryLog.SetSuccess(createResult.Success, createResult.LogData);
 
         if (createResult.Success)
         {

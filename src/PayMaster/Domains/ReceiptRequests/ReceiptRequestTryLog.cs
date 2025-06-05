@@ -25,7 +25,7 @@ public class ReceiptRequestTryLog : Entity<long>
 
     public DateTimeOffset? ExpiredAt { get; set; }
 
-    internal void SeSuccess(bool success, PaymentProviderLogData data)
+    internal void SetSuccess(bool success, PaymentProviderLogData data)
     {
         Success = success;
         Data = data;

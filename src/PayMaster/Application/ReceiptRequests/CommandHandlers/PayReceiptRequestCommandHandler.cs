@@ -13,10 +13,10 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 
     public PayReceiptRequestCommandHandler(
         IReceiptRequestRepository receiptRequestRepository,
-        IPaymentGatewayInitializationService createPaymentDomainService)
+        IPaymentGatewayInitializationService paymentGatewayInitializationService)
     {
         _receiptRequestRepository = receiptRequestRepository;
-        _paymentGatewayInitializationService = createPaymentDomainService;
+        _paymentGatewayInitializationService = paymentGatewayInitializationService;
     }
 
     public async Task<Result<PayReceiptRequestCommandResult>> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
