@@ -1,6 +1,7 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
@@ -103,7 +104,7 @@ public class ReceiptRequest : AggregateRoot<long>
 
     public ReceiptRequestGatewayPayment? GetPayableGatewayPayment()
     {
-        return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+       return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
     }
 
     public ReceiptRequestGatewayPayment? GetGatewayPayment(long id)
@@ -227,5 +228,16 @@ public class ReceiptRequest : AggregateRoot<long>
             gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"It's late for callback.");
             return;
         }
+    }
+
+    public void InitializeGatewayPayment()
+    {
+        if (Status != ReceiptRequestStatus.New
+            && Status != ReceiptRequestStatus.Doing)
+        {
+            throw new StatusNotValidForInitializeException();
+        }
+
+        Status = ReceiptRequestStatus.Doing;
     }
 }

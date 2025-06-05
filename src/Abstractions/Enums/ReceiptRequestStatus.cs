@@ -16,9 +16,9 @@ public enum ReceiptRequestStatus
     [Display(Name = "انجام شد")]
     Done = 3,
 
-    [Display(Name = "ابطال شد")]
+    [Display(Name = "لغو شد")]
     Canceled = 4,
 
-    [Display(Name = "ناموفق")]
-    Failed = 5,
+    [Display(Name = "برگشت خورد")]
+    Reversed = 5,
 }

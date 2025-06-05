@@ -56,11 +56,6 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
         var paymentGatewayProvider = _gatewayProviderFactory
                  .Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
 
-        if (paymentGatewayProvider == null)
-        {
-            throw new GatewayProviderCreationException();
-        }
-
         var verifyResult = await receiptRequest.StartCallbackForGatewayPayment(
             gatewayPayment,
             paymentGatewayProvider,

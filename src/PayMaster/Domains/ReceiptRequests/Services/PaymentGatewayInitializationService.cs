@@ -41,6 +41,9 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
         {
             throw new ArgumentNullException(nameof(receiptRequest), "Receipt request cannot be null.");
         }
+
+        receiptRequest.InitializeGatewayPayment();
+
         var gatewayPayment = receiptRequest.GetPayableGatewayPayment();
 
         if (gatewayPayment is null)
@@ -59,11 +62,6 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
         }
 
         var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
-
-        if (provider == null)
-        {
-            throw new GatewayProviderCreationException();
-        }
 
         var callbackUrl = GetCallbackUrl(receiptRequest, gatewayPayment);
 
