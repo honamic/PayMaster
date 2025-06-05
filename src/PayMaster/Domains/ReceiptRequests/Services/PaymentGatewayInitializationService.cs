@@ -99,8 +99,8 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
     private string GetCallbackUrl(ReceiptRequest receiptRequest, ReceiptRequestGatewayPayment gatewayPayment)
     {
         return _payMasterOptions.Value.CallBackUrl
-                    .Replace(Constants.ReceiptRequestIdParameter, receiptRequest.Id.ToString())
-                    .Replace(Constants.GatewayPaymentIdParameter, gatewayPayment.Id.ToString());
+                    .Replace(Constants.Parameters.ReceiptRequestIdParameter, receiptRequest.Id.ToString())
+                    .Replace(Constants.Parameters.GatewayPaymentIdParameter, gatewayPayment.Id.ToString());
     }
 
     private static ReceiptRequestTryLog CreateTryLog(ReceiptRequest receiptRequest, ReceiptRequestGatewayPayment gatewayPayment)

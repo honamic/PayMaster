@@ -30,6 +30,7 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
             ReceiptRequestId = result.ReceiptRequest.Id.ToString(CultureInfo.InvariantCulture),
             Status = result.ReceiptRequest.Status,
             IssuerReference = result.ReceiptRequest.IssuerReference,
+            IssuerCallbackUrl = result.IssuerCallbackUrl,
             PartyReference = result.ReceiptRequest.PartyReference,
             Amount = result.ReceiptRequest.Amount,
             Currency = result.ReceiptRequest.Currency,
@@ -44,15 +45,8 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
                             Status = result.GatewayPayment.Status,
                             StatusDescription = result.GatewayPayment.StatusDescription,
                             FailedReason = result.GatewayPayment.FailedReason,
-                            FailedReasonName =Enum.GetName(result.GatewayPayment.FailedReason),
                         }
                     },
-            Issuer = new
-            {
-                // اضافه کردن اطلاعات issuer در اینجا
-                // CallbackUrl = result.ReceiptRequest.Issuer.CallbackUrl,
-                // ShowPaymentResultPage = result.ReceiptRequest.Issuer.ShowPaymentResultPage
-            }
         };
     }
 }

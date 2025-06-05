@@ -29,13 +29,14 @@ public class CallBackGatewayPaymentCommandResult
     }
 
     public ReceiptRequestStatus Status { get; set; }
+    public string? StatusName => Status.ToString();
     public string ReceiptRequestId { get; set; }
+    public string IssuerCallbackUrl { get; set; }
     public string? IssuerReference { get; set; }
     public string? PartyReference { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; }
     public string? AdditionalData { get; set; }
-    public object? Issuer { get; set; }
 
     public List<CallBackGatewayPaymentGatewayPaymentsCommandResult> GatewayPayments { get; set; }
 }
@@ -46,6 +47,6 @@ public class CallBackGatewayPaymentGatewayPaymentsCommandResult
     public decimal Amount { get; internal set; }
     public string Currency { get; internal set; }
     public PaymentGatewayFailedReason FailedReason { get; internal set; }
+    public string? FailedReasonName => FailedReason.ToString();
     public string? StatusDescription { get; internal set; }
-    public string? FailedReasonName { get; internal set; }
 }

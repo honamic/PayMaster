@@ -220,7 +220,7 @@ public class ReceiptRequest : AggregateRoot<long>
         }
 
     }
-    internal void UpdateSatusAfterVerifyGatewayPayment()
+    internal void UpdateStatusAfterVerifyGatewayPayment()
     {
         var sumOfSuccess = GatewayPayments
            .Where(c => c.Status == PaymentGatewayStatus.Success)

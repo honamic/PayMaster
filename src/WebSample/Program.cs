@@ -72,10 +72,10 @@ internal class Program
                 {
                     Id = 100,
                     Code = "Default",
-                    CallbackUrl = "",
+                    CallbackUrl = "/Payment/{ReceiptRequestId}/{Status}",
                     Title = "صادر کننده پیش فرض",
-                    Enabled = true,
                     Description = "تست",
+                    Enabled = true,
                 };
 
                 defaultIssuer = ReceiptIssuer.Create(parameters);
@@ -88,7 +88,7 @@ internal class Program
             {
                 SandboxConfigurations sandboxConfig = new()
                 {
-                    PayUrl = "https://localhost:7777/paymaster/sandbox/pay", 
+                    PayUrl = "https://localhost:7777/paymaster/sandbox/pay",
                 };
 
                 sandboxProvider = new PaymentGatewayProvider

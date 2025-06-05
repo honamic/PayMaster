@@ -19,7 +19,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     private readonly Mock<IPaymentGatewayProvider> _providerMock;
     private readonly Mock<IIdGenerator> _idGenerator;
 
-    private readonly PaymentGatewayInitializationService _service;
+    private readonly CallbackGatewayPaymentDomainService _service;
     private readonly DateTimeOffset _currentTime = new DateTimeOffset(2023, 5, 12, 10, 30, 0, TimeSpan.Zero);
 
     public CallbackGatewayPaymentDomainServiceTests()

@@ -68,6 +68,13 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
 
         gatewayPayment.SetCallback(_clock.NowWithOffset, callbackData);
 
+        var issuer = await _receiptIssuerRepository.GetAsync(c => c.Id == receiptRequest.IssuerId);
+
+        if (issuer is null)
+        {
+            throw new InvalidPaymentException();
+        }
+
         var extractCallBackDataResult = paymentGatewayProvider.ExtractCallBackData(callbackData);
 
         if (!extractCallBackDataResult.Success)
@@ -76,13 +83,12 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
                 ?? PaymentGatewayFailedReason.CallbackFailed,
                 extractCallBackDataResult?.Error);
 
-            return new CallbackResult(receiptRequest, gatewayPayment, null);
+            return CreateResult(receiptRequest, gatewayPayment, issuer);
         }
 
         // Save the receipt request and gateway payment changes
         // Preventing a duplicate request process with the concurrency on status property  
         await _unitOfWork.SaveChangesAsync();
-
 
         var callbackValidityDuration = paymentGatewayProvider.GetCallbackValidityDuration();
 
@@ -90,7 +96,7 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
 
         if (isValidCallback is false)
         {
-            return new CallbackResult(receiptRequest, gatewayPayment, null);
+            return CreateResult(receiptRequest, gatewayPayment, issuer);
         }
 
         var verifyResult = await receiptRequest.VerifyGatewayPayment(
@@ -98,8 +104,33 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
             paymentGatewayProvider,
             extractCallBackDataResult);
 
-        receiptRequest.UpdateSatusAfterVerifyGatewayPayment();
+        receiptRequest.UpdateStatusAfterVerifyGatewayPayment();
 
-        return new CallbackResult(receiptRequest, gatewayPayment, verifyResult);
+        return CreateResult(receiptRequest, gatewayPayment, issuer);
+    }
+
+    private static CallbackResult CreateResult(ReceiptRequest receiptRequest,
+        ReceiptRequestGatewayPayment gatewayPayment,
+        ReceiptIssuer issuer)
+    {
+        var issuerCallbackUrl = GetIssuerCallbackUrl(issuer, receiptRequest, gatewayPayment);
+
+        return new CallbackResult(receiptRequest, gatewayPayment, issuerCallbackUrl);
+    }
+
+    private static string GetIssuerCallbackUrl(ReceiptIssuer issuer, ReceiptRequest receiptRequest, ReceiptRequestGatewayPayment gatewayPayment)
+    {
+        if (string.IsNullOrEmpty(issuer.CallbackUrl))
+        {
+            return string.Empty;
+        }
+
+        return issuer.CallbackUrl
+                    .Replace(Constants.Parameters.ReceiptRequestIdParameter, receiptRequest.Id.ToString())
+                    .Replace(Constants.Parameters.GatewayPaymentIdParameter, gatewayPayment.Id.ToString())
+                    .Replace(Constants.Parameters.ReceiptRequestIssuerReferenceParameter, receiptRequest.IssuerReference)
+                    .Replace(Constants.Parameters.ReceiptIssuerCodeParameter, issuer.Code.ToString())
+                    .Replace(Constants.Parameters.GatewayPaymentStatusParameter, gatewayPayment.Status.ToString())
+                    ;
     }
 }
