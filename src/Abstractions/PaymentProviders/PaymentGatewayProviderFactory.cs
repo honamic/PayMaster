@@ -1,5 +1,5 @@
-﻿
-using Honamic.PayMaster.Extensions;
+﻿using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.PaymentProviders.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Honamic.PayMaster.PaymentProviders;
@@ -16,6 +16,11 @@ public class PaymentGatewayProviderFactory : IPaymentGatewayProviderFactory
     public IPaymentGatewayProvider Create(string ProviderType, string providerConfiguration)
     {
         var provider = _services.GetRequiredKeyedService<IPaymentGatewayProvider>(ProviderType);
+  
+        if (provider is null)
+        {
+            throw new PaymentProviderNotFoundException($"Payment provider '{ProviderType}' not found.");
+        }
 
         provider.ParseConfiguration(providerConfiguration);
 

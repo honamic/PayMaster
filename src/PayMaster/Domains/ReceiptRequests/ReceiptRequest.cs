@@ -57,7 +57,11 @@ public class ReceiptRequest : AggregateRoot<long>
             throw new ArgumentException($"واحد پولی {createParameters.Currency} مجاز نیست.");
         }
 
-        if (!createParameters.Issuer.Enabled)
+        if (createParameters.Issuer is null)
+        {
+            throw new ArgumentException($"صادرکننده مشخص نشده است.");
+        }
+        else if (!createParameters.Issuer.Enabled)
         {
             throw new ArgumentException($"صادرکننده فیش غیرفعال است.");
         }
@@ -105,38 +109,6 @@ public class ReceiptRequest : AggregateRoot<long>
     public ReceiptRequestGatewayPayment? GetGatewayPayment(long id)
     {
         return GatewayPayments.FirstOrDefault(c => c.Id == id);
-    }
-
-    public async Task<CreateResult> CreatePaymentByGatewayProviderAsync(
-        ReceiptRequestGatewayPayment gatewayPayment,
-        IPaymentGatewayProvider provider,
-        IClock clock,
-        string callbackUrl)
-    {
-        var createResult = await provider.CreateAsync(new CreateRequest
-        {
-            Amount = gatewayPayment.Amount,
-            Currency = gatewayPayment.Currency,
-            UniqueRequestId = gatewayPayment.Id,
-            CallbackUrl = callbackUrl,
-        });
-
-
-        if (createResult.Success)
-        {
-            gatewayPayment.SetWaitingStatus(
-                createResult.CreateReference,
-                createResult.StatusDescription,
-                clock.NowWithOffset);
-        }
-        else
-        {
-            gatewayPayment.SetFailedStatus(
-                PaymentGatewayFailedReason.CreateFailed,
-                createResult.StatusDescription);
-        }
-
-        return createResult;
     }
 
     public async Task<VerifyResult?> StartCallbackForGatewayPayment(ReceiptRequestGatewayPayment gatewayPayment,
