@@ -31,6 +31,7 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
             .HasMaxLength(3);
 
         builder.Property(x => x.Status)
+            .IsConcurrencyToken()
             .IsRequired();
 
         builder.Property(x => x.StatusDescription)

@@ -182,7 +182,7 @@ public class ReceiptRequestGatewayPaymentTests
         };
 
         // Act
-        payment.SuccessCallBack(supplementaryInfo);
+        payment.SuccessVerify(supplementaryInfo);
 
         // Assert
         payment.Status.Should().Be(PaymentGatewayStatus.Success);
@@ -206,7 +206,7 @@ public class ReceiptRequestGatewayPaymentTests
         payment.SetWaitingStatus("REF123", null, now.AddMinutes(-5));
 
         // Act
-        payment.StartCallback(now, callbackData);
+        payment.SetCallback(now, callbackData);
 
         // Assert
         payment.CallbackAt.Should().Be(now);
@@ -250,7 +250,7 @@ public class ReceiptRequestGatewayPaymentTests
         payment.SetWaitingStatus("REF123", null, DateTimeOffset.Now.AddMinutes(-5));
 
         // Simulate a callback that's already been processed
-        payment.StartCallback(DateTimeOffset.Now, "some data");
+        payment.SetCallback(DateTimeOffset.Now, "some data");
         payment.SetFailedStatus(PaymentGatewayFailedReason.CallbackFailed, "Failed callback");
 
         // Act
@@ -266,12 +266,12 @@ public class ReceiptRequestGatewayPaymentTests
         // Arrange
         var payment = CreateValidGatewayPayment();
         payment.SetWaitingStatus("REF123", null, DateTimeOffset.Now);
-        payment.StartCallback(DateTimeOffset.Now, "callback data");
+        payment.SetCallback(DateTimeOffset.Now, "callback data");
         var reason = PaymentGatewayFailedReason.Verify;
         var errorMsg = "Verification failed with the gateway";
 
         // Act
-        payment.FailedCallBack(reason, errorMsg);
+        payment.FailedCallback(reason, errorMsg);
 
         // Assert
         payment.Status.Should().Be(PaymentGatewayStatus.Failed);
@@ -328,7 +328,7 @@ public class ReceiptRequestGatewayPaymentTests
 
         // Act & Assert
         Assert.Throws<InvalidPaymentStatusException>(() =>
-            payment.SuccessCallBack(new SupplementaryPaymentInformation()));
+            payment.SuccessVerify(new SupplementaryPaymentInformation()));
     }
 
     // Helper method to create a valid payment for testing status changes

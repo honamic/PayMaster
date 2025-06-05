@@ -22,9 +22,9 @@ public enum PaymentGatewayStatus
     [Display(Name = "موفق")]
     Success = 5,
 
-    [Display(Name = "درحال برگشت")]
-    Reversing = 6,
+    //[Display(Name = "درحال برگشت")]
+    //Reversing = 6,
 
-    [Display(Name = "برگشت خورده")]
-    Reversed = 7,
+    //[Display(Name = "برگشت خورده")]
+    //Reversed = 7,
 }

@@ -47,4 +47,5 @@ public class CallBackGatewayPaymentGatewayPaymentsCommandResult
     public string Currency { get; internal set; }
     public PaymentGatewayFailedReason FailedReason { get; internal set; }
     public string? StatusDescription { get; internal set; }
+    public string? FailedReasonName { get; internal set; }
 }

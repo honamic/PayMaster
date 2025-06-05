@@ -104,7 +104,7 @@ public class ReceiptRequest : AggregateRoot<long>
 
     public ReceiptRequestGatewayPayment? GetPayableGatewayPayment()
     {
-       return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
+        return GatewayPayments.FirstOrDefault(c => c.Status == PaymentGatewayStatus.New);
     }
 
     public ReceiptRequestGatewayPayment? GetGatewayPayment(long id)
@@ -112,12 +112,10 @@ public class ReceiptRequest : AggregateRoot<long>
         return GatewayPayments.FirstOrDefault(c => c.Id == id);
     }
 
-    public async Task<VerifyResult?> StartCallbackForGatewayPayment(ReceiptRequestGatewayPayment gatewayPayment,
+    public async Task<VerifyResult?> VerifyGatewayPayment(ReceiptRequestGatewayPayment gatewayPayment,
         IPaymentGatewayProvider paymentGatewayProvider,
-        string callBackData,
-        IClock clock)
+        ExtractCallBackDataResult extractCallBackDataResult)
     {
-
         var tryLog = new ReceiptRequestTryLog()
         {
             CreateAt = DateTimeOffset.Now,
@@ -125,93 +123,64 @@ public class ReceiptRequest : AggregateRoot<long>
             ReceiptRequestId = Id,
             ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
         };
-
-        VerifyResult? verifyResult = null;
-
-        try
-        {
-            gatewayPayment.StartCallback(clock.NowWithOffset, callBackData);
-
-            var extractCallBackDataResult = paymentGatewayProvider.ExtractCallBackData(callBackData);
-
-            if (!extractCallBackDataResult.Success)
-            {
-                gatewayPayment.FailedCallBack(extractCallBackDataResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, extractCallBackDataResult?.Error);
-                return null;
-            }
-
-            var callbackValidityDuration = paymentGatewayProvider.GetCallbackValidityDuration();
-
-            InternalVerifyCallbackData(gatewayPayment, extractCallBackDataResult, callbackValidityDuration);
-
-            if (gatewayPayment.Status == PaymentGatewayStatus.Failed)
-            {
-                return null;
-            }
-
-            VerifyRequest verifyRequest = new()
-            {
-                PaymentInfo = new VerifyRequestPatmentInfo
-                {
-                    Amount = gatewayPayment!.Amount,
-                    UniqueRequestId = gatewayPayment.Id,
-                    CreateReference = gatewayPayment.CreateReference,
-                },
-                CallBackData = extractCallBackDataResult.CallBack
-            };
-
-            verifyResult = await paymentGatewayProvider.VerifyAsync(verifyRequest);
-
-            if (verifyResult.Success)
-            {
-                gatewayPayment.SuccessCallBack(verifyResult.SupplementaryPaymentInformation);
-            }
-            else
-            {
-                gatewayPayment.FailedCallBack(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.StatusDescription);
-            }
-
-            tryLog.Success = verifyResult.Success;
-            tryLog.Data = verifyResult.VerifyLogData;
-
-            if (verifyResult.SettlementLogData is not null)
-            {
-                TryLogs.Add(new ReceiptRequestTryLog
-                {
-                    CreateAt = DateTimeOffset.Now,
-                    TryType = ReceiptRequestTryLogType.SettlementPaymentProvider,
-                    ReceiptRequestId = Id,
-                    ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
-                    Data = verifyResult.SettlementLogData,
-                });
-            }
-        }
-        catch (Exception ex)
-        {
-            tryLog.Data.SetException(ex);
-        }
-
         TryLogs.Add(tryLog);
+
+        VerifyRequest verifyRequest = new()
+        {
+            PaymentInfo = new VerifyRequestPatmentInfo
+            {
+                Amount = gatewayPayment!.Amount,
+                UniqueRequestId = gatewayPayment.Id,
+                CreateReference = gatewayPayment.CreateReference,
+            },
+            CallBackData = extractCallBackDataResult.CallBack
+        };
+
+        var verifyResult = await paymentGatewayProvider.VerifyAsync(verifyRequest);
+
+        if (verifyResult.Success)
+        {
+            gatewayPayment.SuccessVerify(verifyResult.SupplementaryPaymentInformation);
+        }
+        else
+        {
+            gatewayPayment.FailedVerify(verifyResult.PaymentFailedReason ?? PaymentGatewayFailedReason.Other, verifyResult.StatusDescription);
+        }
+
+        tryLog.Success = verifyResult.Success;
+        tryLog.Data = verifyResult.VerifyLogData;
+
+        if (verifyResult.SettlementLogData is not null)
+        {
+            TryLogs.Add(new ReceiptRequestTryLog
+            {
+                CreateAt = DateTimeOffset.Now,
+                TryType = ReceiptRequestTryLogType.SettlementPaymentProvider,
+                ReceiptRequestId = Id,
+                ReceiptRequestGatewayPaymentId = gatewayPayment.Id,
+                Data = verifyResult.SettlementLogData,
+            });
+        }
 
         return verifyResult;
     }
 
-    private static void InternalVerifyCallbackData(ReceiptRequestGatewayPayment gatewayPayment,
+    public bool InternalVerifyCallbackData(ReceiptRequestGatewayPayment gatewayPayment,
         ExtractCallBackDataResult extractCallBackDataResult,
         TimeSpan callbackValidityDuration)
     {
         if (extractCallBackDataResult.UniqueRequestId is null
             && string.IsNullOrEmpty(extractCallBackDataResult.CreateReference))
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"Neither UniqueRequestId nor CreateReference was provided.");
-            return;
+            gatewayPayment.FailedCallback(PaymentGatewayFailedReason.InternalVerify, $"Neither UniqueRequestId nor CreateReference was provided.");
+            return false;
         }
 
         if (extractCallBackDataResult.UniqueRequestId.HasValue
            && gatewayPayment.Id != extractCallBackDataResult.UniqueRequestId)
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"ID is not correct.");
-            return;
+            gatewayPayment.FailedCallback(PaymentGatewayFailedReason.InternalVerify, $"ID is not correct.");
+            return false;
         }
 
         if (!string.IsNullOrEmpty(extractCallBackDataResult.CreateReference)
@@ -219,15 +188,17 @@ public class ReceiptRequest : AggregateRoot<long>
              && !gatewayPayment.CreateReference.Equals
                    (extractCallBackDataResult.CreateReference, StringComparison.InvariantCultureIgnoreCase))
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"CreateReference is not correct");
-            return;
+            gatewayPayment.FailedCallback(PaymentGatewayFailedReason.InternalVerify, $"CreateReference is not correct");
+            return false;
         }
 
         if (gatewayPayment.CallbackAt!.Value - gatewayPayment.RedirectAt!.Value > callbackValidityDuration)
         {
-            gatewayPayment.FailedCallBack(PaymentGatewayFailedReason.InternalVerify, $"It's late for callback.");
-            return;
+            gatewayPayment.FailedCallback(PaymentGatewayFailedReason.InternalVerify, $"It's late for callback.");
+            return false;
         }
+
+        return true;
     }
 
     public void InitializeGatewayPayment()
@@ -239,5 +210,25 @@ public class ReceiptRequest : AggregateRoot<long>
         }
 
         Status = ReceiptRequestStatus.Doing;
+    }
+
+    internal void EnsureCanProcessCallback()
+    {
+        if (Status != ReceiptRequestStatus.Doing)
+        {
+            throw new PaymentStatusNotValidForProcessingException();
+        }
+
+    }
+    internal void UpdateSatusAfterVerifyGatewayPayment()
+    {
+        var sumOfSuccess = GatewayPayments
+           .Where(c => c.Status == PaymentGatewayStatus.Success)
+           .Sum(c => c.Amount);
+
+        if (sumOfSuccess == Amount)
+        {
+            Status = ReceiptRequestStatus.Done;
+        }
     }
 }

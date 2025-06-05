@@ -22,8 +22,8 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
         var gatewayPaymentId = command.GetGatewayPaymentIdAsLong();
         var receiptRequestId = command.GetReceiptRequestIdAsLong();
 
-        var result = await _callBackGatewayPaymentDomainService.ProcessCallBackAsync(
-            receiptRequestId,gatewayPaymentId, command.CallBackData);
+        var result = await _callBackGatewayPaymentDomainService.ProcessCallbackAsync(
+            receiptRequestId, gatewayPaymentId, command.CallBackData);
 
         return new CallBackGatewayPaymentCommandResult
         {
@@ -44,6 +44,7 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
                             Status = result.GatewayPayment.Status,
                             StatusDescription = result.GatewayPayment.StatusDescription,
                             FailedReason = result.GatewayPayment.FailedReason,
+                            FailedReasonName =Enum.GetName(result.GatewayPayment.FailedReason),
                         }
                     },
             Issuer = new
