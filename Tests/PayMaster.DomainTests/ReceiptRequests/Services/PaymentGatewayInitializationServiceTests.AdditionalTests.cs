@@ -1,10 +1,7 @@
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptRequests;
-using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
+using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Moq;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace PayMaster.Tests.Domains.ReceiptRequests.Services;
@@ -15,9 +12,9 @@ public partial class PaymentGatewayInitializationServiceTests
     public async Task InitializePaymentAsync_PaymentCurrency_RetainedInPaymentRequest()
     {
         // Arrange
-        var receiptRequest = CreateValidReceiptRequest();
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
         var expectedCurrency = gatewayPayment.Currency;
 
         var createResult = new CreateResult
@@ -29,7 +26,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Get
         };
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -53,8 +50,8 @@ public partial class PaymentGatewayInitializationServiceTests
     public async Task InitializePaymentAsync_PartiallyImplementedGateway_HandlesGracefully()
     {
         // Arrange
-        var receiptRequest = CreateValidReceiptRequest();
-        var gatewayProvider = CreateGatewayProvider();
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
 
         var createResult = new CreateResult
         {
@@ -65,7 +62,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Post // But PayVerb is provided
         };
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -88,9 +85,9 @@ public partial class PaymentGatewayInitializationServiceTests
     public async Task InitializePaymentAsync_LogsCreatedCorrectly()
     {
         // Arrange
-        var receiptRequest = CreateValidReceiptRequest();
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
 
         var createResult = new CreateResult
         {
@@ -100,7 +97,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         createResult.LogData.SetMessage("Test log message");
         
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -124,15 +121,15 @@ public partial class PaymentGatewayInitializationServiceTests
     public async Task InitializePaymentAsync_CorrectCallbackUrlGenerated()
     {
         // Arrange
-        var receiptRequest = CreateValidReceiptRequest();
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
         
         var expectedCallbackUrl = $"https://example.com/callback/{receiptRequest.Id}/{gatewayPayment.Id}";
 
         CreateRequest? capturedRequest = null;
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -154,12 +151,12 @@ public partial class PaymentGatewayInitializationServiceTests
     public async Task InitializePaymentAsync_StatusUpdated_WhenSuccessful()
     {
         // Arrange
-        var receiptRequest = CreateValidReceiptRequest();
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
         var initialStatus = receiptRequest.Status;
-        var gatewayProvider = CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))

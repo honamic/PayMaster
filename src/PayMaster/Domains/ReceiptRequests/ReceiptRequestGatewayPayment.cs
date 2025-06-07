@@ -139,7 +139,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         return Status == PaymentGatewayStatus.Waiting;
     }
 
-    internal void StartCallback(DateTimeOffset nowWithOffset, string callBackData)
+    internal void SetCallback(DateTimeOffset nowWithOffset, string callBackData)
     {
         if (!CanProcessCallback())
         {
@@ -151,7 +151,14 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         Status = PaymentGatewayStatus.Settlement;
     }
 
-    internal void SuccessCallBack(SupplementaryPaymentInformation? supplementaryPaymentInformation)
+    internal void FailedCallback(PaymentGatewayFailedReason paymentFailedReason, string? statusDescription)
+    {
+        Status = PaymentGatewayStatus.Failed;
+        StatusDescription = statusDescription;
+        FailedReason = paymentFailedReason;
+    }
+
+    internal void SuccessVerify(SupplementaryPaymentInformation? supplementaryPaymentInformation)
     {
         if (Status != PaymentGatewayStatus.Settlement &&
             Status != PaymentGatewayStatus.Waiting)
@@ -173,10 +180,8 @@ public class ReceiptRequestGatewayPayment : Entity<long>
         }
     }
 
-    internal void FailedCallBack(PaymentGatewayFailedReason paymentFailedReason, string? statusDescription)
+    internal void FailedVerify(PaymentGatewayFailedReason paymentFailedReason, string? statusDescription)
     {
-        Status = PaymentGatewayStatus.Failed;
-        StatusDescription = statusDescription;
-        FailedReason = paymentFailedReason;
+        FailedCallback(paymentFailedReason, statusDescription);
     }
 }

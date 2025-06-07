@@ -2,25 +2,24 @@
 
 namespace Honamic.PayMaster.Domains.ReceiptRequests.Services;
 
-// اینترفیس دامین سرویس
 public interface ICallbackGatewayPaymentDomainService
 {
-    Task<CallBackResult> ProcessCallBackAsync(long receiptRequestId, long gatewayPaymentId, string callBackData);
+    Task<CallbackResult> ProcessCallbackAsync(long receiptRequestId, long gatewayPaymentId, string callBackData);
 }
 
-public class CallBackResult
+public class CallbackResult
 {
     public ReceiptRequest ReceiptRequest { get; }
     public ReceiptRequestGatewayPayment GatewayPayment { get; }
-    public VerifyResult? VerifyResult { get; }
+    public string IssuerCallbackUrl { get; }
 
-    public CallBackResult(
+    public CallbackResult(
         ReceiptRequest receiptRequest,
         ReceiptRequestGatewayPayment gatewayPayment,
-        VerifyResult? verifyResult)
+        string issuerCallbackUrl)
     {
         ReceiptRequest = receiptRequest;
         GatewayPayment = gatewayPayment;
-        VerifyResult = verifyResult;
+        IssuerCallbackUrl = issuerCallbackUrl;
     }
 }

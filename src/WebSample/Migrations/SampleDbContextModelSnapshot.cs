@@ -22,7 +22,7 @@ namespace WebSample.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.PaymentGatewayProviders.PaymentGatewayProvider", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.PaymentGatewayProviders.PaymentGatewayProvider", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -92,14 +92,15 @@ namespace WebSample.Migrations
                     b.ToTable("PaymentGatewayProvider", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptIssuers.ReceiptIssuer", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.Property<string>("CallbackUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -117,8 +118,8 @@ namespace WebSample.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");
@@ -133,27 +134,20 @@ namespace WebSample.Migrations
                     b.Property<string>("ModifiedSources")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("ShowPaymentResultPage")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("WebHookUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ReceiptIssuer", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -237,7 +231,7 @@ namespace WebSample.Migrations
                     b.ToTable("ReceiptRequest", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -300,6 +294,7 @@ namespace WebSample.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.Property<int>("Status")
+                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.Property<string>("StatusDescription")
@@ -327,7 +322,7 @@ namespace WebSample.Migrations
                     b.ToTable("ReceiptRequestGatewayPayment", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestTryLog", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestTryLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -378,9 +373,9 @@ namespace WebSample.Migrations
                     b.ToTable("ReceiptRequestTryLog", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Core.ReceiptIssuers.ReceiptIssuer", "Issuer")
+                    b.HasOne("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", "Issuer")
                         .WithMany()
                         .HasForeignKey("IssuerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -389,15 +384,15 @@ namespace WebSample.Migrations
                     b.Navigation("Issuer");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Core.PaymentGatewayProviders.PaymentGatewayProvider", "GatewayProvider")
+                    b.HasOne("Honamic.PayMaster.Domains.PaymentGatewayProviders.PaymentGatewayProvider", "GatewayProvider")
                         .WithMany()
                         .HasForeignKey("GatewayProviderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", null)
+                    b.HasOne("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", null)
                         .WithMany("GatewayPayments")
                         .HasForeignKey("ReceiptRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,16 +401,16 @@ namespace WebSample.Migrations
                     b.Navigation("GatewayProvider");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequestTryLog", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestTryLog", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", null)
+                    b.HasOne("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", null)
                         .WithMany("TryLogs")
                         .HasForeignKey("ReceiptRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Core.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.Navigation("GatewayPayments");
 

@@ -13,6 +13,15 @@ internal class PaymentGatewayProviderRepository
 
     }
 
+    public Task<PaymentGatewayProvider?> GetByCodeAsync(string code)
+    {
+        return GetAsync(c => c.Code == code);
+    }
+
+    public Task<PaymentGatewayProvider?> GetByIdAsync(long id)
+    {
+        return GetAsync(c => c.Id == id);
+    }
 
     protected override IList<Expression<Func<PaymentGatewayProvider, object?>>> GetIncludes()
     {

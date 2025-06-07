@@ -26,18 +26,12 @@ public class ReceiptIssuerEntityConfiguration : IEntityTypeConfiguration<Receipt
 
         builder.Property(p => p.Title)
             .IsRequired()
-            .HasMaxLength(200);
-
-        builder.Property(p => p.ShowPaymentResultPage)
-            .IsRequired();
+            .HasMaxLength(128);
 
         builder.Property(p => p.CallbackUrl)
-            .HasMaxLength(500);
-
-        builder.Property(p => p.WebHookUrl)
-            .HasMaxLength(500);
+            .HasMaxLength(256);
 
         builder.Property(p => p.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1024);
     }
 }

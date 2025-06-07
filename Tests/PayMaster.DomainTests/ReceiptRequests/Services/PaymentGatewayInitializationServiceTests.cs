@@ -1,13 +1,18 @@
-﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Application.Options;
+﻿using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptRequests;
-using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
+using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domains.ReceiptRequests.Services;
+using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
+using Honamic.PayMaster.PaymentProviders.Exceptions;
+using Honamic.PayMaster.PaymentProviders.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Xunit;
+using Honamic.Framework.Domain;
+using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
 
 namespace PayMaster.Tests.Domains.ReceiptRequests.Services;
 
@@ -30,7 +35,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
         _loggerMock = new Mock<ILogger<PaymentGatewayInitializationService>>();
-        _optionsMock = new Mock<IOptions<PayMasterOptions>>(); 
+        _optionsMock = new Mock<IOptions<PayMasterOptions>>();
         _providerMock = new Mock<IPaymentGatewayProvider>();
         _idGenerator = new Mock<IIdGenerator>();
 
@@ -50,46 +55,184 @@ public partial class PaymentGatewayInitializationServiceTests
             _optionsMock.Object);
     }
 
-    // Helper methods to create test objects
-    private ReceiptRequest CreateValidReceiptRequest()
+
+    [Fact]
+    public async Task InitializePaymentAsync_SuccessfulInitialization_ReturnsCreateResult()
     {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayPayment = receiptRequest.GatewayPayments.First();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var expectedCallbackUrl = $"https://example.com/callback/{receiptRequest.Id}/{gatewayPayment.Id}";
 
-        var receiptRequest = ReceiptRequest.Create(new CreateReceiptRequestParameters
+        var createResult = new CreateResult
         {
-            Amount = 10000, // Set the amount here
-            Currency = "IRR",
-            Description = "Test payment",
-            DefaultGatewayProviderCode = "sandbox",
-            DefaultIssuerCode = "default",
-            IssuerCode = "",
-            SupportedCurrencies = ["IRR", "USD"],
-            Issuer = new ReceiptRequestIssuerParameters
-            {
-                Id = 1, // Use the ID of the created issuer
-                Enabled = true
-            },
-            GatewayProvider= new ReceiptRequestGatewayProviderParameters
-            {
-                Enabled=true,
-                Id=789
-            }
-        }, idGenerator: _idGenerator.Object);
+            Success = true,
+            CreateReference = "REF123",
+            PayParams = new Dictionary<string, string> { { "token", "TOKEN123" } },
+            PayUrl = "https://gateway.com/pay",
+            PayVerb = PayVerb.Get
+        };
 
-        return receiptRequest;
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(gatewayProvider);
+
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+            .Returns(_providerMock.Object);
+
+        _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
+            .ReturnsAsync(createResult);
+
+        // Act
+        var result = await _service.InitializePaymentAsync(receiptRequest);
+
+        // Assert
+        Assert.True(result.Success);
+        Assert.Equal("REF123", result.GatewayPayment!.CreateReference);
+        Assert.Equal("https://gateway.com/pay", result.PayUrl);
+        Assert.Equal(PayVerb.Get, result.PayVerb);
+
+        // Verify gateway payment status was updated
+        var payment = receiptRequest.GatewayPayments.FirstOrDefault(c => c.CreateReference == createResult.CreateReference);
+        Assert.Equal(PaymentGatewayStatus.Waiting, payment?.Status);
+        Assert.Equal("REF123", payment?.CreateReference);
+
+        // Verify log entry was created
+        Assert.Single(receiptRequest.TryLogs);
+        Assert.Equal(ReceiptRequestTryLogType.CreatePaymentProvider, receiptRequest.TryLogs.First().TryType);
+        Assert.True(receiptRequest.TryLogs.First().Success);
     }
 
-    private PaymentGatewayProvider CreateGatewayProvider()
+    [Fact]
+    public async Task InitializePaymentAsync_GatewayProviderNotFound_ThrowsException()
     {
-        return new PaymentGatewayProvider
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+            .ReturnsAsync((PaymentGatewayProvider)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<GatewayProviderNotFoundException>(
+            () => _service.InitializePaymentAsync(receiptRequest));
+
+    }
+
+    [Fact]
+    public async Task InitializePaymentAsync_ProviderReturnsFailure_ReturnsFailedResult()
+    {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+
+        var createResult = new CreateResult
         {
-            Id = 789,
-            Code = "sandbox",
-            Title = "Sandbox Gateway",
-            Enabled = true,
-            ProviderType = "Honamic.PayMaster.PaymentProvider.Sandbox.SandboxPaymentProvider",
-            Configurations = "{\"PayUrl\":\"https://sandbox.com/pay\"}",
-            MinimumAmount = 1000,
-            MaximumAmount = 50000000
+            Success = false,
+            StatusDescription = "Gateway rejected the request"
         };
+
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(gatewayProvider);
+
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+            .Returns(_providerMock.Object);
+
+        _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
+            .ReturnsAsync(createResult);
+
+        // Act
+        var result = await _service.InitializePaymentAsync(receiptRequest);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Equal("Gateway rejected the request", result.GatewayPayment!.StatusDescription);
+
+        // Verify log entry was created
+        Assert.Single(receiptRequest.TryLogs);
+        Assert.Equal(ReceiptRequestTryLogType.CreatePaymentProvider, receiptRequest.TryLogs.First().TryType);
+        Assert.False(receiptRequest.TryLogs.First().Success);
+    }
+
+
+    [Fact]
+    public async Task InitializePaymentAsync_NullReceiptRequest_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            () => _service.InitializePaymentAsync(null!));
+    }
+
+    [Fact]
+    public async Task InitializePaymentAsync_NoGatewayPayments_ThrowsException()
+    {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        receiptRequest.GatewayPayments.Clear();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<PayableGatewayPaymentNotFoundException>(
+            () => _service.InitializePaymentAsync(receiptRequest));
+    }
+
+    [Fact]
+    public async Task InitializePaymentAsync_FactoryThrowsException_ReturnsFailedResult()
+    {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(gatewayProvider);
+      
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+                .Throws<PaymentProviderNotFoundException>();
+        // Act & Assert
+        await Assert.ThrowsAsync<PaymentProviderNotFoundException>(
+            () => _service.InitializePaymentAsync(receiptRequest));
+    }
+
+    [Fact]
+    public async Task InitializePaymentAsync_ProviderThrowsNetworkException_ReturnsFailedResult()
+    {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(gatewayProvider);
+
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+            .Returns(_providerMock.Object);
+
+        _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
+            .ReturnsAsync(() =>
+            {
+                var result = new CreateResult();
+                result.LogData.SetException(new Exception("Network error"));
+                result.StatusDescription = "Network error";
+                return result;
+            });
+
+        // Act
+        var result = await _service.InitializePaymentAsync(receiptRequest);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Contains("Network error", result.GatewayPayment?.StatusDescription);
+        Assert.Single(receiptRequest.TryLogs);
+        Assert.False(receiptRequest.TryLogs.First().Success);
+    }
+
+    [Fact]
+    public async Task InitializePaymentAsync_GatewayPaymentNotInNewStatus_ThrowsException()
+    {
+        // Arrange
+        var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
+        var gatewayPayment = receiptRequest.GatewayPayments.First();
+        gatewayPayment.SetWaitingStatus("REF123", "Already initialized", DateTimeOffset.Now); // Change status from New
+
+        // Act & Assert
+        await Assert.ThrowsAsync<PayableGatewayPaymentNotFoundException>(
+            () => _service.InitializePaymentAsync(receiptRequest));
     }
 }

@@ -22,14 +22,15 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
         var gatewayPaymentId = command.GetGatewayPaymentIdAsLong();
         var receiptRequestId = command.GetReceiptRequestIdAsLong();
 
-        var result = await _callBackGatewayPaymentDomainService.ProcessCallBackAsync(
-            receiptRequestId,gatewayPaymentId, command.CallBackData);
+        var result = await _callBackGatewayPaymentDomainService.ProcessCallbackAsync(
+            receiptRequestId, gatewayPaymentId, command.CallBackData);
 
         return new CallBackGatewayPaymentCommandResult
         {
             ReceiptRequestId = result.ReceiptRequest.Id.ToString(CultureInfo.InvariantCulture),
             Status = result.ReceiptRequest.Status,
             IssuerReference = result.ReceiptRequest.IssuerReference,
+            IssuerCallbackUrl = result.IssuerCallbackUrl,
             PartyReference = result.ReceiptRequest.PartyReference,
             Amount = result.ReceiptRequest.Amount,
             Currency = result.ReceiptRequest.Currency,
@@ -46,12 +47,6 @@ internal class CallBackGatewayPaymentCommandHandler : ICommandHandler<CallBackGa
                             FailedReason = result.GatewayPayment.FailedReason,
                         }
                     },
-            Issuer = new
-            {
-                // اضافه کردن اطلاعات issuer در اینجا
-                // CallbackUrl = result.ReceiptRequest.Issuer.CallbackUrl,
-                // ShowPaymentResultPage = result.ReceiptRequest.Issuer.ShowPaymentResultPage
-            }
         };
     }
 }

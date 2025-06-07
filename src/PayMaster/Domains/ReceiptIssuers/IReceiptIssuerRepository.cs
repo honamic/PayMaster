@@ -1,9 +1,9 @@
-﻿using Honamic.Framework.Persistence.EntityFramework;
-
+﻿
 namespace Honamic.PayMaster.Domains.ReceiptIssuers;
 
 public interface IReceiptIssuerRepository
-    : IRepositoryBase<ReceiptIssuer, long>
 {
-
+    Task<ReceiptIssuer?> GetByIdAsync(long id);
+    Task<ReceiptIssuer?> GetByCodeAsync(string code);
+    Task InsertAsync(ReceiptIssuer entity);
 }
