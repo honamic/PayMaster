@@ -1,9 +1,7 @@
-﻿using Honamic.Framework.Persistence.EntityFramework;
+﻿namespace Honamic.PayMaster.Domains.PaymentGatewayProviders;
 
-namespace Honamic.PayMaster.Domains.PaymentGatewayProviders;
-
-public interface IPaymentGatewayProviderRepository 
-    : IRepositoryBase<PaymentGatewayProvider, long>
+public interface IPaymentGatewayProviderRepository
 {
-
+    Task<PaymentGatewayProvider?> GetByIdAsync(long id);
+    Task<PaymentGatewayProvider?> GetByCodeAsync(string code);
 }

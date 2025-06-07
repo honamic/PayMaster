@@ -56,7 +56,7 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
         }
 
         var gatewayProvider = await _gatewayProviderRepository
-                .GetAsync(c => c.Id == gatewayPayment.GatewayProviderId);
+                .GetByIdAsync(gatewayPayment.GatewayProviderId);
 
         if (gatewayProvider == null)
         {

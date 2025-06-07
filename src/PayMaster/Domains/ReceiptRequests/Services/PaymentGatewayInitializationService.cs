@@ -53,8 +53,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
 
         result.GatewayPayment = gatewayPayment;
 
-        var gatewayProvider = await _repository
-            .GetAsync(c => c.Id == gatewayPayment.GatewayProviderId);
+        var gatewayProvider = await _repository.GetByIdAsync(gatewayPayment.GatewayProviderId);
 
         if (gatewayProvider == null)
         {

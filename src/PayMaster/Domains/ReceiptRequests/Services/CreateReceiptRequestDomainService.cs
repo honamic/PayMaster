@@ -93,20 +93,20 @@ public class CreateReceiptRequestDomainService : ICreateReceiptRequestDomainServ
 
         if (gatewayProviderId.HasValue)
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetAsync(c => c.Id == gatewayProviderId);
+            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByIdAsync(gatewayProviderId.Value);
         }
 
         if (paymentGatewayProvider is null &&
             !string.IsNullOrEmpty(gatewayProviderCode))
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetAsync(c => c.Code == gatewayProviderCode);
+            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByCodeAsync(gatewayProviderCode);
         }
 
         if (!gatewayProviderId.HasValue
-               && string.IsNullOrEmpty(gatewayProviderCode))
+               && string.IsNullOrEmpty(gatewayProviderCode)
+               && !string.IsNullOrEmpty(defaultGatewayProviderCode))
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository
-                .GetAsync(c => c.Code == defaultGatewayProviderCode);
+            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByCodeAsync(defaultGatewayProviderCode);
         }
 
         if (paymentGatewayProvider is null)

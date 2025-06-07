@@ -32,7 +32,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Get
         };
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -67,7 +67,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = CreateValidReceiptRequest();
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync((PaymentGatewayProvider)null);
 
         // Act & Assert
@@ -89,7 +89,7 @@ public partial class PaymentGatewayInitializationServiceTests
             StatusDescription = "Gateway rejected the request"
         };
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -139,7 +139,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = CreateValidReceiptRequest();
         var gatewayProvider = CreateGatewayProvider();
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
       
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
@@ -156,7 +156,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = CreateValidReceiptRequest();
         var gatewayProvider = CreateGatewayProvider();
 
-        _repositoryMock.Setup(r => r.GetAsync(It.IsAny<Expression<Func<PaymentGatewayProvider, bool>>>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
