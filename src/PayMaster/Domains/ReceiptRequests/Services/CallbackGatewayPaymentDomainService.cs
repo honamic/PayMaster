@@ -33,8 +33,7 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
 
     public async Task<CallbackResult> ProcessCallbackAsync(long receiptRequestId, long gatewayPaymentId, string callbackData)
     {
-        ReceiptRequest? receiptRequest = await _receiptRequestRepository
-            .GetAsync(c => c.Id == receiptRequestId);
+        ReceiptRequest? receiptRequest = await _receiptRequestRepository.GetByIdAsync(receiptRequestId);
 
         if (receiptRequest is null)
         {
@@ -68,7 +67,7 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
 
         gatewayPayment.SetCallback(_clock.NowWithOffset, callbackData);
 
-        var issuer = await _receiptIssuerRepository.GetAsync(c => c.Id == receiptRequest.IssuerId);
+        var issuer = await _receiptIssuerRepository.GetByIdAsync(receiptRequest.IssuerId);
 
         if (issuer is null)
         {

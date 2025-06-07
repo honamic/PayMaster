@@ -64,11 +64,11 @@ public class CreateReceiptRequestDomainService : ICreateReceiptRequestDomainServ
 
         if (!string.IsNullOrEmpty(issuerCode))
         {
-            receiptIssuer = await _receiptIssuerRepository.GetAsync(c => c.Code == issuerCode);
+            receiptIssuer = await _receiptIssuerRepository.GetByCodeAsync(issuerCode);
         }
         else if (!string.IsNullOrEmpty(defaultIssuerCode))
         {
-            receiptIssuer = await _receiptIssuerRepository.GetAsync(c => c.Code == defaultIssuerCode);
+            receiptIssuer = await _receiptIssuerRepository.GetByCodeAsync(defaultIssuerCode);
         }
 
         if (receiptIssuer is null)

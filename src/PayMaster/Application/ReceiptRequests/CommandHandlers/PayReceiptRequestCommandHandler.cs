@@ -23,8 +23,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
     {
         var result = new Result<PayReceiptRequestCommandResult>();
 
-        var receiptRequest = await _receiptRequestRepository
-                        .GetAsync(c => c.Id == command.GetReceiptRequestIdAsLong());
+        var receiptRequest = await _receiptRequestRepository.GetByIdAsync(command.GetReceiptRequestIdAsLong());
 
         if (receiptRequest is null)
         {

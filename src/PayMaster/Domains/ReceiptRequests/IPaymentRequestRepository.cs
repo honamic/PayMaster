@@ -1,10 +1,9 @@
-﻿using Honamic.Framework.Persistence.EntityFramework;
-
-namespace Honamic.PayMaster.Domains.ReceiptRequests;
+﻿namespace Honamic.PayMaster.Domains.ReceiptRequests;
 
 public interface IReceiptRequestRepository
-    : IRepositoryBase<ReceiptRequest, long>
 {
+    Task<ReceiptRequest?> GetByIdAsync(long id);
+    Task InsertAsync(ReceiptRequest entity);
     Task<ReceiptRequest?> GetByGatewayPaymentCreateReferenceAsync(string? createReference, long gatewayProviderId);
     Task<ReceiptRequest?> GetByGatewayPaymentIDAsync(long gatewayPaymentId);
 }
