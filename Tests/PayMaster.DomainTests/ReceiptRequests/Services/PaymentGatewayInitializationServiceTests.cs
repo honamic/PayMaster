@@ -77,7 +77,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -134,7 +134,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -184,7 +184,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
       
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
                 .Throws<PaymentProviderNotFoundException>();
         // Act & Assert
         await Assert.ThrowsAsync<PaymentProviderNotFoundException>(
@@ -201,7 +201,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -257,7 +257,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -293,7 +293,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -328,7 +328,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -360,7 +360,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))
@@ -387,7 +387,7 @@ public partial class PaymentGatewayInitializationServiceTests
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
 
-        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations))
+        _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
             .Returns(_providerMock.Object);
 
         _providerMock.Setup(p => p.CreateAsync(It.IsAny<CreateRequest>()))

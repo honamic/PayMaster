@@ -12,7 +12,7 @@ using WebSample.Entities;
 namespace WebSample.Migrations
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20250605205102_Version01")]
+    [Migration("20250607173652_Version01")]
     partial class Version01
     {
         /// <inheritdoc />
@@ -35,10 +35,6 @@ namespace WebSample.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<string>("Configurations")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -51,6 +47,10 @@ namespace WebSample.Migrations
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("JsonConfigurations")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoPath")
                         .HasMaxLength(128)
@@ -73,9 +73,6 @@ namespace WebSample.Migrations
 
                     b.Property<string>("ModifiedSources")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
 
                     b.Property<string>("ProviderType")
                         .IsRequired()
@@ -378,13 +375,11 @@ namespace WebSample.Migrations
 
             modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", "Issuer")
+                    b.HasOne("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", null)
                         .WithMany()
                         .HasForeignKey("IssuerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Issuer");
                 });
 
             modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestGatewayPayment", b =>

@@ -5,7 +5,7 @@ public class PaymentGatewayProvider : AggregateRoot<long>
 {
     public PaymentGatewayProvider()
     {
-        Configurations = "{}";
+        JsonConfigurations = "{}";
         ProviderType = "";
     }
 
@@ -17,14 +17,9 @@ public class PaymentGatewayProvider : AggregateRoot<long>
 
     public string? LogoPath { get; set; }
 
-    /// <summary>
-    /// Json configuration
-    /// </summary>
-    public string Configurations { get; set; }
+    public string JsonConfigurations { get; set; }
 
     public bool Enabled { get; set; }
-
-    public int Order { get; set; }
 
     public decimal? MinimumAmount { get; set; }
 

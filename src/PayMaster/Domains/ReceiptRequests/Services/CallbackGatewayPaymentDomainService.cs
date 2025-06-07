@@ -63,7 +63,7 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
         }
 
         var paymentGatewayProvider = _gatewayProviderFactory
-                 .Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
+                 .Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations);
 
         gatewayPayment.SetCallback(_clock.NowWithOffset, callbackData);
 

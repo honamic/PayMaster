@@ -75,7 +75,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             Code = "test",
             Title = "Test Provider",
             ProviderType = "TestProvider",
-            Configurations = "{}",
+            JsonConfigurations = "{}",
             Enabled = true
         };
 

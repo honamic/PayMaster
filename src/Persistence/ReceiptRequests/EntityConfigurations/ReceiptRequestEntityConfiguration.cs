@@ -1,3 +1,4 @@
+using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,6 +17,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
     public void Configure(EntityTypeBuilder<ReceiptRequest> builder)
     {
         builder.HasKey(p => p.Id);
+
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
@@ -27,7 +29,6 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
         builder.Property(p => p.Amount)
             .IsRequired()
             .HasPrecision(18, 2);
-
 
         builder.Property(p => p.Currency)
             .IsRequired()
@@ -55,7 +56,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
             .HasMaxLength(64);
 
         // Relationships
-        builder.HasOne(p => p.Issuer)
+        builder.HasOne<ReceiptIssuer>()
             .WithMany()
             .HasForeignKey(p => p.IssuerId)
             .OnDelete(DeleteBehavior.Restrict);

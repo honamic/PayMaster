@@ -24,11 +24,13 @@ public class ReceiptRequest : AggregateRoot<long>
     /// <summary>
     /// https://en.wikipedia.org/wiki/ISO_4217
     /// </summary>
-    public string Currency { get; set; } = default!;
+    public string Currency { get; private set; } = default!;
 
-    public string? Description { get; set; }
+    public long IssuerId { get; private set; }
 
-    public string? AdditionalData { get; set; }
+    public string? Description { get; private set; }
+
+    public string? AdditionalData { get; private set; }
     public string? Mobile { get; private set; }
     public string? NationalityCode { get; private set; }
     public string? Email { get; private set; }
@@ -38,8 +40,6 @@ public class ReceiptRequest : AggregateRoot<long>
 
     public long? PartyId { get; private set; }
 
-    public ReceiptIssuer Issuer { get; set; }
-    public long IssuerId { get; set; }
 
     public List<ReceiptRequestGatewayPayment> GatewayPayments { get; set; }
 

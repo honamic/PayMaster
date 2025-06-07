@@ -60,7 +60,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
             throw new GatewayProviderNotFoundException();
         }
 
-        var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.Configurations);
+        var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations);
 
         var callbackUrl = GetCallbackUrl(receiptRequest, gatewayPayment);
 

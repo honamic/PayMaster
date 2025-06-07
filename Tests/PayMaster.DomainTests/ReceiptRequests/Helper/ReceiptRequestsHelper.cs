@@ -78,7 +78,7 @@ public static class ReceiptRequestsHelper
             Title = "Sandbox Gateway",
             Enabled = true,
             ProviderType = "Honamic.PayMaster.PaymentProvider.Sandbox.SandboxPaymentProvider",
-            Configurations = "{\"PayUrl\":\"https://sandbox.com/pay\"}",
+            JsonConfigurations = "{\"PayUrl\":\"https://sandbox.com/pay\"}",
             MinimumAmount = 1000,
             MaximumAmount = 50000000
         };

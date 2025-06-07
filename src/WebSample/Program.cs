@@ -60,6 +60,13 @@ internal class Program
 
         PaymentEndpoints.MapPaymentEndpoints(app);
 
+        InitializeDatabaseDefaults(app);
+
+        app.Run();
+    }
+
+    private static void InitializeDatabaseDefaults(WebApplication app)
+    {
         using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
@@ -97,10 +104,9 @@ internal class Program
                     Code = "sandbox",
                     Title = "تست پرداخت",
                     Enabled = true,
-                    Configurations = JsonSerializer.Serialize(sandboxConfig),
+                    JsonConfigurations = JsonSerializer.Serialize(sandboxConfig),
                     MinimumAmount = 1000,
                     MaximumAmount = null,
-                    Order = 1,
                     ProviderType = typeof(SandboxPaymentProvider).FullName,
                     LogoPath = null,
                 };
@@ -124,10 +130,9 @@ internal class Program
                     Code = "Default",
                     Title = "زرین پل تستی",
                     Enabled = true,
-                    Configurations = JsonSerializer.Serialize(zarinPalConfig),
+                    JsonConfigurations = JsonSerializer.Serialize(zarinPalConfig),
                     MinimumAmount = 1000,
                     MaximumAmount = null,
-                    Order = 1,
                     ProviderType = typeof(ZarinPalPaymentProvider).FullName,
                     LogoPath = null,
                 };
@@ -135,11 +140,7 @@ internal class Program
                 db.Set<PaymentGatewayProvider>().Add(zainpalProvider);
             }
 
-
-
             db.SaveChanges();
         }
-
-        app.Run();
     }
 }

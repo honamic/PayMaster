@@ -35,7 +35,7 @@ public class PaymentGatewayProviderEntityConfiguration : IEntityTypeConfiguratio
         builder.Property(p => p.LogoPath)
             .HasMaxLength(128);
 
-        builder.Property(p => p.Configurations)
+        builder.Property(p => p.JsonConfigurations)
             .IsRequired();
 
         builder.Property(p => p.MinimumAmount)
