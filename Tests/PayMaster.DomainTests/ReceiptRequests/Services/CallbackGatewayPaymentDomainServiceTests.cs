@@ -55,7 +55,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     public async Task ProcessCallbackAsync_ValidRequest_ReturnsSuccessfulResult()
     {
         // Arrange
-        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequest(ReceiptRequestStatus.Doing, _idGenerator.Object);
+        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Doing, _idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
         gatewayPayment.SetWaitingStatus("ref123", "Redirected to payment gateway", _currentTime.AddMinutes(-5));
 
@@ -169,7 +169,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     public async Task ProcessCallbackAsync_InvalidReceiptRequestStatus_ThrowsPaymentStatusNotValidForProcessingException()
     {
         // Arrange
-        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequest(ReceiptRequestStatus.Done, _idGenerator.Object);
+        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Done, _idGenerator.Object);
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
         receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
@@ -192,7 +192,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     public async Task ProcessCallbackAsync_GatewayPaymentNotFound_ThrowsInvalidPaymentException()
     {
         // Arrange
-        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequest(ReceiptRequestStatus.Doing, _idGenerator.Object);
+        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Doing, _idGenerator.Object);
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
         receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
@@ -215,7 +215,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     public async Task ProcessCallbackAsync_InvalidGatewayPaymentStatus_ThrowsPaymentStatusNotValidForProcessingException()
     {
         // Arrange
-        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequest(ReceiptRequestStatus.Doing, _idGenerator.Object);
+        var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Doing, _idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
         gatewayPayment.SetFailedStatus(PaymentGatewayFailedReason.Canceled, "User canceled the payment");
 
