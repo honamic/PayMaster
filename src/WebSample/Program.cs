@@ -5,6 +5,7 @@ using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
+using Honamic.PayMaster.PaymentProvider.Digipay;
 using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 using Honamic.PayMaster.PaymentProvider.Sandbox;
 using Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
@@ -138,6 +139,35 @@ internal class Program
                 };
 
                 db.Set<PaymentGatewayProvider>().Add(zainpalProvider);
+            }
+
+
+            var digipayProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "digipay");
+            if (digipayProvider == null)
+            {
+                DigipayConfigurations digipayPalConfig = new()
+                {
+                    ApiAddress = "https://api.mydigipay.com/digipay/api",
+                    ClientId = "YourClientId",
+                    ClientSecret = "YourClientSecret",
+                    Password = "YourPassword",
+                    UserName = "YourUserName",
+                };
+
+                digipayProvider = new PaymentGatewayProvider
+                {
+                    Id = 1002,
+                    Code = "digipay",
+                    Title = "دیجی پی",
+                    Enabled = true,
+                    JsonConfigurations = JsonSerializer.Serialize(digipayPalConfig),
+                    MinimumAmount = 1000,
+                    MaximumAmount = null,
+                    ProviderType = typeof(DigiPayPaymentProvider).FullName,
+                    LogoPath = null,
+                };
+
+                db.Set<PaymentGatewayProvider>().Add(digipayProvider);
             }
 
             db.SaveChanges();
