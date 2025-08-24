@@ -13,20 +13,20 @@ internal class ReceiptRequestRepository
 
     }
 
-    public Task<ReceiptRequest?> GetByGatewayPaymentCreateReferenceAsync(string? createReference, long gatewayProviderId)
+    public Task<ReceiptRequest?> GetByGatewayPaymentCreateReferenceAsync(string? createReference, long gatewayProviderId, CancellationToken cancellationToken = default)
     {
         return GetAsync(c => c.GatewayPayments.Any(c => c.CreateReference == createReference
-        && c.GatewayProviderId == gatewayProviderId));
+        && c.GatewayProviderId == gatewayProviderId),cancellationToken);
     }
 
-    public Task<ReceiptRequest?> GetByGatewayPaymentIDAsync(long gatewayPaymentId)
+    public Task<ReceiptRequest?> GetByGatewayPaymentIDAsync(long gatewayPaymentId, CancellationToken cancellationToken = default)
     {
-        return GetAsync(receipt => receipt.GatewayPayments.Any(pay => pay.Id == gatewayPaymentId));
+        return GetAsync(receipt => receipt.GatewayPayments.Any(pay => pay.Id == gatewayPaymentId), cancellationToken);
     }
 
-    public Task<ReceiptRequest?> GetByIdAsync(long id)
+    public Task<ReceiptRequest?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        return GetAsync(c => c.Id == id);
+        return GetAsync(c => c.Id == id, cancellationToken);
     }
 
     protected override IList<Expression<Func<ReceiptRequest, object?>>> GetIncludes()

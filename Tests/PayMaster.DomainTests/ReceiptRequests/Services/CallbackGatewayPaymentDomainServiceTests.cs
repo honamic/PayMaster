@@ -115,11 +115,11 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             .ReturnsAsync(verifyResult);
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
-        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(),CancellationToken.None))
             .ReturnsAsync(receiptRequest);
 
         var receiptIssuerRepositoryMock = new Mock<IReceiptIssuerRepository>();
-        receiptIssuerRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptIssuerRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(receiptIssuer);
 
         _service = new CallbackGatewayPaymentDomainService(
@@ -149,7 +149,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
     {
         // Arrange
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
-        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync((ReceiptRequest)null!);
 
         _service = new CallbackGatewayPaymentDomainService(
@@ -172,7 +172,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Done, _idGenerator.Object);
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
-        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(receiptRequest);
 
         _service = new CallbackGatewayPaymentDomainService(
@@ -195,7 +195,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateSampleReceiptRequestForStatus(ReceiptRequestStatus.Doing, _idGenerator.Object);
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
-        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(receiptRequest);
 
         _service = new CallbackGatewayPaymentDomainService(
@@ -220,7 +220,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
         gatewayPayment.SetFailedStatus(PaymentGatewayFailedReason.Canceled, "User canceled the payment");
 
         var receiptRequestRepositoryMock = new Mock<IReceiptRequestRepository>();
-        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        receiptRequestRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(receiptRequest);
 
         _service = new CallbackGatewayPaymentDomainService(

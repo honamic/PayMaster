@@ -7,6 +7,7 @@ using Honamic.PayMaster.Domains.ReceiptIssuers;
 using Honamic.PayMaster.Persistence.PaymentGatewayProviders;
 using Honamic.PayMaster.Persistence.ReceiptIssuers;
 using Honamic.PayMaster.Persistence.ReceiptRequests;
+using Honamic.Framework.EntityFramework.Persistence.Extensions;
 
 namespace Honamic.PayMaster.Persistence.Extensions;
 

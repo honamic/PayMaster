@@ -24,7 +24,7 @@ public static class ReceiptRequestsEndpoints
         {
             var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(model, cancellationToken);
 
-            if (paycommandResult.Status == ResultStatus.Ok)
+            if (paycommandResult.IsSuccess)
             {
                 if (paycommandResult.Data?.PayUrl == null)
                 {

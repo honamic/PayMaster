@@ -43,7 +43,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
                 PayVerb = createResult.PayVerb,
             };
 
-            result.Succeed();
+            result.SetSuccess();
         }
         else
         {

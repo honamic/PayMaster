@@ -13,14 +13,14 @@ internal class ReceiptIssuerRepository
 
     }
 
-    public Task<ReceiptIssuer?> GetByIdAsync(long id)
+    public Task<ReceiptIssuer?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        return GetAsync(x => x.Id == id);
+        return GetAsync(x => x.Id == id, cancellationToken);
     }
 
-    public Task<ReceiptIssuer?> GetByCodeAsync(string code)
+    public Task<ReceiptIssuer?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
-        return GetAsync(x => x.Code == code);
+        return GetAsync(x => x.Code == code, cancellationToken);
     }
 
     protected override IList<Expression<Func<ReceiptIssuer, object?>>> GetIncludes()

@@ -21,7 +21,7 @@ public static class PaymentEndpoints
         {
             var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
 
-            if (createResult.Status != ResultStatus.Ok)
+            if (createResult.IsSuccess)
             {
                 return Results.BadRequest(createResult);
             }
@@ -33,8 +33,7 @@ public static class PaymentEndpoints
 
             var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(paycommand, cancellationToken);
 
-            if (paycommandResult.Status == ResultStatus.Ok
-)
+            if (paycommandResult.IsSuccess)
             {
                 if (paycommandResult.Data?.PayUrl == null)
                 {

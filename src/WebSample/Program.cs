@@ -1,4 +1,5 @@
 ﻿using Honamic.Framework.Applications.Authorizes;
+using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.Options;
 using Honamic.PayMaster.Domains.PaymentGatewayProviders;
 using Honamic.PayMaster.Domains.ReceiptIssuers;
@@ -16,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
+using Honamic.Framework.Endpoints.Web.Extensions;
 
 internal class Program
 {
@@ -38,6 +40,7 @@ internal class Program
         });
 
         builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
+        builder.Services.AddDefaultUserContextService();
 
         builder.Services.AddPayMasterServices();
         builder.Services.AddPersistenceEntityFrameworkServices(sqlServerConnection);
