@@ -1,8 +1,7 @@
-﻿using Honamic.PayMaster.Application.Options;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptRequests.Enums;
-using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
-using Honamic.PayMaster.Domains.ReceiptRequests.Services;
+﻿using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.ReceiptRequests.Enums;
+using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
+using Honamic.PayMaster.Domain.ReceiptRequests.Services;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Exceptions;
@@ -13,8 +12,9 @@ using Moq;
 using Xunit;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
+using Honamic.PayMaster.Options;
 
-namespace PayMaster.Tests.Domains.ReceiptRequests.Services;
+namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 
 public partial class PaymentGatewayInitializationServiceTests
 {

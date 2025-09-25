@@ -1,0 +1,42 @@
+﻿namespace Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
+public class CreateReceiptRequestParameters
+{
+    public required decimal Amount { get; set; }
+    public required string Currency { get; set; } = default!;
+
+    public required string? IssuerCode { get; init; }
+    public long? GatewayProviderId { get; set; }
+    public string? GatewayProviderCode { get; set; }
+
+    public required string? DefaultIssuerCode { get; init; }
+    public required string? DefaultGatewayProviderCode { get; init; }
+
+    public string? Description { get; set; }
+    public string? Email { get; set; }
+    public string? Mobile { get; set; }
+    public string? NationalityCode { get; set; }
+    public string? PartyReference { get; set; }
+    public string? IssuerReference { get; set; }
+    public long? PartyId { get; set; }
+    public bool? IsLegal { get; set; }
+    public string? AdditionalData { get; set; }
+
+    public ReceiptRequestIssuerParameters? Issuer { get; set; }
+    public ReceiptRequestGatewayProviderParameters? GatewayProvider { get; set; }
+
+    public required string[] SupportedCurrencies;
+}
+
+public class ReceiptRequestIssuerParameters
+{
+    public long Id { get; set; }
+    public bool Enabled { get; set; }
+}
+
+public class ReceiptRequestGatewayProviderParameters
+{
+    public long Id { get; set; }
+    public bool Enabled { get; set; }
+    public decimal? MinimumAmount { get; set; }
+    public decimal? MaximumAmount { get; set; }
+}

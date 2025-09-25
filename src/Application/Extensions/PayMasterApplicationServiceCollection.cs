@@ -1,0 +1,58 @@
+﻿using Honamic.Framework.Applications.Authorizes;
+using Honamic.Framework.Applications.Extensions;
+using Honamic.Framework.Applications.Results;
+using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
+using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Honamic.PayMaster.Options;
+using Honamic.PayMaster.PaymentProviders;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Honamic.PayMaster.Application.Extensions;
+
+public static class PayMasterApplicationServiceCollection
+{
+    public static IServiceCollection AddPayMasterApplicationServices(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        
+        services.AddOptions<PayMasterOptions>();
+
+        services.AddSingleton<IPaymentGatewayProviderFactory, PaymentGatewayProviderFactory>();
+
+
+        DynamicPermissionRegistry.Register(typeof(PayMasterApplicationServiceCollection).Assembly);
+        DynamicPermissionRegistry.Register(typeof(PayMasterConstants).Assembly);
+
+        services.AddCommandHandlers();
+        services.AddQueryHandlers();
+        services.AddEventHandlers();
+
+        return services;
+    }
+
+    private static void AddCommandHandlers(this IServiceCollection services)
+    {
+        services.AddCommandHandler<CreateReceiptRequestCommand,
+            CreateReceiptRequestCommandHandler,
+            Result<CreateReceiptRequestCommandResult>>();
+
+        services.AddCommandHandler<PayReceiptRequestCommand,
+            PayReceiptRequestCommandHandler,
+            Result<PayReceiptRequestCommandResult>>();
+
+        services.AddCommandHandler<CallBackGatewayPaymentCommand,
+            CallBackGatewayPaymentCommandHandler,
+            Result<CallBackGatewayPaymentCommandResult>>();
+
+    }
+
+    private static void AddQueryHandlers(this IServiceCollection services)
+    {
+
+    }
+
+    private static void AddEventHandlers(this IServiceCollection services)
+    {
+        //services.AddEventHandler<UserCreatedEvent, UserCreatedEventHandler>();
+    }
+}

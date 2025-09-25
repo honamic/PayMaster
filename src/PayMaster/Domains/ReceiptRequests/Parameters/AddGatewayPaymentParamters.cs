@@ -1,8 +1,0 @@
-﻿namespace Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
-public class CreateGatewayPaymentParameters
-{
-    public required long Id { get; set; }
-    public required decimal Amount { get; set; }
-    public required string Currency { get; set; }
-    public required ReceiptRequestGatewayProviderParameters GatewayProvider { get; set; }
-}

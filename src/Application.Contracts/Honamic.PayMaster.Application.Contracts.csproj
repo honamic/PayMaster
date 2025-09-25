@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Honamic.PayMaster.Application</RootNamespace>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Honamic.Framework.Applications.Abstractions" Version="1.0.12-Beta12" />
+		<PackageReference Include="Honamic.Framework.Commands.Abstractions" Version="1.0.12-Beta12" />
+		<PackageReference Include="Honamic.Framework.Queries.Abstractions" Version="1.0.12-Beta12" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Abstractions\Honamic.PayMaster.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

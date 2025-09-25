@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Persistence.EntityFramework;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders;

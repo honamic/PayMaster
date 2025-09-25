@@ -1,4 +1,4 @@
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

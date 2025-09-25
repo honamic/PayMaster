@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Persistence.EntityFramework;
-using Honamic.PayMaster.Domains.ReceiptRequests;
+using Honamic.PayMaster.Domain.ReceiptRequests;
 using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.ReceiptRequests;

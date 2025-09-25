@@ -1,20 +1,20 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Application.Options;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptIssuers;
-using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
-using Honamic.PayMaster.Domains.ReceiptRequests;
-using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
-using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
-using Honamic.PayMaster.Domains.ReceiptRequests.Services;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.ReceiptIssuers;
+using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
+using Honamic.PayMaster.Domain.ReceiptRequests;
+using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
+using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
+using Honamic.PayMaster.Domain.ReceiptRequests.Services;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
+using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace PayMaster.Tests.Domains.ReceiptRequests.Services;
+namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 
 public partial class CreateReceiptRequestDomainServiceTests
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Honamic.Framework.Persistence.EntityFramework.Extensions;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptRequests;
-using Honamic.PayMaster.Domains.ReceiptIssuers;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.ReceiptRequests;
+using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Persistence.PaymentGatewayProviders;
 using Honamic.PayMaster.Persistence.ReceiptIssuers;
 using Honamic.PayMaster.Persistence.ReceiptRequests;

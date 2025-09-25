@@ -1,8 +1,8 @@
 using FluentAssertions;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptRequests;
-using Honamic.PayMaster.Domains.ReceiptRequests.Exceptions;
-using Honamic.PayMaster.Domains.ReceiptRequests.Parameters;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.ReceiptRequests;
+using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
+using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Xunit;

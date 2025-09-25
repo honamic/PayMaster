@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.Domains.ReceiptIssuers;
+﻿using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

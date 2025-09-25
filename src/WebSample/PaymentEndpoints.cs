@@ -3,7 +3,6 @@ using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using System.Web;
 
 namespace WebSample;
 
@@ -21,7 +20,7 @@ public static class PaymentEndpoints
         {
             var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
 
-            if (createResult.IsSuccess)
+            if (!createResult.IsSuccess)
             {
                 return Results.BadRequest(createResult);
             }

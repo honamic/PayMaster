@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Honamic.Framework.Domain" Version="1.0.12-Beta12" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Honamic.PayMaster.DomainTests" />
+		<InternalsVisibleTo Include="Honamic.PayMaster.ApplicationTests" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Abstractions\Honamic.PayMaster.Abstractions.csproj" />
+	</ItemGroup>
+	
+</Project>

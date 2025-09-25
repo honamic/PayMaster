@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\PayMaster\Honamic.PayMaster.csproj" />
+		<ProjectReference Include="..\Application\Honamic.PayMaster.Application.csproj" /> 
 	</ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
-﻿using Honamic.Framework.Applications.Authorizes;
-using Honamic.Framework.Domain;
-using Honamic.PayMaster.Application.Options;
-using Honamic.PayMaster.Domains.PaymentGatewayProviders;
-using Honamic.PayMaster.Domains.ReceiptIssuers;
-using Honamic.PayMaster.Domains.ReceiptIssuers.Parameters;
+﻿using Honamic.Framework.Domain;
+using Honamic.Framework.Endpoints.Web.Extensions;
+using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.ReceiptIssuers;
+using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
 using Honamic.PayMaster.PaymentProvider.Digipay;
 using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebSample;
 using WebSample.Entities;
-using Honamic.Framework.Endpoints.Web.Extensions;
 
 internal class Program
 {
@@ -39,10 +38,11 @@ internal class Program
             options.UseSqlServer(sqlServerConnection);
         });
 
-        builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
-        builder.Services.AddDefaultUserContextService();
 
         builder.Services.AddPayMasterServices();
+        builder.Services.AddDefaultUserContextService();
+        builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
+
         builder.Services.AddPersistenceEntityFrameworkServices(sqlServerConnection);
 
         builder.Services.Configure<PayMasterOptions>(c =>
