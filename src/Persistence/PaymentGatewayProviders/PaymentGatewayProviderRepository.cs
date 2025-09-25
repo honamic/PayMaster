@@ -1,5 +1,8 @@
-﻿using Honamic.Framework.Persistence.EntityFramework;
+﻿using Honamic.Framework.Domain;
+using Honamic.Framework.Persistence.EntityFramework;
 using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders;
@@ -8,7 +11,7 @@ internal class PaymentGatewayProviderRepository
     : RepositoryBase<PaymentGatewayProvider, long>
     , IPaymentGatewayProviderRepository
 {
-    public PaymentGatewayProviderRepository(PaymasterDbContext context) : base(context)
+    public PaymentGatewayProviderRepository([FromKeyedServices(DomainConstants.PersistenceDbContextKey)] DbContext context) : base(context)
     {
 
     }

@@ -1,5 +1,8 @@
-﻿using Honamic.Framework.Persistence.EntityFramework;
+﻿using Honamic.Framework.Domain;
+using Honamic.Framework.Persistence.EntityFramework;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.ReceiptIssuers;
@@ -8,7 +11,7 @@ internal class ReceiptIssuerRepository
     : RepositoryBase<ReceiptIssuer, long>
     , IReceiptIssuerRepository
 {
-    public ReceiptIssuerRepository(PaymasterDbContext context) : base(context)
+    public ReceiptIssuerRepository([FromKeyedServices(DomainConstants.PersistenceDbContextKey)] DbContext context) : base(context)
     {
 
     }
