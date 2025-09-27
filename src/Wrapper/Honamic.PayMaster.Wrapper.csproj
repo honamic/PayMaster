@@ -6,6 +6,9 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Honamic.Framework.EntityFramework.Query" Version="1.0.13-Beta13" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Honamic.PayMaster.Application.csproj" />

@@ -7,7 +7,7 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="Honamic.Framework.Endpoints.Web" Version="1.0.12-Beta12" />
+		<PackageReference Include="Honamic.Framework.Endpoints.Web" Version="1.0.13-Beta13" />
 
 	</ItemGroup>
 

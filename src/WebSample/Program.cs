@@ -19,10 +19,6 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddAllPaymentProviderServices();
-        builder.Services.AddDigipayPaymentProviderServices();
-        builder.Services.AddSandboxWebPaymentProviderServices();
-        builder.Services.AddHttpClient();
 
         var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnectionString");
         builder.Services.AddDbContext<SampleDbContext>((serviceProvider, options) =>
@@ -31,10 +27,22 @@ internal class Program
         });
 
 
-        builder.Services.AddPayMasterServices(sqlServerConnection);
+        builder.Services.AddPayMasterWrapper(option =>
+        {
+            option.UseEntityFrameWorkPersistence<SampleDbContext>();
+            //option.UseSqlServerPersistence(sqlServerConnection);
+
+            option.UseSqlServerQueryModel(sqlServerConnection!);
+            // option.UseEntityFrameWorkQueryModel<SampleQueryDbContext>();
+        });
 
         builder.Services.AddDefaultUserContextService();
         builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
+
+        builder.Services.AddAllPaymentProviderServices();
+        builder.Services.AddDigipayPaymentProviderServices();
+        builder.Services.AddSandboxWebPaymentProviderServices();
+        builder.Services.AddHttpClient();
 
         builder.Services.Configure<PayMasterOptions>(c =>
         {

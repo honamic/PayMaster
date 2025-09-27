@@ -1,7 +1,6 @@
-﻿using Honamic.Framework.Applications.Results;
-using Honamic.Framework.Commands;
-using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+﻿using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Web.Helpers;
+using Honamic.PayMaster.Wrapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebSample;
@@ -12,13 +11,12 @@ public static class PaymentEndpoints
     {
         var payGroup = app.MapGroup("sample");
 
-        payGroup.MapGet("sample/receipt/createAndPay/", async (HttpContext context,
-          IServiceProvider services,
-          [FromServices] ICommandBus commandBus,
-          [AsParameters] CreateReceiptRequestCommand model,
-          CancellationToken cancellationToken) =>
+        payGroup.MapGet("sample/receipt/createAndPay/", async (
+            [FromServices] IPayMasterFacade payMasterFacade,
+            [AsParameters] CreateReceiptRequestCommand model,
+            CancellationToken cancellationToken) =>
         {
-            var createResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
+            var createResult = await payMasterFacade.CreateReceiptRequest(model, cancellationToken);
 
             if (!createResult.IsSuccess)
             {
@@ -30,7 +28,7 @@ public static class PaymentEndpoints
                 ReceiptRequestId = createResult.Data!.Id,
             };
 
-            var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(paycommand, cancellationToken);
+            var paycommandResult = await payMasterFacade.PayReceiptRequest(paycommand, cancellationToken);
 
             if (paycommandResult.IsSuccess)
             {
@@ -48,13 +46,11 @@ public static class PaymentEndpoints
             return Results.BadRequest(paycommandResult);
         });
 
-        payGroup.MapPost("sample/receipt/create/", async (HttpContext context,
-                IServiceProvider services,
-               [FromServices] ICommandBus commandBus,
+        payGroup.MapPost("sample/receipt/create/", async ( [FromServices] IPayMasterFacade payMasterFacade,
                 [AsParameters] CreateReceiptRequestCommand model,
-                  CancellationToken cancellationToken) =>
+                CancellationToken cancellationToken) =>
         {
-            var commandResult = await commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
+            var commandResult = await payMasterFacade.CreateReceiptRequest(model, cancellationToken);
 
             return Results.Ok(commandResult);
         });
