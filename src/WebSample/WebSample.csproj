@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PayMaster\Honamic.PayMaster.csproj" />
     <ProjectReference Include="..\PaymentProvider\All\All.csproj" />
     <ProjectReference Include="..\PaymentProvider\Digipay\Digipay.csproj" />
     <ProjectReference Include="..\PaymentProvider\PayPal\PayPal.csproj" />
@@ -30,6 +29,8 @@
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
 	  
     <ProjectReference Include="..\Web\Honamic.PayMaster.Web.csproj" />
+	  
+    <ProjectReference Include="..\Wrapper\Honamic.PayMaster.Wrapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,11 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.Framework.Endpoints.Web.Extensions;
-using Honamic.PayMaster.Extensions;
 using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
 using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 using Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
 using Honamic.PayMaster.Web.Extensions;
+using Honamic.PayMaster.Wrapper.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WebSample;
 using WebSample.Entities;

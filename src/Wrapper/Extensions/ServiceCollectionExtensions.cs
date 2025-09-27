@@ -3,12 +3,12 @@ using Honamic.Framework.EntityFramework.Persistence.Extensions;
 using Honamic.Framework.Tools.IdGenerators;
 using Honamic.PayMaster.Application.Extensions;
 using Honamic.PayMaster.Domain.Extensions;
-using Honamic.PayMaster.Persistence;
 using Honamic.PayMaster.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Honamic.Framework.Persistence.EntityFramework.Extensions;
-namespace Honamic.PayMaster.Extensions;
+using Honamic.PayMaster.Wrapper.Persistence;
+namespace Honamic.PayMaster.Wrapper.Extensions;
 
 public static class ServiceCollectionExtensions
 {
