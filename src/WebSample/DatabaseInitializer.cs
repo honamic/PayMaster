@@ -10,7 +10,7 @@ using WebSample.Entities;
 
 internal static class DatabaseInitializer
 {
-    public static void InitializeDatabaseDefaults(WebApplication app)
+    public static void InitializeDatabaseDefaults(this IHost app)
     {
         using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {

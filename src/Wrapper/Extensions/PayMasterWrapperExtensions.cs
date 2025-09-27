@@ -17,8 +17,15 @@ public static class PayMasterWrapperExtensions
 
         setupAction(payMasterWrapperBuilder);
 
+        if (!payMasterWrapperBuilder.PersistenceConfigured)
+            throw new InvalidOperationException("You must configure persistence (EF or SQL Server).");
+
+        if (!payMasterWrapperBuilder.QueryModelConfigured)
+            throw new InvalidOperationException("You must configure QueryModel (EF or SQL Server).");
+
         services.AddFrameworkServies();
         services.AddPayMasterModuleServices();
+        services.AddHttpClient();
 
         services.AddScoped<IPayMasterFacade, PayMasterFacade>();
     }

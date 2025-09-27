@@ -7,7 +7,7 @@ namespace WebSample;
 
 public static class PaymentEndpoints
 {
-    public static void MapPaymentEndpoints(IEndpointRouteBuilder app)
+    public static void MapPaymentEndpoints(this IEndpointRouteBuilder app)
     {
         var payGroup = app.MapGroup("sample");
 

@@ -1,6 +1,6 @@
 ﻿using Honamic.Framework.Domain;
+using Honamic.Framework.Endpoints.Web.Authorization;
 using Honamic.Framework.Endpoints.Web.Extensions;
-using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
 using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 using Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
@@ -26,28 +26,28 @@ internal class Program
             options.UseSqlServer(sqlServerConnection);
         });
 
-
         builder.Services.AddPayMasterWrapper(option =>
         {
             option.UseEntityFrameWorkPersistence<SampleDbContext>();
-            //option.UseSqlServerPersistence(sqlServerConnection);
+            // option.UseSqlServerPersistence(sqlServerConnection);
 
             option.UseSqlServerQueryModel(sqlServerConnection!);
             // option.UseEntityFrameWorkQueryModel<SampleQueryDbContext>();
+
+            option.Configure(config =>
+            {
+                config.CallBackUrl = "https://localhost:7777/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
+                config.SupportedCurrencies = ["IRR", "USD"];
+            });
+
+            option.Services.AddAllPaymentProviderServices();
+            option.Services.AddDigipayPaymentProviderServices();
+            option.Services.AddSandboxWebPaymentProviderServices();
+
+            builder.Services.AddDefaultUserContextService<DefaultUserContext>();
+            builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
         });
 
-        builder.Services.AddDefaultUserContextService();
-        builder.Services.AddScoped<IAuthorization, DefaultAuthorization>();
-
-        builder.Services.AddAllPaymentProviderServices();
-        builder.Services.AddDigipayPaymentProviderServices();
-        builder.Services.AddSandboxWebPaymentProviderServices();
-        builder.Services.AddHttpClient();
-
-        builder.Services.Configure<PayMasterOptions>(c =>
-        {
-            c.CallBackUrl = "https://localhost:7777/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
-        });
 
         var app = builder.Build();
 
@@ -60,9 +60,9 @@ internal class Program
         app.UseHttpsRedirection();
         app.UsePayMasterEndpoints();
         app.UseSandboxPayEndpoints();
-
-        PaymentEndpoints.MapPaymentEndpoints(app);
-        DatabaseInitializer.InitializeDatabaseDefaults(app);
+        
+        app.MapPaymentEndpoints();
+        app.InitializeDatabaseDefaults();
 
         app.Run();
     }

@@ -13,6 +13,6 @@ public class PayMasterOptions
 
     public string? DefaultIssuerCode { get; set; } = default!;
     public string? DefaultGatewayProviderCode { get; set; } = default!;
-    public string[] SupportedCurrencies { get; set; } = default!;
+    public string[] SupportedCurrencies { get; set; }
     public string CallBackUrl { get; set; } = default!;
 }

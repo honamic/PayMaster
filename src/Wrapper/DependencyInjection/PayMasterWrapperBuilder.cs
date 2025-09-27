@@ -2,6 +2,7 @@
 using Honamic.Framework.EntityFramework.Query;
 using Honamic.Framework.EntityFramework.Query.Extensions;
 using Honamic.Framework.Persistence.EntityFramework.Extensions;
+using Honamic.PayMaster.Options;
 using Honamic.PayMaster.Persistence.Extensions;
 using Honamic.PayMaster.Wrapper.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -11,23 +12,37 @@ namespace Honamic.PayMaster.Wrapper.DependencyInjection;
 
 public class PayMasterWrapperBuilder
 {
-    private readonly IServiceCollection services;
+    public IServiceCollection Services { get; }
 
+    internal bool PersistenceConfigured { get; private set; }
+    internal bool QueryModelConfigured { get; private set; }
     public PayMasterWrapperBuilder(IServiceCollection services)
     {
-        this.services = services;
+        Services = services;
     }
 
+    public void Configure(Action<PayMasterOptions> configure)
+    {
+        Services.Configure<PayMasterOptions>(configure);
+    }
 
     public void UseEntityFrameWorkPersistence<TDbContext>() where TDbContext : DbContext
     {
-        services.AddUnitOfWorkByEntityFramework<TDbContext>();
-        services.AddPayMasterPersistenceServices();
+        EnsurePersistenceNotAlreadyConfigured();
+
+        PersistenceConfigured = true;
+
+        Services.AddUnitOfWorkByEntityFramework<TDbContext>();
+        Services.AddPayMasterPersistenceServices();
     }
 
     public void UseSqlServerPersistence(string sqlServerConnection)
     {
-        services.AddDbContext<PaymasterDbContext>((serviceProvider, options) =>
+        EnsurePersistenceNotAlreadyConfigured();
+
+        PersistenceConfigured = true;
+
+        Services.AddDbContext<PaymasterDbContext>((serviceProvider, options) =>
         {
             options.UseSqlServer(sqlServerConnection);
             options.AddPersianYeKeCommandInterceptor();
@@ -35,20 +50,39 @@ public class PayMasterWrapperBuilder
             options.AddMarkAsDeletedInterceptors();
         });
 
-        services.AddUnitOfWorkByEntityFramework<PaymasterDbContext>();
-        services.AddPayMasterPersistenceServices();
+        Services.AddUnitOfWorkByEntityFramework<PaymasterDbContext>();
+        Services.AddPayMasterPersistenceServices();
     }
 
     public void UseEntityFrameWorkQueryModel<TDbContext>() where TDbContext : QueryDbContext‌Base
     {
-        services.AddDefaultQueryDbContext<TDbContext>();
-        services.AddPayMasterPersistenceServices();
+        EnsureQueryModelNotAlreadyConfigured();
+        QueryModelConfigured = true;
+
+        Services.AddDefaultQueryDbContext<TDbContext>();
+        Services.AddPayMasterPersistenceServices();
     }
 
 
     public void UseSqlServerQueryModel(string sqlServerConnection)
     {
+        EnsureQueryModelNotAlreadyConfigured();
+        QueryModelConfigured = true;
+        
         //throw new NotImplementedException();
+    }
+
+
+    private void EnsurePersistenceNotAlreadyConfigured()
+    {
+        if (PersistenceConfigured)
+            throw new InvalidOperationException("Persistence already configured. You cannot configure it twice.");
+    }
+
+    private void EnsureQueryModelNotAlreadyConfigured()
+    {
+        if (QueryModelConfigured)
+            throw new InvalidOperationException("QueryModel already configured. You cannot configure it twice.");
     }
 
 }
