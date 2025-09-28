@@ -7,7 +7,6 @@ using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests.Services;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
-using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -22,7 +21,6 @@ public partial class CreateReceiptRequestDomainServiceTests
     private readonly Mock<IPaymentGatewayProviderFactory> _factoryMock;
     private readonly Mock<IClock> _clockMock;
     private readonly Mock<ILogger<CreateReceiptRequestDomainService>> _loggerMock;
-    private readonly Mock<IOptions<PayMasterOptions>> _optionsMock;
     private readonly Mock<IPaymentGatewayProvider> _providerMock;
     private readonly Mock<IIdGenerator> _idGenerator;
 
@@ -34,17 +32,9 @@ public partial class CreateReceiptRequestDomainServiceTests
         _repositoryMock = new Mock<IPaymentGatewayProfileRepository>();
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
-        _loggerMock = new Mock<ILogger<CreateReceiptRequestDomainService>>();
-        _optionsMock = new Mock<IOptions<PayMasterOptions>>();
+        _loggerMock = new Mock<ILogger<CreateReceiptRequestDomainService>>(); 
         _providerMock = new Mock<IPaymentGatewayProvider>();
         _idGenerator = new Mock<IIdGenerator>();
-
-        var options = new PayMasterOptions
-        {
-            CallBackUrl = "https://example.com/callback/{ReceiptRequestId}/{GatewayPaymentId}"
-        };
-
-        _optionsMock.Setup(o => o.Value).Returns(options);
         _clockMock.Setup(c => c.NowWithOffset).Returns(_currentTime);
         _idGenerator.Setup(g => g.GetNewId()).Returns(DateTime.Now.Ticks);
     }

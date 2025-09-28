@@ -2,7 +2,6 @@
 using Honamic.Framework.EntityFramework.Query;
 using Honamic.Framework.EntityFramework.Query.Extensions;
 using Honamic.Framework.Persistence.EntityFramework.Extensions;
-using Honamic.PayMaster.Options;
 using Honamic.PayMaster.Persistence.Extensions;
 using Honamic.PayMaster.Wrapper.Persistence;
 using Honamic.PayMaster.Wrapper.QueryModels;

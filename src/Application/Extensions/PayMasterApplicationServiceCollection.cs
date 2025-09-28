@@ -2,8 +2,7 @@
 using Honamic.Framework.Applications.Extensions;
 using Honamic.Framework.Applications.Results;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-using Honamic.PayMaster.Application.ReceiptRequests.Commands;
-using Honamic.PayMaster.Options;
+using Honamic.PayMaster.Application.ReceiptRequests.Commands; 
 using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,9 +12,7 @@ public static class PayMasterApplicationServiceCollection
 {
     public static IServiceCollection AddPayMasterApplicationServices(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(services);
-        
-        services.AddOptions<PayMasterOptions>();
+        ArgumentNullException.ThrowIfNull(services); 
 
         services.AddSingleton<IPaymentGatewayProviderFactory, PaymentGatewayProviderFactory>();
 

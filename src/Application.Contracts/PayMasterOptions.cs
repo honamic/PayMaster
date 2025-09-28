@@ -1,5 +1,4 @@
-﻿
-namespace Honamic.PayMaster.Options;
+﻿namespace Honamic.PayMaster;
 
 public class PayMasterOptions
 {

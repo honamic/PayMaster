@@ -3,7 +3,7 @@
 namespace Honamic.PayMaster.Domain.ReceiptRequests.Services;
 public interface IPaymentGatewayInitializationService
 {
-    Task<PaymentInitializationResult> InitializePaymentAsync(ReceiptRequest receiptRequest);
+    Task<PaymentInitializationResult> InitializePaymentAsync(ReceiptRequest receiptRequest,string CallBackUrl);
 }
 
 

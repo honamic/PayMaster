@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Honamic.Framework.Applications" Version="1.0.13-Beta13" />
 		<PackageReference Include="Honamic.Framework.Tools.IdGenerators" Version="1.0.13-Beta13" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
 	</ItemGroup>
 	
 	<ItemGroup>

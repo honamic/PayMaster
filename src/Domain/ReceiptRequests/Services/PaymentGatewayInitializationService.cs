@@ -1,12 +1,10 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
-using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
-using Honamic.PayMaster.Options;
+using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions; 
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.ReceiptRequests;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging; 
 
 namespace Honamic.PayMaster.Domain.ReceiptRequests.Services;
 
@@ -16,23 +14,20 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
     private readonly IPaymentGatewayProviderFactory _factory;
     private readonly IClock _clock;
     private readonly ILogger<PaymentGatewayInitializationService> _logger;
-    private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
     public PaymentGatewayInitializationService(
         IPaymentGatewayProfileRepository repository,
         IPaymentGatewayProviderFactory factory,
         IClock clock,
-        ILogger<PaymentGatewayInitializationService> logger,
-        IOptions<PayMasterOptions> payMasterOptions)
+        ILogger<PaymentGatewayInitializationService> logger)
     {
         _repository = repository;
         _factory = factory;
         _clock = clock;
-        _logger = logger;
-        _payMasterOptions = payMasterOptions;
+        _logger = logger; 
     }
 
-    public async Task<PaymentInitializationResult> InitializePaymentAsync(ReceiptRequest receiptRequest)
+    public async Task<PaymentInitializationResult> InitializePaymentAsync(ReceiptRequest receiptRequest, string CallBackUrl)
     {
         PaymentInitializationResult result = new PaymentInitializationResult();
 
@@ -61,7 +56,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
 
         var provider = _factory.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations);
 
-        var callbackUrl = GetCallbackUrl(receiptRequest, gatewayPayment);
+        var callbackUrl = GetCallbackUrl(CallBackUrl, receiptRequest, gatewayPayment);
 
         ReceiptRequestTryLog tryLog = CreateTryLog(receiptRequest, gatewayPayment);
 
@@ -94,9 +89,9 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
         return result;
     }
 
-    private string GetCallbackUrl(ReceiptRequest receiptRequest, ReceiptRequestGatewayPayment gatewayPayment)
+    private string GetCallbackUrl(string callBackUrl, ReceiptRequest receiptRequest, ReceiptRequestGatewayPayment gatewayPayment)
     {
-        return _payMasterOptions.Value.CallBackUrl
+        return callBackUrl
                     .Replace(Constants.Parameters.ReceiptRequestIdParameter, receiptRequest.Id.ToString())
                     .Replace(Constants.Parameters.GatewayPaymentIdParameter, gatewayPayment.Id.ToString());
     }

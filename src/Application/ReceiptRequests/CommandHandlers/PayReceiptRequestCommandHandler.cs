@@ -3,6 +3,7 @@ using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Services;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
@@ -10,13 +11,16 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IPaymentGatewayInitializationService _paymentGatewayInitializationService;
+    private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
     public PayReceiptRequestCommandHandler(
         IReceiptRequestRepository receiptRequestRepository,
-        IPaymentGatewayInitializationService paymentGatewayInitializationService)
+        IPaymentGatewayInitializationService paymentGatewayInitializationService,
+        IOptions<PayMasterOptions> payMasterOptions)
     {
         _receiptRequestRepository = receiptRequestRepository;
         _paymentGatewayInitializationService = paymentGatewayInitializationService;
+        _payMasterOptions = payMasterOptions;
     }
 
     public async Task<Result<PayReceiptRequestCommandResult>> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
@@ -31,7 +35,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
             return result;
         }
 
-        var createResult = await _paymentGatewayInitializationService.InitializePaymentAsync(receiptRequest);
+        var createResult = await _paymentGatewayInitializationService.InitializePaymentAsync(receiptRequest, _payMasterOptions.Value.CallBackUrl);
 
         if (createResult.Success)
         {

@@ -9,7 +9,6 @@ using Moq;
 using Xunit;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
-using Honamic.PayMaster.Options;
 using Honamic.PayMaster.ReceiptRequests;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 
@@ -21,10 +20,9 @@ public partial class PaymentGatewayInitializationServiceTests
     private readonly Mock<IPaymentGatewayProviderFactory> _factoryMock;
     private readonly Mock<IClock> _clockMock;
     private readonly Mock<ILogger<PaymentGatewayInitializationService>> _loggerMock;
-    private readonly Mock<IOptions<PayMasterOptions>> _optionsMock;
     private readonly Mock<IPaymentGatewayProvider> _providerMock;
     private readonly Mock<IIdGenerator> _idGenerator;
-
+    private readonly string CallBackUrl;
     private readonly PaymentGatewayInitializationService _service;
     private readonly DateTimeOffset _currentTime = new DateTimeOffset(2023, 5, 12, 10, 30, 0, TimeSpan.Zero);
 
@@ -34,24 +32,20 @@ public partial class PaymentGatewayInitializationServiceTests
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
         _loggerMock = new Mock<ILogger<PaymentGatewayInitializationService>>();
-        _optionsMock = new Mock<IOptions<PayMasterOptions>>();
         _providerMock = new Mock<IPaymentGatewayProvider>();
         _idGenerator = new Mock<IIdGenerator>();
 
-        var options = new PayMasterOptions
-        {
-            CallBackUrl = "https://example.com/callback/{ReceiptRequestId}/{GatewayPaymentId}"
-        };
 
-        _optionsMock.Setup(o => o.Value).Returns(options);
+        CallBackUrl = "https://example.com/callback/{ReceiptRequestId}/{GatewayPaymentId}";
+
+
         _clockMock.Setup(c => c.NowWithOffset).Returns(_currentTime);
         _idGenerator.Setup(g => g.GetNewId()).Returns(DateTime.Now.Ticks);
         _service = new PaymentGatewayInitializationService(
             _repositoryMock.Object,
             _factoryMock.Object,
             _clockMock.Object,
-            _loggerMock.Object,
-            _optionsMock.Object);
+            _loggerMock.Object);
     }
 
 
@@ -83,7 +77,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(createResult);
 
         // Act
-        var result = await _service.InitializePaymentAsync(receiptRequest);
+        var result = await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.True(result.Success);
@@ -113,7 +107,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<GatewayProviderNotFoundException>(
-            () => _service.InitializePaymentAsync(receiptRequest));
+            () => _service.InitializePaymentAsync(receiptRequest, CallBackUrl));
 
     }
 
@@ -140,7 +134,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(createResult);
 
         // Act
-        var result = await _service.InitializePaymentAsync(receiptRequest);
+        var result = await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.False(result.Success);
@@ -158,7 +152,7 @@ public partial class PaymentGatewayInitializationServiceTests
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(
-            () => _service.InitializePaymentAsync(null!));
+            () => _service.InitializePaymentAsync(null!, CallBackUrl));
     }
 
     [Fact]
@@ -170,7 +164,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<PayableGatewayPaymentNotFoundException>(
-            () => _service.InitializePaymentAsync(receiptRequest));
+            () => _service.InitializePaymentAsync(receiptRequest, CallBackUrl));
     }
 
     [Fact]
@@ -182,12 +176,12 @@ public partial class PaymentGatewayInitializationServiceTests
 
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
-      
+
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
                 .Throws<PaymentProviderNotFoundException>();
         // Act & Assert
         await Assert.ThrowsAsync<PaymentProviderNotFoundException>(
-            () => _service.InitializePaymentAsync(receiptRequest));
+            () => _service.InitializePaymentAsync(receiptRequest, CallBackUrl));
     }
 
     [Fact]
@@ -213,7 +207,7 @@ public partial class PaymentGatewayInitializationServiceTests
             });
 
         // Act
-        var result = await _service.InitializePaymentAsync(receiptRequest);
+        var result = await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.False(result.Success);
@@ -232,7 +226,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<PayableGatewayPaymentNotFoundException>(
-            () => _service.InitializePaymentAsync(receiptRequest));
+            () => _service.InitializePaymentAsync(receiptRequest, CallBackUrl));
     }
 
     [Fact]
@@ -263,7 +257,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(createResult);
 
         // Act
-        var result = await _service.InitializePaymentAsync(receiptRequest);
+        var result = await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.Equal(expectedCurrency, result.GatewayPayment!.Currency);
@@ -299,7 +293,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(createResult);
 
         // Act
-        var result = await _service.InitializePaymentAsync(receiptRequest);
+        var result = await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.True(result.Success);
@@ -334,7 +328,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(createResult);
 
         // Act
-        await _service.InitializePaymentAsync(receiptRequest);
+        await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.Single(receiptRequest.TryLogs);
@@ -367,7 +361,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(new CreateResult { Success = true });
 
         // Act
-        await _service.InitializePaymentAsync(receiptRequest);
+        await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.NotNull(capturedRequest);
@@ -393,7 +387,7 @@ public partial class PaymentGatewayInitializationServiceTests
             .ReturnsAsync(new CreateResult { Success = true });
 
         // Act
-        await _service.InitializePaymentAsync(receiptRequest);
+        await _service.InitializePaymentAsync(receiptRequest, CallBackUrl);
 
         // Assert
         Assert.NotEqual(initialStatus, receiptRequest.Status);
