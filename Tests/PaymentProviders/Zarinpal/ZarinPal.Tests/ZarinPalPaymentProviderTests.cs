@@ -2,11 +2,11 @@
 using System.Net;
 using System.Text.Json;
 using ZarinPal.Tests.Helper;
-using Honamic.PayMaster.Enums;
 using Microsoft.Extensions.Logging;
 using Honamic.PayMaster.PaymentProvider.ZarinPal;
 using Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
 using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace ZarinPal.Tests;
 

@@ -2,7 +2,7 @@
 using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
-using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
 public static class ReceiptRequestsHelper

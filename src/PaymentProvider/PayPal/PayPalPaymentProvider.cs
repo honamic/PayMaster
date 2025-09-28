@@ -1,9 +1,9 @@
-﻿using Honamic.PayMaster.Enums;
-using Honamic.PayMaster.PaymentProvider.PayPal.Models;
+﻿using Honamic.PayMaster.PaymentProvider.PayPal.Models;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models.Enums;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models.Shared;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.ReceiptRequests;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;

@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.Enums;
+﻿using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.PaymentProviders.Models;
 

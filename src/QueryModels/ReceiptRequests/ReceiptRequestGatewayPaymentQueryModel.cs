@@ -1,6 +1,6 @@
-﻿using Honamic.PayMaster.Enums;
-using Honamic.Framework.Queries;
+﻿using Honamic.Framework.Queries;
 using Honamic.PayMaster.QueryModels.PaymentGatewayProviders;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.QueryModels.ReceiptRequests;
 

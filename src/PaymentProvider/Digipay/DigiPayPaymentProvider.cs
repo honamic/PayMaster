@@ -1,8 +1,8 @@
-﻿using Honamic.PayMaster.Enums;
-using Honamic.PayMaster.PaymentProvider.Digipay.Models;
+﻿using Honamic.PayMaster.PaymentProvider.Digipay.Models;
 using Honamic.PayMaster.PaymentProvider.Digipay.Models.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.ReceiptRequests;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;

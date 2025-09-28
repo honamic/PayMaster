@@ -1,7 +1,6 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
-using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.ReceiptRequests;

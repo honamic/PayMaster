@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Honamic.PayMaster.Enums;
+namespace Honamic.PayMaster.ReceiptRequests;
 
 public enum ReceiptRequestStatus
 {

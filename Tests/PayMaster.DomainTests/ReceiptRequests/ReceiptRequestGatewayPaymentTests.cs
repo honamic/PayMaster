@@ -3,8 +3,8 @@ using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
-using Honamic.PayMaster.Enums;
 using Honamic.PayMaster.PaymentProviders.Models;
+using Honamic.PayMaster.ReceiptRequests;
 using Xunit;
 
 namespace Honamic.PayMaster.DomianTests.ReceiptRequests;

@@ -5,7 +5,7 @@ using Honamic.PayMaster.PaymentProvider.ZarinPal.Models;
 using System.Globalization;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.PaymentProviders;
-using Honamic.PayMaster.Enums;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.PaymentProvider.ZarinPal;
 

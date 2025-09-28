@@ -1,14 +1,14 @@
 ﻿using Moq;
 using Microsoft.Extensions.Logging;
-using System.Net; 
+using System.Net;
 using System.Text.Json;
 using Honamic.PayMaster.PaymentProvider.PayPal;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models.Enums;
 using Honamic.PayMaster.PaymentProvider.PayPal.Models.Shared;
 using Honamic.PayMaster.PaymentProviders.Models;
-using Honamic.PayMaster.Enums;
 using PayPal.Tests.Helper;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace PayPal.Tests;
 
