@@ -5,6 +5,7 @@ using Honamic.Framework.Persistence.EntityFramework.Extensions;
 using Honamic.PayMaster.Options;
 using Honamic.PayMaster.Persistence.Extensions;
 using Honamic.PayMaster.Wrapper.Persistence;
+using Honamic.PayMaster.Wrapper.QueryModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -68,8 +69,14 @@ public class PayMasterWrapperBuilder
     {
         EnsureQueryModelNotAlreadyConfigured();
         QueryModelConfigured = true;
-        
-        //throw new NotImplementedException();
+
+        Services.AddDbContext<PaymasterQueryModelDbContext>((serviceProvider, options) =>
+        {
+            options.UseSqlServer(sqlServerConnection);
+            options.AddPersianYeKeCommandInterceptor();
+        });
+
+        Services.AddDefaultQueryDbContext<PaymasterQueryModelDbContext>();
     }
 
 
@@ -84,5 +91,4 @@ public class PayMasterWrapperBuilder
         if (QueryModelConfigured)
             throw new InvalidOperationException("QueryModel already configured. You cannot configure it twice.");
     }
-
 }

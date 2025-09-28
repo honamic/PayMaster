@@ -5,6 +5,8 @@ using Honamic.PayMaster.Domain.Extensions;
 using Honamic.PayMaster.Persistence.Extensions;
 using Honamic.PayMaster.Wrapper.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Honamic.PayMaster.QueryModels.EntityFramework.Extensions;
+
 namespace Honamic.PayMaster.Wrapper.Extensions;
 
 public static class PayMasterWrapperExtensions
@@ -35,6 +37,7 @@ public static class PayMasterWrapperExtensions
         services.AddPayMasterDomainServices();
         services.AddPayMasterApplicationServices();
         services.AddPayMasterPersistenceServices();
+        services.AddPayMasterQueryModelServices();
     }
 
     private static void AddFrameworkServies(this IServiceCollection services)

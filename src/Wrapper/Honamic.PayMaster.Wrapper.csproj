@@ -14,6 +14,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Honamic.PayMaster.Application.csproj" />
 		<ProjectReference Include="..\Persistence\Honamic.PayMaster.Persistence.csproj" />
+		<ProjectReference Include="..\QueryModels.EntityFramework\Honamic.PayMaster.QueryModels.EntityFramework.csproj" />
 	</ItemGroup>
 
 </Project>
