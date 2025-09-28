@@ -59,6 +59,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.QueryMode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.Domain", "src\Domain\Honamic.PayMaster.Domain.csproj", "{7B715A58-08A0-4652-C3A6-0691989219CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.UI.Management", "src\ManagementUI\Honamic.PayMaster.UI.Management.csproj", "{087457BE-C190-3A5E-D683-2033AD837D09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honamic.PayMaster.WebApi.Management", "src\WebApi.Management\Honamic.PayMaster.WebApi.Management.csproj", "{47D8B692-10A9-4A60-3D05-AA153DAC80E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +161,14 @@ Global
 		{7B715A58-08A0-4652-C3A6-0691989219CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B715A58-08A0-4652-C3A6-0691989219CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B715A58-08A0-4652-C3A6-0691989219CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{087457BE-C190-3A5E-D683-2033AD837D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{087457BE-C190-3A5E-D683-2033AD837D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{087457BE-C190-3A5E-D683-2033AD837D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{087457BE-C190-3A5E-D683-2033AD837D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47D8B692-10A9-4A60-3D05-AA153DAC80E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47D8B692-10A9-4A60-3D05-AA153DAC80E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47D8B692-10A9-4A60-3D05-AA153DAC80E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47D8B692-10A9-4A60-3D05-AA153DAC80E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,6 +199,8 @@ Global
 		{EB114B30-3731-087C-3F6D-75EBFCE653B9} = {27989A77-8151-49A2-A81D-990655154889}
 		{E4415AA0-546F-371A-060B-C567307177E3} = {27989A77-8151-49A2-A81D-990655154889}
 		{7B715A58-08A0-4652-C3A6-0691989219CA} = {27989A77-8151-49A2-A81D-990655154889}
+		{087457BE-C190-3A5E-D683-2033AD837D09} = {27989A77-8151-49A2-A81D-990655154889}
+		{47D8B692-10A9-4A60-3D05-AA153DAC80E0} = {27989A77-8151-49A2-A81D-990655154889}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2395F65-A679-4732-A522-0C7D24F44238}

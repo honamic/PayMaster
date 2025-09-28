@@ -5,6 +5,7 @@ using Honamic.PayMaster.PaymentProvider.Behpardakht.Extensions;
 using Honamic.PayMaster.PaymentProvider.Digipay.Extensions;
 using Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
 using Honamic.PayMaster.Web.Extensions;
+using Honamic.PayMaster.WebApi.Management.Extensions;
 using Honamic.PayMaster.Wrapper.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WebSample;
@@ -62,6 +63,7 @@ internal class Program
         app.UseSandboxPayEndpoints();
         
         app.MapPaymentEndpoints();
+        app.MapPayMasterManagementEndpoints();
         app.InitializeDatabaseDefaults();
 
         app.Run();
