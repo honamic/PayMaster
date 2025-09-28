@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Domain\Honamic.PayMaster.Domain\Honamic.PayMaster.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Domain\Honamic.PayMaster.Domain.csproj" />
   </ItemGroup>
 
 </Project>
