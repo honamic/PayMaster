@@ -1,16 +1,11 @@
-﻿using Honamic.Framework.Domain;
+﻿using Honamic.Framework.Queries;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.ReceiptRequests;
 
-namespace Honamic.PayMaster.Domain.ReceiptRequests;
+namespace Honamic.PayMaster.QueryModels.ReceiptRequests;
 
-public class ReceiptRequestTryLog : Entity<long>
+public class ReceiptRequestTryLogQueryModel : EntityQueryBase<long>
 {
-    public ReceiptRequestTryLog()
-    {
-        Data = new PaymentProviderLogData();
-    }
-
     public long ReceiptRequestId { get; set; }
 
     public DateTimeOffset CreateAt { get; set; }
@@ -24,10 +19,4 @@ public class ReceiptRequestTryLog : Entity<long>
     public bool Success { get; set; }
 
     public DateTimeOffset? ExpiredAt { get; set; }
-
-    internal void SetSuccess(bool success, PaymentProviderLogData data)
-    {
-        Success = success;
-        Data = data;
-    }
 }

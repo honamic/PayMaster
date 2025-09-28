@@ -1,5 +1,4 @@
 ﻿using Honamic.PayMaster.Domain.PaymentGatewayProviders;
-using Honamic.PayMaster.Domain.ReceiptRequests.Enums;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Services;
 using Honamic.PayMaster.Enums;
@@ -13,6 +12,7 @@ using Xunit;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
 using Honamic.PayMaster.Options;
+using Honamic.PayMaster.ReceiptRequests;
 
 namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 

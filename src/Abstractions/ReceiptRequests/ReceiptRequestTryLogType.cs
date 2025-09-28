@@ -1,4 +1,4 @@
-﻿namespace Honamic.PayMaster.Domain.ReceiptRequests.Enums;
+﻿namespace Honamic.PayMaster.ReceiptRequests;
 
 public enum ReceiptRequestTryLogType
 {
