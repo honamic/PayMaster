@@ -5,17 +5,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
 public class PaymentGatewayProviderQueryModelEntityConfiguration : IEntityTypeConfiguration<PaymentGatewayProviderQueryModel>
 {
-    private string schema;
+    private readonly string schema;
+    private readonly string tableName;
 
-    public PaymentGatewayProviderQueryModelEntityConfiguration(string schema)
+    public PaymentGatewayProviderQueryModelEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<PaymentGatewayProviderQueryModel> builder)
     {
         builder.HasKey(p => p.Id); 
 
-        builder.ToTable(nameof(PaymentGatewayProviderQueryModel), schema);
+        builder.ToTable(tableName, schema);
     }
 }

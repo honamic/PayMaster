@@ -7,7 +7,7 @@ namespace Honamic.PayMaster.Persistence.Extensions;
 
 public static class EntityFrameworkExtensions
 {
-     
+
     public static ModelBuilder AddPayMasterQueryModels(this ModelBuilder modelBuilder)
     {
         if (modelBuilder == null)
@@ -16,19 +16,19 @@ public static class EntityFrameworkExtensions
         }
 
         modelBuilder.ApplyConfiguration(
-            new PaymentGatewayProviderQueryModelEntityConfiguration(Constants.Schema));
+            new PaymentGatewayProviderQueryModelEntityConfiguration(Constants.Schema, "PaymentGatewayProvider"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestQueryModelEntityConfiguration(Constants.Schema));
+            new ReceiptRequestQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequest"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptIssuerQueryModelEntityConfiguration(Constants.Schema));
+            new ReceiptIssuerQueryModelEntityConfiguration(Constants.Schema, "ReceiptIssuer"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestGatewayPaymentQueryModelEntityConfiguration(Constants.Schema));
+            new ReceiptRequestGatewayPaymentQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequestGatewayPayment"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestTryLogQueryModelEntityTypeConfigurations(Constants.Schema));
+            new ReceiptRequestTryLogQueryModelEntityTypeConfigurations(Constants.Schema, "ReceiptRequestTryLog"));
 
         return modelBuilder;
     }

@@ -7,18 +7,20 @@ namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 
 public class ReceiptRequestQueryModelEntityConfiguration : IEntityTypeConfiguration<ReceiptRequestQueryModel>
 {
-    private string schema;
+    private readonly string schema;
+    private readonly string tableName;
 
-    public ReceiptRequestQueryModelEntityConfiguration(string schema)
+    public ReceiptRequestQueryModelEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<ReceiptRequestQueryModel> builder)
     {
         builder.HasKey(p => p.Id);
 
-        builder.ToTable(nameof(ReceiptRequestQueryModel), schema);
+        builder.ToTable(tableName, schema);
  
         builder.HasOne<ReceiptIssuerQueryModel>()
             .WithMany()
