@@ -29,6 +29,6 @@ public class PaymentGatewayProviderFactory : IPaymentGatewayProviderFactory
 
     public List<KeyValuePair<string, string>> Providers()
     {
-        return ServiceCollectionExtensions.Providers;
+        return GatewayPaymentProviderServiceCollectionExtensions.Providers;
     }
 }

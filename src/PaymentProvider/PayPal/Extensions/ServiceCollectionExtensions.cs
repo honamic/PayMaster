@@ -15,7 +15,6 @@ public static class ServiceCollectionExtensions
     }
     private static void AddHttpServices(IServiceCollection services)
     {
-        services.AddInMemoryBearerTokensStoreService();
         services.AddTransient<HttpInterceptorService>();
         services.AddHttpClient(Constants.HttpClientName)
             .AddHttpMessageHandler<HttpInterceptorService>();

@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.HttpClients;
+﻿using Honamic.PayMaster.PaymentProviders;
 using System.Text.Json.Serialization;
 
 namespace Honamic.PayMaster.PaymentProvider.Digipay.Models;

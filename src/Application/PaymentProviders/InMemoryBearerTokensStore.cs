@@ -1,6 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using Honamic.PayMaster.PaymentProviders;
+using System.Collections.Concurrent;
 
-namespace Honamic.PayMaster.HttpClients;
+namespace Honamic.PayMaster.Application.PaymentProviders;
 
 public class InMemoryBearerTokensStore : IBearerTokensStore
 {

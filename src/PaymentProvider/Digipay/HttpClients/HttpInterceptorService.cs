@@ -1,6 +1,6 @@
 using Honamic.PayMaster.Extensions;
-using Honamic.PayMaster.HttpClients;
 using Honamic.PayMaster.PaymentProvider.Digipay.Models;
+using Honamic.PayMaster.PaymentProviders;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;

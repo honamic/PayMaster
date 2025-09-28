@@ -1,6 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Honamic.PayMaster.HttpClients;
+namespace Honamic.PayMaster.PaymentProviders;
+
+public interface IBearerTokensStore
+{
+    Task<BearerTokenModel?> GetBearerTokenAsync(string key);
+    Task StoreTokenAsync(string key, BearerTokenModel bearerToken);
+    Task RemoveTokenAsync(string key);
+}
+
 
 public class BearerTokenModel
 {
