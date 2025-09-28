@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Honamic.PayMaster.Persistence.ReceiptIssuers.EntityConfigurations;
+namespace Honamic.PayMaster.QueryModels.EntityFramework.ReceiptIssuers.EntityConfigurations;
 public class ReceiptIssuerQueryModelEntityConfiguration : IEntityTypeConfiguration<ReceiptIssuerQueryModel>
 {
     private readonly string schema;

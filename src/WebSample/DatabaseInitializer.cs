@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+﻿using Honamic.PayMaster.Domain.PaymentGatewayProfiles; 
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.PaymentProvider.Digipay;
@@ -35,15 +35,15 @@ internal static class DatabaseInitializer
                 db.Set<ReceiptIssuer>().Add(defaultIssuer!);
             }
 
-            var sandboxProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "sandbox");
-            if (sandboxProvider == null)
+            var sandboxProfile= db.Set<PaymentGatewayProfile>().FirstOrDefault(b => b.Code == "sandbox");
+            if (sandboxProfile== null)
             {
                 SandboxConfigurations sandboxConfig = new()
                 {
                     PayUrl = "https://localhost:7777/paymaster/sandbox/pay",
                 };
 
-                sandboxProvider = new PaymentGatewayProvider
+                sandboxProfile= new PaymentGatewayProfile
                 {
                     Id = 1000,
                     Code = "sandbox",
@@ -56,11 +56,11 @@ internal static class DatabaseInitializer
                     LogoPath = null,
                 };
 
-                db.Set<PaymentGatewayProvider>().Add(sandboxProvider);
+                db.Set<PaymentGatewayProfile>().Add(sandboxProfile);
             }
 
-            var zainpalProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "Default");
-            if (zainpalProvider == null)
+            var zainpalProfile= db.Set<PaymentGatewayProfile>().FirstOrDefault(b => b.Code == "Default");
+            if (zainpalProfile== null)
             {
                 ZarinPalConfigurations zarinPalConfig = new()
                 {
@@ -69,7 +69,7 @@ internal static class DatabaseInitializer
                     MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
                 };
 
-                zainpalProvider = new PaymentGatewayProvider
+                zainpalProfile= new PaymentGatewayProfile
                 {
                     Id = 1001,
                     Code = "Default",
@@ -82,12 +82,12 @@ internal static class DatabaseInitializer
                     LogoPath = null,
                 };
 
-                db.Set<PaymentGatewayProvider>().Add(zainpalProvider);
+                db.Set<PaymentGatewayProfile>().Add(zainpalProfile);
             }
 
 
-            var digipayProvider = db.Set<PaymentGatewayProvider>().FirstOrDefault(b => b.Code == "digipay");
-            if (digipayProvider == null)
+            var digipayProfile= db.Set<PaymentGatewayProfile>().FirstOrDefault(b => b.Code == "digipay");
+            if (digipayProfile== null)
             {
                 DigipayConfigurations digipayPalConfig = new()
                 {
@@ -98,7 +98,7 @@ internal static class DatabaseInitializer
                     UserName = "YourUserName",
                 };
 
-                digipayProvider = new PaymentGatewayProvider
+                digipayProfile= new PaymentGatewayProfile
                 {
                     Id = 1002,
                     Code = "digipay",
@@ -111,7 +111,7 @@ internal static class DatabaseInitializer
                     LogoPath = null,
                 };
 
-                db.Set<PaymentGatewayProvider>().Add(digipayProvider);
+                db.Set<PaymentGatewayProfile>().Add(digipayProfile);
             }
 
             db.SaveChanges();

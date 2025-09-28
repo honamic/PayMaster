@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.ReceiptRequests;
@@ -69,9 +69,9 @@ public static class ReceiptRequestsHelper
         return receiptRequest;
     }
 
-    public static PaymentGatewayProvider CreateGatewayProvider()
+    public static PaymentGatewayProfile CreateGatewayProfile()
     {
-        return new PaymentGatewayProvider
+        return new PaymentGatewayProfile
         {
             Id = 789,
             Code = "sandbox",

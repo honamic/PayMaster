@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Queries;
-using Honamic.PayMaster.QueryModels.PaymentGatewayProviders;
+using Honamic.PayMaster.QueryModels.PaymentGatewayProfiles; 
 using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.QueryModels.ReceiptRequests;
@@ -16,10 +16,10 @@ public class ReceiptRequestGatewayPaymentQueryModel : EntityQueryBase<long>
 
     public PaymentGatewayFailedReason FailedReason { get;  set; }
 
-    public long GatewayProviderId { get; set; }
-    public PaymentGatewayProviderQueryModel GatewayProvider { get;  set; } = default!;
+    public long PaymentGatewayProfileId { get; set; }
+    public PaymentGatewayProfileQueryModel PaymentGatewayProfile  { get;  set; } = default!;
 
-   
+ 
     public string? CreateReference { get;  set; }
  
     public DateTimeOffset? RedirectAt { get;  set; }

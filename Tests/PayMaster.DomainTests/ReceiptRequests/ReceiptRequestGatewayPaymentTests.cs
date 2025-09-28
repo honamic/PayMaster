@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
@@ -15,7 +15,7 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithDisabledProvider_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProvider { Enabled = false };
+        var provider = new PaymentGatewayProfile { Enabled = false };
         var parameters = new CreateGatewayPaymentParameters
         {
             Id = 123456,
@@ -39,7 +39,7 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithAmountBelowMinimum_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProvider
+        var provider = new PaymentGatewayProfile
         {
             Enabled = true,
             MinimumAmount = 1000
@@ -68,7 +68,7 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithValidParameters_CreatesEntity()
     {
         // Arrange
-        var provider = new PaymentGatewayProvider
+        var provider = new PaymentGatewayProfile
         {
             Enabled = true,
             Id = 1,
@@ -98,14 +98,14 @@ public class ReceiptRequestGatewayPaymentTests
         payment.Amount.Should().Be(5000);
         payment.Currency.Should().Be("IRR");
         payment.Status.Should().Be(PaymentGatewayStatus.New);
-        payment.GatewayProviderId.Should().Be(1);
+        payment.PaymentGatewayProfileId.Should().Be(1);
     }
 
     [Fact]
     public void Create_WithAmountAboveMaximum_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProvider
+        var provider = new PaymentGatewayProfile
         {
             Enabled = true,
             MaximumAmount = 10000
@@ -299,7 +299,7 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithInvalidCurrency_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProvider { Enabled = true };
+        var provider = new PaymentGatewayProfile { Enabled = true };
         var parameters = new CreateGatewayPaymentParameters
         {
             Id = 123456,
@@ -334,7 +334,7 @@ public class ReceiptRequestGatewayPaymentTests
     // Helper method to create a valid payment for testing status changes
     private ReceiptRequestGatewayPayment CreateValidGatewayPayment(PaymentGatewayStatus? status = null)
     {
-        var provider = new PaymentGatewayProvider
+        var provider = new PaymentGatewayProfile
         {
             Enabled = true,
             Id = 1

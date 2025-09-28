@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Text.Json;
 
-namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
+namespace Honamic.PayMaster.QueryModels.EntityFramework.ReceiptRequests.EntityConfigurations;
 internal class ReceiptRequestTryLogQueryModelEntityTypeConfigurations : IEntityTypeConfiguration<ReceiptRequestTryLogQueryModel>
 {
     private readonly string? _schema;

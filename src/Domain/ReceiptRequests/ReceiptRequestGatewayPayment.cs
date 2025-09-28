@@ -1,5 +1,4 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.PaymentProviders.Models;
@@ -22,8 +21,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
 
     public PaymentGatewayFailedReason FailedReason { get; private set; }
 
-    public long GatewayProviderId { get; set; }
-    public PaymentGatewayProvider GatewayProvider { get; private set; } = default!;
+    public long PaymentGatewayProfileId { get; set; } 
 
     /// <summary>
     /// این مقدار هنگام ایجاد پرداخت به ما برای فرستادن کاربر به درگاه داده می شود.    
@@ -98,7 +96,7 @@ public class ReceiptRequestGatewayPayment : Entity<long>
             Id = parameters.Id,
             Amount = parameters.Amount,
             Currency = parameters.Currency,
-            GatewayProviderId = parameters.GatewayProvider.Id,
+            PaymentGatewayProfileId = parameters.GatewayProvider.Id,
             Status = PaymentGatewayStatus.New,
         };
 

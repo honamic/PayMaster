@@ -1,4 +1,4 @@
-﻿using Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
+﻿using Honamic.PayMaster.Persistence.PaymentGatewayProfiles.EntityConfigurations; 
 using Honamic.PayMaster.Persistence.ReceiptIssuers.EntityConfigurations;
 using Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -21,20 +21,20 @@ public static class EntityFrameworkExtensions
         }
 
         modelBuilder.ApplyConfiguration(
-            new PaymentGatewayProviderEntityConfiguration(Constants.Schema));
+            new PaymentGatewayProfileEntityConfiguration(Constants.Schema, "PaymentGatewayProfiles"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestEntityConfiguration(Constants.Schema));
+            new ReceiptRequestEntityConfiguration(Constants.Schema, "ReceiptRequests"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptIssuerEntityConfiguration(Constants.Schema));
+            new ReceiptIssuerEntityConfiguration(Constants.Schema, "ReceiptIssuers"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestGatewayPaymentEntityConfiguration(Constants.Schema));
+            new ReceiptRequestGatewayPaymentEntityConfiguration(Constants.Schema, "ReceiptRequestGatewayPayments"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestTryLogEntityTypeConfigurations(Constants.Schema));
-
+            new ReceiptRequestTryLogEntityTypeConfigurations(Constants.Schema, "ReceiptRequestTryLogs"));
+         
         return modelBuilder;
     }
 }

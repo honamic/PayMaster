@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebSample.Migrations
 {
     /// <inheritdoc />
-    public partial class Version01 : Migration
+    public partial class paymaster_version01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace WebSample.Migrations
                 name: "PayMaster");
 
             migrationBuilder.CreateTable(
-                name: "PaymentGatewayProvider",
+                name: "PaymentGatewayProfiles",
                 schema: "PayMaster",
                 columns: table => new
                 {
@@ -38,11 +38,11 @@ namespace WebSample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentGatewayProvider", x => x.Id);
+                    table.PrimaryKey("PK_PaymentGatewayProfiles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptIssuer",
+                name: "ReceiptIssuers",
                 schema: "PayMaster",
                 columns: table => new
                 {
@@ -62,11 +62,11 @@ namespace WebSample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReceiptIssuer", x => x.Id);
+                    table.PrimaryKey("PK_ReceiptIssuers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptRequest",
+                name: "ReceiptRequests",
                 schema: "PayMaster",
                 columns: table => new
                 {
@@ -94,18 +94,18 @@ namespace WebSample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReceiptRequest", x => x.Id);
+                    table.PrimaryKey("PK_ReceiptRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReceiptRequest_ReceiptIssuer_IssuerId",
+                        name: "FK_ReceiptRequests_ReceiptIssuers_IssuerId",
                         column: x => x.IssuerId,
                         principalSchema: "PayMaster",
-                        principalTable: "ReceiptIssuer",
+                        principalTable: "ReceiptIssuers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptRequestGatewayPayment",
+                name: "ReceiptRequestGatewayPayments",
                 schema: "PayMaster",
                 columns: table => new
                 {
@@ -115,7 +115,7 @@ namespace WebSample.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     StatusDescription = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     FailedReason = table.Column<int>(type: "int", nullable: false),
-                    GatewayProviderId = table.Column<long>(type: "bigint", nullable: false),
+                    PaymentGatewayProfileId = table.Column<long>(type: "bigint", nullable: false),
                     CreateReference = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     RedirectAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CallbackAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -134,25 +134,25 @@ namespace WebSample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReceiptRequestGatewayPayment", x => x.Id);
+                    table.PrimaryKey("PK_ReceiptRequestGatewayPayments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReceiptRequestGatewayPayment_PaymentGatewayProvider_GatewayProviderId",
-                        column: x => x.GatewayProviderId,
+                        name: "FK_ReceiptRequestGatewayPayments_PaymentGatewayProfiles_PaymentGatewayProfileId",
+                        column: x => x.PaymentGatewayProfileId,
                         principalSchema: "PayMaster",
-                        principalTable: "PaymentGatewayProvider",
+                        principalTable: "PaymentGatewayProfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ReceiptRequestGatewayPayment_ReceiptRequest_ReceiptRequestId",
+                        name: "FK_ReceiptRequestGatewayPayments_ReceiptRequests_ReceiptRequestId",
                         column: x => x.ReceiptRequestId,
                         principalSchema: "PayMaster",
-                        principalTable: "ReceiptRequest",
+                        principalTable: "ReceiptRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptRequestTryLog",
+                name: "ReceiptRequestTryLogs",
                 schema: "PayMaster",
                 columns: table => new
                 {
@@ -172,38 +172,38 @@ namespace WebSample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReceiptRequestTryLog", x => x.Id);
+                    table.PrimaryKey("PK_ReceiptRequestTryLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReceiptRequestTryLog_ReceiptRequest_ReceiptRequestId",
+                        name: "FK_ReceiptRequestTryLogs_ReceiptRequests_ReceiptRequestId",
                         column: x => x.ReceiptRequestId,
                         principalSchema: "PayMaster",
-                        principalTable: "ReceiptRequest",
+                        principalTable: "ReceiptRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptRequest_IssuerId",
+                name: "IX_ReceiptRequestGatewayPayments_PaymentGatewayProfileId",
                 schema: "PayMaster",
-                table: "ReceiptRequest",
-                column: "IssuerId");
+                table: "ReceiptRequestGatewayPayments",
+                column: "PaymentGatewayProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptRequestGatewayPayment_GatewayProviderId",
+                name: "IX_ReceiptRequestGatewayPayments_ReceiptRequestId",
                 schema: "PayMaster",
-                table: "ReceiptRequestGatewayPayment",
-                column: "GatewayProviderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptRequestGatewayPayment_ReceiptRequestId",
-                schema: "PayMaster",
-                table: "ReceiptRequestGatewayPayment",
+                table: "ReceiptRequestGatewayPayments",
                 column: "ReceiptRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptRequestTryLog_ReceiptRequestId",
+                name: "IX_ReceiptRequests_IssuerId",
                 schema: "PayMaster",
-                table: "ReceiptRequestTryLog",
+                table: "ReceiptRequests",
+                column: "IssuerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptRequestTryLogs_ReceiptRequestId",
+                schema: "PayMaster",
+                table: "ReceiptRequestTryLogs",
                 column: "ReceiptRequestId");
         }
 
@@ -211,23 +211,23 @@ namespace WebSample.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ReceiptRequestGatewayPayment",
+                name: "ReceiptRequestGatewayPayments",
                 schema: "PayMaster");
 
             migrationBuilder.DropTable(
-                name: "ReceiptRequestTryLog",
+                name: "ReceiptRequestTryLogs",
                 schema: "PayMaster");
 
             migrationBuilder.DropTable(
-                name: "PaymentGatewayProvider",
+                name: "PaymentGatewayProfiles",
                 schema: "PayMaster");
 
             migrationBuilder.DropTable(
-                name: "ReceiptRequest",
+                name: "ReceiptRequests",
                 schema: "PayMaster");
 
             migrationBuilder.DropTable(
-                name: "ReceiptIssuer",
+                name: "ReceiptIssuers",
                 schema: "PayMaster");
         }
     }

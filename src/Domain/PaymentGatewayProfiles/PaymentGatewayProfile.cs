@@ -1,9 +1,14 @@
-﻿using Honamic.Framework.Queries;
+﻿using Honamic.Framework.Domain;
 
-namespace Honamic.PayMaster.QueryModels.PaymentGatewayProviders;
-public class PaymentGatewayProviderQueryModel  : AggregateQueryBase<long>
+namespace Honamic.PayMaster.Domain.PaymentGatewayProfiles;
+public class PaymentGatewayProfile : AggregateRoot<long>
 {
-    
+    public PaymentGatewayProfile()
+    {
+        JsonConfigurations = "{}";
+        ProviderType = "";
+    }
+
     public string Title { get; set; }
 
     public string Code { get; set; }

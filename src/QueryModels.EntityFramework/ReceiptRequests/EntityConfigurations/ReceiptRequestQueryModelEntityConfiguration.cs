@@ -3,7 +3,7 @@ using Honamic.PayMaster.QueryModels.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
+namespace Honamic.PayMaster.QueryModels.EntityFramework.ReceiptRequests.EntityConfigurations;
 
 public class ReceiptRequestQueryModelEntityConfiguration : IEntityTypeConfiguration<ReceiptRequestQueryModel>
 {

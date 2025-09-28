@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Honamic.PayMaster.Persistence.ReceiptIssuers.EntityConfigurations;
 public class ReceiptIssuerEntityConfiguration : IEntityTypeConfiguration<ReceiptIssuer>
 {
-    private string schema;
+    private readonly string schema;
+    private readonly string tableName;
 
-    public ReceiptIssuerEntityConfiguration(string schema)
+    public ReceiptIssuerEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<ReceiptIssuer> builder)
@@ -18,7 +20,7 @@ public class ReceiptIssuerEntityConfiguration : IEntityTypeConfiguration<Receipt
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
-        builder.ToTable(nameof(ReceiptIssuer), schema);
+        builder.ToTable(tableName, schema);
 
         builder.Property(p => p.Code)
             .IsRequired()

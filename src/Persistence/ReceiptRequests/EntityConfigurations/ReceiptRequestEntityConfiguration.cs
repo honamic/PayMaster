@@ -8,10 +8,12 @@ namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<ReceiptRequest>
 {
     private string schema;
+    private readonly string tableName;
 
-    public ReceiptRequestEntityConfiguration(string schema)
+    public ReceiptRequestEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<ReceiptRequest> builder)
@@ -21,7 +23,7 @@ public class ReceiptRequestEntityConfiguration : IEntityTypeConfiguration<Receip
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
-        builder.ToTable(nameof(ReceiptRequest), schema);
+        builder.ToTable(tableName, schema);
 
         builder.Property(p => p.Status)
             .IsRequired();

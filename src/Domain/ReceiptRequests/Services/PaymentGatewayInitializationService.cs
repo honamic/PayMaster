@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Options;
 using Honamic.PayMaster.PaymentProviders;
@@ -12,14 +12,14 @@ namespace Honamic.PayMaster.Domain.ReceiptRequests.Services;
 
 public class PaymentGatewayInitializationService : IPaymentGatewayInitializationService
 {
-    private readonly IPaymentGatewayProviderRepository _repository;
+    private readonly IPaymentGatewayProfileRepository _repository;
     private readonly IPaymentGatewayProviderFactory _factory;
     private readonly IClock _clock;
     private readonly ILogger<PaymentGatewayInitializationService> _logger;
     private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
     public PaymentGatewayInitializationService(
-        IPaymentGatewayProviderRepository repository,
+        IPaymentGatewayProfileRepository repository,
         IPaymentGatewayProviderFactory factory,
         IClock clock,
         ILogger<PaymentGatewayInitializationService> logger,
@@ -52,7 +52,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
 
         result.GatewayPayment = gatewayPayment;
 
-        var gatewayProvider = await _repository.GetByIdAsync(gatewayPayment.GatewayProviderId);
+        var gatewayProvider = await _repository.GetByIdAsync(gatewayPayment.PaymentGatewayProfileId);
 
         if (gatewayProvider == null)
         {

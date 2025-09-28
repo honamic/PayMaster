@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.PaymentProviders;
@@ -11,20 +11,20 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IReceiptIssuerRepository _receiptIssuerRepository;
-    private readonly IPaymentGatewayProviderRepository _gatewayProviderRepository;
+    private readonly IPaymentGatewayProfileRepository _gatewayProfileRepository;
     private readonly IPaymentGatewayProviderFactory _gatewayProviderFactory;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IClock _clock;
     public CallbackGatewayPaymentDomainService(
         IReceiptRequestRepository receiptRequestRepository,
-        IPaymentGatewayProviderRepository gatewayProviderRepository,
+        IPaymentGatewayProfileRepository gatewayProfileRepository,
         IReceiptIssuerRepository receiptIssuerRepository,
         IPaymentGatewayProviderFactory gatewayProviderFactory,
         IUnitOfWork unitOfWork,
         IClock clock)
     {
         _receiptRequestRepository = receiptRequestRepository;
-        _gatewayProviderRepository = gatewayProviderRepository;
+        _gatewayProfileRepository = gatewayProfileRepository;
         _receiptIssuerRepository = receiptIssuerRepository;
         _gatewayProviderFactory = gatewayProviderFactory;
         _unitOfWork = unitOfWork;
@@ -54,8 +54,8 @@ public class CallbackGatewayPaymentDomainService : ICallbackGatewayPaymentDomain
             throw new PaymentStatusNotValidForProcessingException();
         }
 
-        var gatewayProvider = await _gatewayProviderRepository
-                .GetByIdAsync(gatewayPayment.GatewayProviderId);
+        var gatewayProvider = await _gatewayProfileRepository
+                .GetByIdAsync(gatewayPayment.PaymentGatewayProfileId);
 
         if (gatewayProvider == null)
         {

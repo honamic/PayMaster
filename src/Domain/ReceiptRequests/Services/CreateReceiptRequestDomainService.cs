@@ -1,8 +1,8 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 
 namespace Honamic.PayMaster.Domain.ReceiptRequests.Services;
 
@@ -10,18 +10,18 @@ public class CreateReceiptRequestDomainService : ICreateReceiptRequestDomainServ
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IReceiptIssuerRepository _receiptIssuerRepository;
-    private readonly IPaymentGatewayProviderRepository _paymentGatewayProviderRepository;
+    private readonly IPaymentGatewayProfileRepository _paymentGatewayProfileRepository;
     private readonly IIdGenerator _idGenerator;
     public CreateReceiptRequestDomainService(
         IIdGenerator idGenerator,
         IReceiptRequestRepository receiptRequestRepository,
         IReceiptIssuerRepository receiptIssuerRepository,
-        IPaymentGatewayProviderRepository paymentGatewayProviderRepository)
+        IPaymentGatewayProfileRepository paymentGatewayProfileRepository)
     {
         _idGenerator = idGenerator;
         _receiptRequestRepository = receiptRequestRepository;
         _receiptIssuerRepository = receiptIssuerRepository;
-        _paymentGatewayProviderRepository = paymentGatewayProviderRepository;
+        _paymentGatewayProfileRepository = paymentGatewayProfileRepository;
     }
 
     public async Task<ReceiptRequest> CreateAsync(CreateReceiptRequestParameters createParams)
@@ -79,41 +79,41 @@ public class CreateReceiptRequestDomainService : ICreateReceiptRequestDomainServ
         return receiptIssuer;
     }
 
-    private async Task<PaymentGatewayProvider> GetPaymentGatewayProvider
-            (long? gatewayProviderId, string? gatewayProviderCode, string? defaultGatewayProviderCode)
+    private async Task<PaymentGatewayProfile> GetPaymentGatewayProvider
+            (long? gatewayProfileId, string? gatewayProfileCode, string? defaultGatewayProviderCode)
     {
-        PaymentGatewayProvider? paymentGatewayProvider = null;
+        PaymentGatewayProfile? paymentGatewayProfile = null;
 
-        if (!gatewayProviderId.HasValue
-                   && string.IsNullOrEmpty(gatewayProviderCode)
+        if (!gatewayProfileId.HasValue
+                   && string.IsNullOrEmpty(gatewayProfileCode)
                     && string.IsNullOrEmpty(defaultGatewayProviderCode))
         {
             throw new NoDefaultGatewayProviderException();
         }
 
-        if (gatewayProviderId.HasValue)
+        if (gatewayProfileId.HasValue)
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByIdAsync(gatewayProviderId.Value);
+            paymentGatewayProfile = await _paymentGatewayProfileRepository.GetByIdAsync(gatewayProfileId.Value);
         }
 
-        if (paymentGatewayProvider is null &&
-            !string.IsNullOrEmpty(gatewayProviderCode))
+        if (paymentGatewayProfile is null &&
+            !string.IsNullOrEmpty(gatewayProfileCode))
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByCodeAsync(gatewayProviderCode);
+            paymentGatewayProfile = await _paymentGatewayProfileRepository.GetByCodeAsync(gatewayProfileCode);
         }
 
-        if (!gatewayProviderId.HasValue
-               && string.IsNullOrEmpty(gatewayProviderCode)
+        if (!gatewayProfileId.HasValue
+               && string.IsNullOrEmpty(gatewayProfileCode)
                && !string.IsNullOrEmpty(defaultGatewayProviderCode))
         {
-            paymentGatewayProvider = await _paymentGatewayProviderRepository.GetByCodeAsync(defaultGatewayProviderCode);
+            paymentGatewayProfile = await _paymentGatewayProfileRepository.GetByCodeAsync(defaultGatewayProviderCode);
         }
 
-        if (paymentGatewayProvider is null)
+        if (paymentGatewayProfile is null)
         {
             throw new SpecifiedGatewayProviderNotFoundException();
         }
 
-        return paymentGatewayProvider;
+        return paymentGatewayProfile;
     }
 }

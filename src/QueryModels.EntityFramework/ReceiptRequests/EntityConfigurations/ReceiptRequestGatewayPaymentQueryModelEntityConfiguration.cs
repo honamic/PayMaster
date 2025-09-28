@@ -20,9 +20,8 @@ public class ReceiptRequestGatewayPaymentQueryModelEntityConfiguration : IEntity
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.GatewayProvider)
-            .WithMany()
-            .HasForeignKey(x => x.GatewayProviderId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.PaymentGatewayProfile)
+            .WithMany(c=> c.ReceiptRequestGatewayPayments)
+            .HasForeignKey(x => x.PaymentGatewayProfileId);
     }
 }

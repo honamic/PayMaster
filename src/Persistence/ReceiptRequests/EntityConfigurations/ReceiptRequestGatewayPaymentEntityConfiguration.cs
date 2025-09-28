@@ -1,3 +1,4 @@
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,16 +7,18 @@ namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 public class ReceiptRequestGatewayPaymentEntityConfiguration
     : IEntityTypeConfiguration<ReceiptRequestGatewayPayment>
 {
-    private string schema;
+    private readonly string schema;
+    private readonly string tableName;
 
-    public ReceiptRequestGatewayPaymentEntityConfiguration(string schema)
+    public ReceiptRequestGatewayPaymentEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<ReceiptRequestGatewayPayment> builder)
     {
-        builder.ToTable(nameof(ReceiptRequestGatewayPayment), schema);
+        builder.ToTable(tableName, schema);
 
         builder.HasKey(x => x.Id);
 
@@ -40,7 +43,7 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
         builder.Property(x => x.FailedReason)
             .IsRequired();
 
-        builder.Property(x => x.GatewayProviderId)
+        builder.Property(x => x.PaymentGatewayProfileId)
             .IsRequired();
 
         builder.Property(x => x.CreateReference)
@@ -68,9 +71,9 @@ public class ReceiptRequestGatewayPaymentEntityConfiguration
 
         builder.Property(x => x.CallbackAt);
 
-        builder.HasOne(x => x.GatewayProvider)
+        builder.HasOne(typeof(PaymentGatewayProfile))
             .WithMany()
-            .HasForeignKey(x => x.GatewayProviderId)
+            .HasForeignKey(nameof(ReceiptRequestGatewayPayment.PaymentGatewayProfileId))
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

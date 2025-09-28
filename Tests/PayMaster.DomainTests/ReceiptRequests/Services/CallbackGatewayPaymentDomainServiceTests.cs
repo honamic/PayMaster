@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests;
@@ -19,7 +19,7 @@ namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 
 public partial class CallbackGatewayPaymentDomainServiceTests
 {
-    private readonly Mock<IPaymentGatewayProviderRepository> _repositoryMock;
+    private readonly Mock<IPaymentGatewayProfileRepository> _repositoryMock;
     private readonly Mock<IPaymentGatewayProviderFactory> _factoryMock;
     private readonly Mock<IClock> _clockMock;
     private readonly Mock<ILogger<CallbackGatewayPaymentDomainService>> _loggerMock;
@@ -32,7 +32,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
 
     public CallbackGatewayPaymentDomainServiceTests()
     {
-        _repositoryMock = new Mock<IPaymentGatewayProviderRepository>();
+        _repositoryMock = new Mock<IPaymentGatewayProfileRepository>();
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
         _loggerMock = new Mock<ILogger<CallbackGatewayPaymentDomainService>>();
@@ -68,7 +68,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             CallbackUrl = "/payment/{ReceiptRequestId}/{Status}"
         });
 
-        var gatewayProvider = new PaymentGatewayProvider
+        var gatewayProvider = new PaymentGatewayProfile
         {
             Id = 100,
             Code = "test",

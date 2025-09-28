@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Domain;
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests;
@@ -18,7 +18,7 @@ namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 
 public partial class CreateReceiptRequestDomainServiceTests
 {
-    private readonly Mock<IPaymentGatewayProviderRepository> _repositoryMock;
+    private readonly Mock<IPaymentGatewayProfileRepository> _repositoryMock;
     private readonly Mock<IPaymentGatewayProviderFactory> _factoryMock;
     private readonly Mock<IClock> _clockMock;
     private readonly Mock<ILogger<CreateReceiptRequestDomainService>> _loggerMock;
@@ -31,7 +31,7 @@ public partial class CreateReceiptRequestDomainServiceTests
 
     public CreateReceiptRequestDomainServiceTests()
     {
-        _repositoryMock = new Mock<IPaymentGatewayProviderRepository>();
+        _repositoryMock = new Mock<IPaymentGatewayProfileRepository>();
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
         _loggerMock = new Mock<ILogger<CreateReceiptRequestDomainService>>();
@@ -53,7 +53,7 @@ public partial class CreateReceiptRequestDomainServiceTests
 
     private readonly Mock<IReceiptRequestRepository> _receiptRequestRepositoryMock = new();
     private readonly Mock<IReceiptIssuerRepository> _receiptIssuerRepositoryMock = new();
-    private readonly Mock<IPaymentGatewayProviderRepository> _paymentGatewayProviderRepositoryMock = new();
+    private readonly Mock<IPaymentGatewayProfileRepository> _paymentGatewayProfileRepositoryMock = new();
 
     private CreateReceiptRequestDomainService CreateService()
     {
@@ -61,7 +61,7 @@ public partial class CreateReceiptRequestDomainServiceTests
             _idGenerator.Object,
             _receiptRequestRepositoryMock.Object,
             _receiptIssuerRepositoryMock.Object,
-            _paymentGatewayProviderRepositoryMock.Object
+            _paymentGatewayProfileRepositoryMock.Object
         );
     }
 
@@ -93,10 +93,10 @@ public partial class CreateReceiptRequestDomainServiceTests
             Description = ""
         });
 
-        var gateway = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gateway = ReceiptRequestsHelper.CreateGatewayProfile();
 
         _receiptIssuerRepositoryMock.Setup(x => x.GetByCodeAsync("issuer1", CancellationToken.None)).ReturnsAsync(issuer);
-        _paymentGatewayProviderRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(gateway);
+        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(gateway);
         _receiptRequestRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<ReceiptRequest>(), CancellationToken.None)).Returns(Task.CompletedTask);
 
         _idGenerator.Setup(x => x.GetNewId()).Returns(123);
@@ -111,7 +111,7 @@ public partial class CreateReceiptRequestDomainServiceTests
         Assert.Equal(parameters.Amount, result.Amount);
         Assert.Equal(parameters.Currency, result.Currency);
         Assert.Equal(issuer.Id, result.IssuerId);
-        Assert.Equal(gateway.Id, result.GatewayPayments.First().GatewayProviderId);
+        Assert.Equal(gateway.Id, result.GatewayPayments.First().PaymentGatewayProfileId);
         _receiptRequestRepositoryMock.Verify(x => x.InsertAsync(It.IsAny<ReceiptRequest>(), CancellationToken.None), Times.Once);
     }
 
@@ -202,7 +202,7 @@ public partial class CreateReceiptRequestDomainServiceTests
             Description = ""
         });
         _receiptIssuerRepositoryMock.Setup(x => x.GetByCodeAsync("issuer1", CancellationToken.None)).ReturnsAsync(issuer);
-        _paymentGatewayProviderRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync((PaymentGatewayProvider?)null);
+        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync((PaymentGatewayProfile?)null);
 
         var service = CreateService();
 

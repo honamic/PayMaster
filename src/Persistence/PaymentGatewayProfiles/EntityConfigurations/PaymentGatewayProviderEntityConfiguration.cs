@@ -1,24 +1,26 @@
-using Honamic.PayMaster.Domain.PaymentGatewayProviders;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
-public class PaymentGatewayProviderEntityConfiguration : IEntityTypeConfiguration<PaymentGatewayProvider>
+namespace Honamic.PayMaster.Persistence.PaymentGatewayProfiles.EntityConfigurations;
+public class PaymentGatewayProfileEntityConfiguration : IEntityTypeConfiguration<PaymentGatewayProfile>
 {
-    private string schema;
+    private readonly string schema;
+    private readonly string tableName;
 
-    public PaymentGatewayProviderEntityConfiguration(string schema)
+    public PaymentGatewayProfileEntityConfiguration(string schema, string tableName)
     {
         this.schema = schema;
+        this.tableName = tableName;
     }
 
-    public void Configure(EntityTypeBuilder<PaymentGatewayProvider> builder)
+    public void Configure(EntityTypeBuilder<PaymentGatewayProfile> builder)
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
             .ValueGeneratedNever();
 
-        builder.ToTable(nameof(PaymentGatewayProvider), schema);
+        builder.ToTable(tableName, schema);
 
         builder.Property(p => p.Code)
             .IsRequired()

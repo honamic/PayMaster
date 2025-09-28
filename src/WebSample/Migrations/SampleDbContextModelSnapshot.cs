@@ -17,12 +17,12 @@ namespace WebSample.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.PaymentGatewayProviders.PaymentGatewayProvider", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.PaymentGatewayProfiles.PaymentGatewayProfile", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -86,10 +86,10 @@ namespace WebSample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentGatewayProvider", "PayMaster");
+                    b.ToTable("PaymentGatewayProfiles", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptIssuers.ReceiptIssuer", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -141,10 +141,10 @@ namespace WebSample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReceiptIssuer", "PayMaster");
+                    b.ToTable("ReceiptIssuers", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -225,10 +225,10 @@ namespace WebSample.Migrations
 
                     b.HasIndex("IssuerId");
 
-                    b.ToTable("ReceiptRequest", "PayMaster");
+                    b.ToTable("ReceiptRequests", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -262,9 +262,6 @@ namespace WebSample.Migrations
                     b.Property<int>("FailedReason")
                         .HasColumnType("int");
 
-                    b.Property<long>("GatewayProviderId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("MerchantId")
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
@@ -279,6 +276,9 @@ namespace WebSample.Migrations
                     b.Property<string>("Pan")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<long>("PaymentGatewayProfileId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("ReceiptRequestId")
                         .HasColumnType("bigint");
@@ -312,14 +312,14 @@ namespace WebSample.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GatewayProviderId");
+                    b.HasIndex("PaymentGatewayProfileId");
 
                     b.HasIndex("ReceiptRequestId");
 
-                    b.ToTable("ReceiptRequestGatewayPayment", "PayMaster");
+                    b.ToTable("ReceiptRequestGatewayPayments", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestTryLog", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequestTryLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -367,45 +367,43 @@ namespace WebSample.Migrations
 
                     b.HasIndex("ReceiptRequestId");
 
-                    b.ToTable("ReceiptRequestTryLog", "PayMaster");
+                    b.ToTable("ReceiptRequestTryLogs", "PayMaster");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequest", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Domains.ReceiptIssuers.ReceiptIssuer", null)
+                    b.HasOne("Honamic.PayMaster.Domain.ReceiptIssuers.ReceiptIssuer", null)
                         .WithMany()
                         .HasForeignKey("IssuerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequestGatewayPayment", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Domains.PaymentGatewayProviders.PaymentGatewayProvider", "GatewayProvider")
+                    b.HasOne("Honamic.PayMaster.Domain.PaymentGatewayProfiles.PaymentGatewayProfile", null)
                         .WithMany()
-                        .HasForeignKey("GatewayProviderId")
+                        .HasForeignKey("PaymentGatewayProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", null)
+                    b.HasOne("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequest", null)
                         .WithMany("GatewayPayments")
                         .HasForeignKey("ReceiptRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("GatewayProvider");
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequestTryLog", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequestTryLog", b =>
                 {
-                    b.HasOne("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", null)
+                    b.HasOne("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequest", null)
                         .WithMany("TryLogs")
                         .HasForeignKey("ReceiptRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Honamic.PayMaster.Domains.ReceiptRequests.ReceiptRequest", b =>
+            modelBuilder.Entity("Honamic.PayMaster.Domain.ReceiptRequests.ReceiptRequest", b =>
                 {
                     b.Navigation("GatewayPayments");
 

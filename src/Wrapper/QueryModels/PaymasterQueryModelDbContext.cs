@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.EntityFramework.Query;
-using Honamic.PayMaster.Persistence.Extensions; 
+using Honamic.PayMaster.QueryModels.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Honamic.PayMaster.Wrapper.QueryModels;

@@ -1,9 +1,10 @@
-﻿using Honamic.PayMaster.Persistence.PaymentGatewayProviders.EntityConfigurations;
-using Honamic.PayMaster.Persistence.ReceiptIssuers.EntityConfigurations;
-using Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
+﻿using Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
+using Honamic.PayMaster.QueryModels.EntityFramework.PaymentGatewayProfiles.EntityConfigurations;
+using Honamic.PayMaster.QueryModels.EntityFramework.ReceiptIssuers.EntityConfigurations;
+using Honamic.PayMaster.QueryModels.EntityFramework.ReceiptRequests.EntityConfigurations; 
 using Microsoft.EntityFrameworkCore;
 
-namespace Honamic.PayMaster.Persistence.Extensions;
+namespace Honamic.PayMaster.QueryModels.EntityFramework.Extensions;
 
 public static class EntityFrameworkExtensions
 {
@@ -16,19 +17,19 @@ public static class EntityFrameworkExtensions
         }
 
         modelBuilder.ApplyConfiguration(
-            new PaymentGatewayProviderQueryModelEntityConfiguration(Constants.Schema, "PaymentGatewayProvider"));
+            new PaymentGatewayProfileQueryModelEntityConfiguration(Constants.Schema, "PaymentGatewayProfiles"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequest"));
+            new ReceiptRequestQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequests"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptIssuerQueryModelEntityConfiguration(Constants.Schema, "ReceiptIssuer"));
+            new ReceiptIssuerQueryModelEntityConfiguration(Constants.Schema, "ReceiptIssuers"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestGatewayPaymentQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequestGatewayPayment"));
+            new ReceiptRequestGatewayPaymentQueryModelEntityConfiguration(Constants.Schema, "ReceiptRequestGatewayPayments"));
 
         modelBuilder.ApplyConfiguration(
-            new ReceiptRequestTryLogQueryModelEntityTypeConfigurations(Constants.Schema, "ReceiptRequestTryLog"));
+            new ReceiptRequestTryLogQueryModelEntityTypeConfigurations(Constants.Schema, "ReceiptRequestTryLogs"));
 
         return modelBuilder;
     }

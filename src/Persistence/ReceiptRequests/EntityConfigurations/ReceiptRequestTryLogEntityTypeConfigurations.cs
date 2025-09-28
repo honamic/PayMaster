@@ -7,11 +7,13 @@ using System.Text.Json;
 namespace Honamic.PayMaster.Persistence.ReceiptRequests.EntityConfigurations;
 internal class ReceiptRequestTryLogEntityTypeConfigurations : IEntityTypeConfiguration<ReceiptRequestTryLog>
 {
-    private string? _schema;
+    private readonly string? _schema;
+    private readonly string tableName;
 
-    public ReceiptRequestTryLogEntityTypeConfigurations(string? schema)
+    public ReceiptRequestTryLogEntityTypeConfigurations(string? schema, string tableName)
     {
         _schema = schema;
+        this.tableName = tableName;
     }
 
     public void Configure(EntityTypeBuilder<ReceiptRequestTryLog> builder)
@@ -30,6 +32,6 @@ internal class ReceiptRequestTryLogEntityTypeConfigurations : IEntityTypeConfigu
                 })
         );
 
-        builder.ToTable(nameof(ReceiptRequestTryLog), _schema);
+        builder.ToTable(tableName, _schema);
     }
 }

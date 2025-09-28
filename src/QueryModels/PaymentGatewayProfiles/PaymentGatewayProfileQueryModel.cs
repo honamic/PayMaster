@@ -1,14 +1,10 @@
-﻿using Honamic.Framework.Domain;
+﻿using Honamic.Framework.Queries;
+using Honamic.PayMaster.QueryModels.ReceiptRequests;
 
-namespace Honamic.PayMaster.Domain.PaymentGatewayProviders;
-public class PaymentGatewayProvider : AggregateRoot<long>
+namespace Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;
+public class PaymentGatewayProfileQueryModel : AggregateQueryBase<long>
 {
-    public PaymentGatewayProvider()
-    {
-        JsonConfigurations = "{}";
-        ProviderType = "";
-    }
-
+    
     public string Title { get; set; }
 
     public string Code { get; set; }
@@ -24,4 +20,6 @@ public class PaymentGatewayProvider : AggregateRoot<long>
     public decimal? MinimumAmount { get; set; }
 
     public decimal? MaximumAmount { get; set; }
+
+    public virtual ICollection<ReceiptRequestGatewayPaymentQueryModel> ReceiptRequestGatewayPayments { get; set; }
 }

@@ -3,7 +3,7 @@ using Honamic.PayMaster.QueryModels.ReceiptIssuers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Honamic.PayMaster.Persistence.ReceiptIssuers;
+namespace Honamic.PayMaster.QueryModels.EntityFramework.ReceiptIssuers;
 
 internal class ReceiptIssuerQueryModelRepository : IReceiptIssuerQueryModelRepository
 { 

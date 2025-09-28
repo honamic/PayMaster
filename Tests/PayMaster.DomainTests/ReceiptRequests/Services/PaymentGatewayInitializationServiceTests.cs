@@ -1,5 +1,4 @@
-﻿using Honamic.PayMaster.Domain.PaymentGatewayProviders;
-using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
+﻿using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Services;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Exceptions;
@@ -12,12 +11,13 @@ using Honamic.Framework.Domain;
 using Honamic.PayMaster.DomainTests.ReceiptRequests.Helper;
 using Honamic.PayMaster.Options;
 using Honamic.PayMaster.ReceiptRequests;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 
 namespace PayMaster.Tests.Domain.ReceiptRequests.Services;
 
 public partial class PaymentGatewayInitializationServiceTests
 {
-    private readonly Mock<IPaymentGatewayProviderRepository> _repositoryMock;
+    private readonly Mock<IPaymentGatewayProfileRepository> _repositoryMock;
     private readonly Mock<IPaymentGatewayProviderFactory> _factoryMock;
     private readonly Mock<IClock> _clockMock;
     private readonly Mock<ILogger<PaymentGatewayInitializationService>> _loggerMock;
@@ -30,7 +30,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
     public PaymentGatewayInitializationServiceTests()
     {
-        _repositoryMock = new Mock<IPaymentGatewayProviderRepository>();
+        _repositoryMock = new Mock<IPaymentGatewayProfileRepository>();
         _factoryMock = new Mock<IPaymentGatewayProviderFactory>();
         _clockMock = new Mock<IClock>();
         _loggerMock = new Mock<ILogger<PaymentGatewayInitializationService>>();
@@ -61,7 +61,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
         var expectedCallbackUrl = $"https://example.com/callback/{receiptRequest.Id}/{gatewayPayment.Id}";
 
         var createResult = new CreateResult
@@ -109,7 +109,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
 
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
-            .ReturnsAsync((PaymentGatewayProvider)null);
+            .ReturnsAsync((PaymentGatewayProfile)null);
 
         // Act & Assert
         await Assert.ThrowsAsync<GatewayProviderNotFoundException>(
@@ -122,7 +122,7 @@ public partial class PaymentGatewayInitializationServiceTests
     {
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         var createResult = new CreateResult
         {
@@ -178,7 +178,7 @@ public partial class PaymentGatewayInitializationServiceTests
     {
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
@@ -195,7 +195,7 @@ public partial class PaymentGatewayInitializationServiceTests
     {
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
@@ -241,7 +241,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
         var expectedCurrency = gatewayPayment.Currency;
 
         var createResult = new CreateResult
@@ -278,7 +278,7 @@ public partial class PaymentGatewayInitializationServiceTests
     {
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         var createResult = new CreateResult
         {
@@ -314,7 +314,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         var createResult = new CreateResult
         {
@@ -350,7 +350,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         var expectedCallbackUrl = $"https://example.com/callback/{receiptRequest.Id}/{gatewayPayment.Id}";
 
@@ -381,7 +381,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayPayment = receiptRequest.GatewayPayments.First();
         var initialStatus = receiptRequest.Status;
-        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProvider();
+        var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
         _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
             .ReturnsAsync(gatewayProvider);
