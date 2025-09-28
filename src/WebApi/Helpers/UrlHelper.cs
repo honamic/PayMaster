@@ -1,6 +1,6 @@
 ﻿using System.Web;
 
-namespace Honamic.PayMaster.Web.Helpers;
+namespace Honamic.PayMaster.WebApi.Helpers;
 public static class UrlHelper
 {
     public static string AddParametersToUrl(this string baseUrl, Dictionary<string, string>? parameters)

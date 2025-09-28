@@ -2,7 +2,7 @@
 using System.Dynamic;
 using System.Text.Json;
 
-namespace Honamic.PayMaster.Web.Helpers;
+namespace Honamic.PayMaster.WebApi.Helpers;
 
 public static class ExtractDataHelper
 {

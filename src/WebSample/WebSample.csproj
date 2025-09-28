@@ -28,8 +28,7 @@
     <ProjectReference Include="..\PaymentProvider\Sandbox.Web\Sandbox.Web.csproj" />
     <ProjectReference Include="..\PaymentProvider\ZarinPal\ZarinPal.csproj" />
     <ProjectReference Include="..\WebApi.Management\Honamic.PayMaster.WebApi.Management.csproj" />
-	  
-    <ProjectReference Include="..\Web\Honamic.PayMaster.Web.csproj" />
+    <ProjectReference Include="..\WebApi\Honamic.PayMaster.WebApi.csproj" />
 	  
     <ProjectReference Include="..\Wrapper\Honamic.PayMaster.Wrapper.csproj" />
   </ItemGroup>

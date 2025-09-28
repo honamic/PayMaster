@@ -1,5 +1,5 @@
 ﻿using Honamic.PayMaster.Application.ReceiptRequests.Commands;
-using Honamic.PayMaster.Web.Helpers;
+using Honamic.PayMaster.WebApi.Helpers;
 using Honamic.PayMaster.Wrapper;
 using Microsoft.AspNetCore.Mvc;
 

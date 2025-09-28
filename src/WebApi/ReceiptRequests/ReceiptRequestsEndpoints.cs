@@ -1,17 +1,17 @@
 ﻿using Honamic.Framework.Applications.Results;
 using Honamic.Framework.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
-using Honamic.PayMaster.Web.Helpers;
+using Honamic.PayMaster.WebApi.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace Honamic.PayMaster.Web;
+namespace Honamic.PayMaster.WebApi.ReceiptRequests;
 
 public static class ReceiptRequestsEndpoints
 {
-    public static void MapReceiptRequestsEndpoints(IEndpointRouteBuilder app, string prefixRoute = "Payments")
+    public static void MapReceiptRequestsEndpoints(IEndpointRouteBuilder app, string prefixRoute)
     {
         var payGroup = app.MapGroup(prefixRoute)
              .WithTags("PayMaster");
