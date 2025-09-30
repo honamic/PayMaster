@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using System;
 
 namespace Honamic.PayMaster.WebApi.ReceiptRequests;
 
@@ -57,6 +58,11 @@ public static class ReceiptRequestsEndpoints
 
             var commandResult = await commandBus.DispatchAsync<CallBackGatewayPaymentCommand,
                 Result<CallBackGatewayPaymentCommandResult>>(command, cancellationToken);
+
+            var IssuerCallbackUrl = commandResult?.Data?.IssuerCallbackUrl;
+
+            if (!string.IsNullOrEmpty(IssuerCallbackUrl))
+                return Results.Redirect(IssuerCallbackUrl);
 
             return Results.Ok(commandResult);
         });

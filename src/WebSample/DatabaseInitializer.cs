@@ -24,7 +24,7 @@ internal static class DatabaseInitializer
                 {
                     Id = 100,
                     Code = "Default",
-                    CallbackUrl = "/Payment/{ReceiptRequestId}/{Status}",
+                    CallbackUrl = "/result/{ReceiptRequestId}/{Status}",
                     Title = "صادر کننده پیش فرض",
                     Description = "تست",
                     Enabled = true,

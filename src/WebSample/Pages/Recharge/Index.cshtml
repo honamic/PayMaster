@@ -1,0 +1,62 @@
+﻿@page "/"
+@model WebSample.Pages.Recharge.RechargeModel
+@{
+    ViewData["Title"] = "شارژ حساب";
+}
+
+<div class="container py-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">شارژ حساب کاربری</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-4">
+                            <label asp-for="Input.Amount" class="form-label">مبلغ</label>
+                            <div class="input-group">
+                                <input asp-for="Input.Amount" type="number" class="form-control" min="1" step="0.01" required />
+                                <input asp-for="Input.Currency" type="hidden" value="IRR" />
+                                <span class="input-group-text">ریال</span>
+                            </div>
+                            <span asp-validation-for="Input.Amount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Input.Description" class="form-label">توضیحات (اختیاری)</label>
+                            <textarea asp-for="Input.Description" class="form-control" rows="2"></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">انتخاب درگاه پرداخت</label>
+                            @foreach (var gateway in @Model.PaymentGateways)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" value="@gateway.Value" type="radio" asp-for="Input.GatewayProviderCode" required>
+                                    <label class="form-check-label" for="SelectedGateway">
+                                        @gateway.Text
+                                    </label>
+                                </div>
+                            }
+                            <span asp-validation-for="SelectedGateway" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-credit-card ms-2"></i>ادامه فرآیند پرداخت
+                            </button>
+                        </div>
+                        <label class="form-label">@(Model.Error)</label>
+
+                    </form>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+@* @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@

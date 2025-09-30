@@ -18,6 +18,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddRazorPages();
         builder.Services.AddSwaggerGen();
 
 
@@ -37,7 +38,7 @@ internal class Program
 
             option.Configure(config =>
             {
-                config.CallBackUrl = "https://localhost:7777/Payments/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
+                config.CallBackUrl = "https://localhost:7777/api/paymaster/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
                 config.SupportedCurrencies = ["IRR", "USD"];
             });
 
@@ -59,12 +60,16 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.MapRazorPages();
+
+        app.InitializeDatabaseDefaults();
+
         app.MapPayMasterEndpoints();
         app.UseSandboxPayEndpoints();
-        
         app.MapPaymentEndpoints();
         app.MapPayMasterManagementEndpoints();
-        app.InitializeDatabaseDefaults();
+
 
         app.Run();
     }

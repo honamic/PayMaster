@@ -1,0 +1,51 @@
+﻿@page "/result/{ReceiptRequestId}/{Status}"
+
+
+@model WebSample.Pages.Recharge.ResultModel
+@{
+    ViewData["Title"] = "نتیجه پرداخت";
+}
+
+
+<div class="container py-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title> mb-0">نتیجه پرداخت</h4>
+                </div>
+                <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
+
+                <div class="card-body text-center">
+                    @if (Model.Status == "Success")
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h5 class="alert-heading">پرداخت با موفقیت انجام شد!</h5>
+                            <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
+                            <hr />
+                            <p class="mb-0">مبلغ پرداخت شده: <strong>Model.Amount.ToString("N0") ریال</strong></p>
+                            <p class="mb-0">توضیحات: <strong>Model.Description</strong></p>
+                            <p class="mb-0">
+                                تاریخ: <strong>Model.TransactionDate.ToString("yyyy/MM/dd HH:mm:ss")</strong>
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h5 class="alert-heading">پرداخت ناموفق بود!</h5>
+                            <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
+                            <hr />
+                            <p class="mb-0">مبلغ پرداخت شده: <strong>Model.Amount.ToString("N0") ریال</strong></p>
+                            <p class="mb-0">توضیحات: <strong>Model.Description</strong></p>
+                            <p class="mb-0">
+                                تاریخ: <strong>Model.TransactionDate.ToString("yyyy/MM/dd HH:mm:ss")</strong>
+                            </p>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

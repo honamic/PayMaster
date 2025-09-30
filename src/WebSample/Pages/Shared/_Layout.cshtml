@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head >
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.rtl.min.css" />
+</head>
+<body>
+    <header>
+
+    </header>
+    <div class="container">
+        @RenderBody()
+    </div>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - MyApp</p>
+    </footer>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
