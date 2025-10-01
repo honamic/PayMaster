@@ -1,15 +1,16 @@
-﻿using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+﻿using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
+using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Honamic.PayMaster.WebApi.Helpers;
 using Honamic.PayMaster.Wrapper;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Honamic.PayMaster.WebApi.Helpers;
 
 namespace WebSample.Pages.Recharge;
 
 public class RechargeModel : PageModel
 {
+    private readonly IPayMasterFacade PayMasterFacade;
+
     public RechargeModel(IPayMasterFacade payMasterFacade)
     {
         PayMasterFacade = payMasterFacade;
@@ -19,37 +20,34 @@ public class RechargeModel : PageModel
     public CreateReceiptRequestCommand Input { get; set; } = new();
     public string Error { get; set; } = string.Empty;
 
-    public List<SelectListItem> PaymentGateways { get; set; } = new();
+    public List<GetActivePaymentGatewaysQueryResult> PaymentGateways { get; set; } = new();
 
     [BindProperty]
     public string? SelectedGateway { get; set; }
 
-    [Inject]
-    IPayMasterFacade PayMasterFacade { get; set; }
 
-    public void OnGet()
+    public Task OnGet(CancellationToken cancellationToken)
     {
-        LoadGateways();
+        return LoadGateways(cancellationToken);
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
-        LoadGateways();
 
         if (!ModelState.IsValid)
         {
-            return Page();
+            return await ShowPage(cancellationToken);
         }
 
         if (!ModelState.IsValid)
-            return Page();
+            return await ShowPage(cancellationToken);
 
         var createResult = await PayMasterFacade.CreateReceiptRequest(Input, cancellationToken);
 
         if (!createResult.IsSuccess)
         {
             Error = createResult.Messages.FirstOrDefault()?.Message ?? "خطایی رخ داده است.";
-            return Page();
+            return await ShowPage(cancellationToken);
         }
 
         var paycommand = new PayReceiptRequestCommand
@@ -68,21 +66,36 @@ public class RechargeModel : PageModel
         }
 
         Error = paycommandResult.Messages.FirstOrDefault()?.Message ?? "خطایی رخ داده است.";
-        return Page();
+        return await ShowPage(cancellationToken);
 
     }
 
+    private async Task<IActionResult> ShowPage(CancellationToken cancellationToken)
+    {
+        await LoadGateways(cancellationToken);
 
-    private void LoadGateways()
+        return Page();
+    }
+
+    private async Task LoadGateways(CancellationToken cancellationToken)
     {
-        PaymentGateways = new List<SelectListItem>
-    {
-        new("پیش فرض", "default"),
-        new("درگاه تست", "sandbox"),
-        new("زرین‌پال", "zarinpal"),
-        new("دیجی‌پی", "digipay"),
-        new("سداد", "sadad")
-    };
+        var gatewaysResult = await PayMasterFacade.GetActivePaymentGateways(cancellationToken);
+        
+        PaymentGateways.Add(new GetActivePaymentGatewaysQueryResult
+        {
+            Id = 0,
+            Title = "درگاه پیش فرض سیستم",
+            Code = "Default",
+        });
+
+        if (gatewaysResult.IsSuccessWithData)
+        {
+            PaymentGateways.AddRange(gatewaysResult.Data);
+        }
+        else
+        {
+            Error = gatewaysResult.Messages.FirstOrDefault()?.Message ?? "خط در بارگذاری درگاهها";
+        }
     }
 
 }

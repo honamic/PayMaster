@@ -1,4 +1,5 @@
 ﻿using Honamic.Framework.Queries;
+using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 using Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,4 +15,18 @@ internal class PaymentGatewayProfileQueryModelRepository : IPaymentGatewayProfil
         _context = context;
     }
 
+    public Task<List<GetActivePaymentGatewaysQueryResult>> GetActivePaymentGatewayProfilesAsync(GetActivePaymentGatewaysQuery query, CancellationToken cancellationToken)
+    {
+        return _context.Set<PaymentGatewayProfileQueryModel>()
+             .Where(c => c.Enabled)
+             .Select(c => new GetActivePaymentGatewaysQueryResult
+             {
+                 Id = c.Id,
+                 Code = c.Code,
+                 Title = c.Title,
+                 LogoPath = c.LogoPath,
+                 MinimumAmount = c.MinimumAmount,
+                 MaximumAmount = c.MaximumAmount
+             }).ToListAsync(cancellationToken);
+    }
 }

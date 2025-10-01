@@ -34,9 +34,9 @@
                             @foreach (var gateway in @Model.PaymentGateways)
                             {
                                 <div class="form-check">
-                                    <input class="form-check-input" value="@gateway.Value" type="radio" asp-for="Input.GatewayProviderCode" required>
+                                    <input class="form-check-input" value="@gateway.Code" type="radio" asp-for="Input.GatewayProviderCode" required>
                                     <label class="form-check-label" for="SelectedGateway">
-                                        @gateway.Text
+                                        @gateway.Title
                                     </label>
                                 </div>
                             }

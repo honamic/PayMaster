@@ -1,6 +1,8 @@
 ﻿using Honamic.Framework.Applications.Authorizes;
 using Honamic.Framework.Applications.Extensions;
 using Honamic.Framework.Applications.Results;
+using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
+using Honamic.PayMaster.Application.PaymentGatewayProfiles.QueryHandlers;
 using Honamic.PayMaster.Application.PaymentProviders;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
@@ -52,6 +54,10 @@ public static class PayMasterApplicationServiceCollection
         services.AddQueryHandler<GetPublicReceiptRequestQuery,
             Result<GetPublicReceiptRequestQueryResult?>,
             GetPublicReceiptRequestQueryHandler>();
+
+        services.AddQueryHandler<GetActivePaymentGatewaysQuery,
+            Result<List<GetActivePaymentGatewaysQueryResult>>,
+            GetActivePaymentGatewaysQueryHandler>();
     }
 
     private static void AddEventHandlers(this IServiceCollection services)

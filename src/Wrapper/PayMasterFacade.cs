@@ -1,6 +1,7 @@
 ﻿using Honamic.Framework.Applications.Results;
 using Honamic.Framework.Commands;
 using Honamic.Framework.Queries;
+using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 
@@ -29,6 +30,12 @@ public class PayMasterFacade : IPayMasterFacade
 
     public Task<Result<GetPublicReceiptRequestQueryResult?>> GetPublicReceiptRequest(GetPublicReceiptRequestQuery query, CancellationToken cancellationToken)
     {
+        return _queryBus.Dispatch(query, cancellationToken);
+    }
+
+    public Task<Result<List<GetActivePaymentGatewaysQueryResult>>> GetActivePaymentGateways(CancellationToken cancellationToken)
+    {
+        var query = new GetActivePaymentGatewaysQuery();
         return _queryBus.Dispatch(query, cancellationToken);
     }
 }
