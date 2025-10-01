@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application.Contracts\Honamic.PayMaster.Application.Contracts.csproj" />
     <ProjectReference Include="..\Domain\Honamic.PayMaster.Domain.csproj" />
+    <ProjectReference Include="..\QueryModels\Honamic.PayMaster.QueryModels.csproj" />
   </ItemGroup>
  
 

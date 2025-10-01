@@ -1,18 +1,42 @@
+﻿using Honamic.PayMaster.Application.ReceiptRequests.Queries; 
+using Honamic.PayMaster.Wrapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using Microsoft.AspNetCore.Mvc.RazorPages; 
 namespace WebSample.Pages.Recharge
 {
     public class ResultModel : PageModel
     {
-        [FromRoute()]
-        public long ReceiptRequestId { get; set; }
+        private readonly IPayMasterFacade _payMasterFacade;
 
-        [FromRoute()]
-        public string Status { get; set; } = string.Empty;
+        public GetPublicReceiptRequestQueryResult? Receipt { get; set; }
+        public string? Message { get; set; }
 
-        public void OnGet()
+        public ResultModel(IPayMasterFacade payMasterFacade)
         {
+            _payMasterFacade = payMasterFacade;
         }
+
+        [FromRoute()]
+        public long ReceiptRequestId { get; set; } 
+
+
+        public async Task OnGet(CancellationToken cancellationToken)
+        {
+            var result = await _payMasterFacade.GetPublicReceiptRequest(new GetPublicReceiptRequestQuery
+            {
+                Id = ReceiptRequestId
+            }, cancellationToken);
+
+
+            Receipt = result.Data;
+            Message = result.Messages.FirstOrDefault()?.Message;
+
+            if (Receipt is null && Message is null)
+            {
+                Message = "اطلاعات درخواستی یافت نشد.";
+            }
+
+        }
+         
     }
 }

@@ -1,11 +1,10 @@
-﻿@page "/result/{ReceiptRequestId}/{Status}"
-
+﻿@page "/result/{ReceiptRequestId}/{Status?}"
+@using Honamic.PayMaster.ReceiptRequests;
 
 @model WebSample.Pages.Recharge.ResultModel
 @{
     ViewData["Title"] = "نتیجه پرداخت";
 }
-
 
 <div class="container py-5" dir="rtl">
     <div class="row justify-content-center">
@@ -14,37 +13,91 @@
                 <div class="card-header bg-primary text-white">
                     <h4 class="card-title> mb-0">نتیجه پرداخت</h4>
                 </div>
-                <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
+                @if (Model.Receipt is null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">@Model.Message</h5>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-body text-center">
+                        @if (Model.Receipt.Status == Honamic.PayMaster.ReceiptRequests.ReceiptRequestStatus.Done)
+                        {
+                            <div class="alert alert-success" role="alert">
+                                <h5 class="alert-heading">پرداخت موفق</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <h5 class="alert-heading">پرداخت ناموفق!</h5>
+                            </div>
+                        }
+                        <hr />
+                        <p>شناسه قبض: <strong>@Model.Receipt.Id</strong></p>
+                        <p class="mb-0">وضعیت: <strong>@Model.Receipt.Status</strong></p>
+                        <p class="mb-0">مبلغ: <strong>@Model.Receipt.Amount.ToString("N0") @Model.Receipt.Currency</strong></p>
 
-                <div class="card-body text-center">
-                    @if (Model.Status == "Success")
-                    {
-                        <div class="alert alert-success" role="alert">
-                            <h5 class="alert-heading">پرداخت با موفقیت انجام شد!</h5>
-                            <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
-                            <hr />
-                            <p class="mb-0">مبلغ پرداخت شده: <strong>Model.Amount.ToString("N0") ریال</strong></p>
-                            <p class="mb-0">توضیحات: <strong>Model.Description</strong></p>
-                            <p class="mb-0">
-                                تاریخ: <strong>Model.TransactionDate.ToString("yyyy/MM/dd HH:mm:ss")</strong>
-                            </p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            <h5 class="alert-heading">پرداخت ناموفق بود!</h5>
-                            <p>شناسه تراکنش: <strong>@Model.ReceiptRequestId</strong></p>
-                            <hr />
-                            <p class="mb-0">مبلغ پرداخت شده: <strong>Model.Amount.ToString("N0") ریال</strong></p>
-                            <p class="mb-0">توضیحات: <strong>Model.Description</strong></p>
-                            <p class="mb-0">
-                                تاریخ: <strong>Model.TransactionDate.ToString("yyyy/MM/dd HH:mm:ss")</strong>
-                            </p>
-                        </div>
-                    }
+                        @if (Model.Receipt.GatewayPayments?.Any() == true)
+                        {
+                            <div class="mt-4">
+                                <h6 class="mb-3">تاریخچه پرداخت‌ها</h6>
+                                <div class="list-group">
+                                    @foreach (var payment in Model.Receipt.GatewayPayments)
+                                    {
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    @{
+                                                        var (statusClass, icon) = payment.Status switch
+                                                        {
+                                                            PaymentGatewayStatus.Waiting => ("text-warning", "bi-hourglass-split"),
+                                                            PaymentGatewayStatus.Success => ("text-success", "bi-check-circle"),
+                                                            PaymentGatewayStatus.Failed => ("text-danger", "bi-x-circle"),
+                                                            PaymentGatewayStatus.Settlement => ("text-secondary", "bi-dash-circle"),
+                                                            _ => ("text-muted", "bi-question-circle")
+                                                        };
+                                                    }
+                                                    <i class="bi @icon @statusClass me-2"></i>
+                                                    <span>درگاه پرداخت: @payment.PaymentGatewayTitle</span>
+                                                </div>
+                                                <div class="text-muted small">
+                                                    @payment.RedirectAt?.ToString("yyyy/MM/dd HH:mm:ss")
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small>شناسه پرداخت: @payment.Id</small>
+                                            </div>
+                                            <div class="mt-2 @statusClass">
+                                                <small>وضعیت: @payment.Status</small>
+                                            </div>
 
-                </div>
+                                            <div class="mt-2">
+                                                <small>مبلغ: @payment.Amount @payment.Currency</small>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <small>شماره پرداخت موفق درگاه: @payment.SuccessReference</small>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small>شماره مرجع: @payment.ReferenceRetrievalNumber</small>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small>شماره پیگیری: @payment.TrackingNumber</small>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <small>شماره کارت: @payment.Pan</small>
+                                            </div> 
+
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>

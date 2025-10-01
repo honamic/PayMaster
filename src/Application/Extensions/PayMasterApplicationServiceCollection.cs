@@ -4,6 +4,8 @@ using Honamic.Framework.Applications.Results;
 using Honamic.PayMaster.Application.PaymentProviders;
 using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Honamic.PayMaster.Application.ReceiptRequests.Queries;
+using Honamic.PayMaster.Application.ReceiptRequests.QueryHandlers;
 using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +15,7 @@ public static class PayMasterApplicationServiceCollection
 {
     public static IServiceCollection AddPayMasterApplicationServices(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(services); 
+        ArgumentNullException.ThrowIfNull(services);
 
         services.AddSingleton<IPaymentGatewayProviderFactory, PaymentGatewayProviderFactory>();
         services.AddSingleton<IBearerTokensStore, InMemoryBearerTokensStore>();
@@ -47,7 +49,9 @@ public static class PayMasterApplicationServiceCollection
 
     private static void AddQueryHandlers(this IServiceCollection services)
     {
-
+        services.AddQueryHandler<GetPublicReceiptRequestQuery,
+            Result<GetPublicReceiptRequestQueryResult?>,
+            GetPublicReceiptRequestQueryHandler>();
     }
 
     private static void AddEventHandlers(this IServiceCollection services)
