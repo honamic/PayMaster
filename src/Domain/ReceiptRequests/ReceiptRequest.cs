@@ -229,4 +229,31 @@ public class ReceiptRequest : AggregateRoot<long>
             Status = ReceiptRequestStatus.Done;
         }
     }
+
+    internal void AddNewGatewayPayment(ReceiptRequestGatewayProviderParameters GatewayProvider,
+        IIdGenerator idGenerator)
+    {
+        if (Status != ReceiptRequestStatus.New
+            && Status != ReceiptRequestStatus.Doing)
+        {
+            throw new StatusNotValidForAddNewGatewayPaymentException();
+        }
+
+        var sumOfExistings = GatewayPayments.Where(c => c.Status == PaymentGatewayStatus.Success).Sum(c => c.Amount);
+
+        if (sumOfExistings + Amount > Amount)
+        {
+            throw new BusinessException($"مجموع مبالغ پرداختی موفق نمی تواند بیشتر از مبلغ فیش باشد.");
+        }
+
+        var newPayment = ReceiptRequestGatewayPayment.Create(new CreateGatewayPaymentParameters
+        {
+            Id = idGenerator.GetNewId(),
+            Amount = Amount,
+            Currency = Currency,
+            GatewayProvider = GatewayProvider,
+        });
+
+        GatewayPayments.Add(newPayment);
+    }
 }

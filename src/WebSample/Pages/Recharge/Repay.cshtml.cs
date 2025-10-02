@@ -1,5 +1,6 @@
 ﻿using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
+using Honamic.PayMaster.Application.ReceiptRequests.Queries; 
 using Honamic.PayMaster.WebApi.Helpers;
 using Honamic.PayMaster.Wrapper;
 using Microsoft.AspNetCore.Mvc;
@@ -7,18 +8,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebSample.Pages.Recharge;
 
-public class RechargeModel : PageModel
+public class RepayModel : PageModel
 {
-    private readonly IPayMasterFacade PayMasterFacade;
+    private readonly IPayMasterFacade _payMasterFacade;
 
-    public RechargeModel(IPayMasterFacade payMasterFacade)
+    public RepayModel(IPayMasterFacade payMasterFacade)
     {
-        PayMasterFacade = payMasterFacade;
+        _payMasterFacade = payMasterFacade;
     }
 
     [BindProperty]
-    public CreateReceiptRequestCommand Input { get; set; } = new();
-    public string Error { get; set; } = string.Empty;
+    public RepayReceiptRequestCommand Input { get; set; } = new();
+
+
+    public GetPublicReceiptRequestQueryResult? Receipt { get; set; }
+
+
+    public string? Error { get; set; }
 
     public List<GetActivePaymentGatewaysQueryResult> PaymentGateways { get; set; } = new();
 
@@ -26,14 +32,34 @@ public class RechargeModel : PageModel
     public string? SelectedGateway { get; set; }
 
 
-    public Task OnGet(CancellationToken cancellationToken)
+    public async Task OnGet([FromRoute] long ReceiptRequestId, CancellationToken cancellationToken)
     {
-        return LoadGateways(cancellationToken);
+        Input.ReceiptRequestId = ReceiptRequestId;
+
+        await LoadReceiptRequest(ReceiptRequestId, cancellationToken);
+
+        await LoadGateways(cancellationToken);
+    }
+
+    private async Task LoadReceiptRequest(long ReceiptRequestId, CancellationToken cancellationToken)
+    {
+        var result = await _payMasterFacade.GetPublicReceiptRequest(new GetPublicReceiptRequestQuery
+        {
+            Id = ReceiptRequestId
+        }, cancellationToken);
+
+
+        Receipt = result.Data;
+        Error = result.Messages.FirstOrDefault()?.Message;
+
+        if (Receipt is null && Error is null)
+        {
+            Error = "اطلاعات درخواستی یافت نشد.";
+        }
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
-
         if (!ModelState.IsValid)
         {
             return await ShowPage(cancellationToken);
@@ -42,7 +68,7 @@ public class RechargeModel : PageModel
         if (!ModelState.IsValid)
             return await ShowPage(cancellationToken);
 
-        var createResult = await PayMasterFacade.CreateReceiptRequest(Input, cancellationToken);
+        var createResult = await _payMasterFacade.RepayReceiptRequest(Input, cancellationToken);
 
         if (!createResult.IsSuccess)
         {
@@ -55,7 +81,7 @@ public class RechargeModel : PageModel
             ReceiptRequestId = createResult.Data!.Id,
         };
 
-        var paycommandResult = await PayMasterFacade.InitiatePayReceiptRequest(paycommand, cancellationToken);
+        var paycommandResult = await _payMasterFacade.InitiatePayReceiptRequest(paycommand, cancellationToken);
 
         if (paycommandResult.IsSuccessWithData)
         {
@@ -79,8 +105,8 @@ public class RechargeModel : PageModel
 
     private async Task LoadGateways(CancellationToken cancellationToken)
     {
-        var gatewaysResult = await PayMasterFacade.GetActivePaymentGateways(cancellationToken);
-        
+        var gatewaysResult = await _payMasterFacade.GetActivePaymentGateways(cancellationToken);
+
         PaymentGateways.Add(new GetActivePaymentGatewaysQueryResult
         {
             Id = -1,

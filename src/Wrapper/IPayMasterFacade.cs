@@ -7,8 +7,9 @@ namespace Honamic.PayMaster.Wrapper;
 
 public interface IPayMasterFacade
 {
-    Task<Result<CreateReceiptRequestCommandResult>> CreateReceiptRequest(CreateReceiptRequestCommand model, CancellationToken cancellationToken);
-    Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand paycommand, CancellationToken cancellationToken);
+    Task<Result<CreateReceiptRequestCommandResult>> CreateReceiptRequest(CreateReceiptRequestCommand command, CancellationToken cancellationToken);
+    Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand command, CancellationToken cancellationToken);
     Task<Result<GetPublicReceiptRequestQueryResult?>> GetPublicReceiptRequest(GetPublicReceiptRequestQuery query, CancellationToken cancellationToken);
     Task<Result<List<GetActivePaymentGatewaysQueryResult>>> GetActivePaymentGateways(CancellationToken cancellationToken);
+    Task<Result<RepayReceiptRequestCommandResult>> RepayReceiptRequest(RepayReceiptRequestCommand command, CancellationToken cancellationToken);
 }

@@ -47,6 +47,9 @@ public static class PayMasterApplicationServiceCollection
             CallBackGatewayPaymentCommandHandler,
             Result<CallBackGatewayPaymentCommandResult>>();
 
+        services.AddCommandHandler<RepayReceiptRequestCommand,
+            RepayReceiptRequestCommandHandler,
+            Result<RepayReceiptRequestCommandResult>>();
     }
 
     private static void AddQueryHandlers(this IServiceCollection services)

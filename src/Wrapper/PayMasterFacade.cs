@@ -18,14 +18,14 @@ public class PayMasterFacade : IPayMasterFacade
         _queryBus = queryBus;
     }
 
-    public Task<Result<CreateReceiptRequestCommandResult>> CreateReceiptRequest(CreateReceiptRequestCommand model, CancellationToken cancellationToken = default)
+    public Task<Result<CreateReceiptRequestCommandResult>> CreateReceiptRequest(CreateReceiptRequestCommand command, CancellationToken cancellationToken = default)
     {
-        return _commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
+        return _commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(command, cancellationToken);
     }
 
-    public Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand model, CancellationToken cancellationToken = default)
+    public Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand command, CancellationToken cancellationToken = default)
     {
-        return _commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(model, cancellationToken);
+        return _commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(command, cancellationToken);
     }
 
     public Task<Result<GetPublicReceiptRequestQueryResult?>> GetPublicReceiptRequest(GetPublicReceiptRequestQuery query, CancellationToken cancellationToken)
@@ -37,5 +37,10 @@ public class PayMasterFacade : IPayMasterFacade
     {
         var query = new GetActivePaymentGatewaysQuery();
         return _queryBus.Dispatch(query, cancellationToken);
+    }
+
+    public Task<Result<RepayReceiptRequestCommandResult>> RepayReceiptRequest(RepayReceiptRequestCommand command, CancellationToken cancellationToken)
+    {
+        return _commandBus.DispatchAsync<RepayReceiptRequestCommand, Result<RepayReceiptRequestCommandResult>>(command, cancellationToken);
     }
 }

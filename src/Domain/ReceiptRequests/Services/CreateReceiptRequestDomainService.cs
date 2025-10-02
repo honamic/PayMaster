@@ -116,4 +116,30 @@ public class CreateReceiptRequestDomainService : ICreateReceiptRequestDomainServ
 
         return paymentGatewayProfile;
     }
+
+    public async Task<ReceiptRequest> RepayAsync(long receiptRequestId, string? gatewayProviderCode, long? gatewayProviderId,
+        string? defaultGatewayProviderCode, CancellationToken cancellationToken)
+    {
+        var receiptRequest = await _receiptRequestRepository.GetByIdAsync(receiptRequestId, cancellationToken);
+
+        if (receiptRequest is null)
+        {
+            throw new InvalidPaymentException();
+        }
+
+        var paymentGatewayProvider = await GetPaymentGatewayProvider(gatewayProviderId,
+            gatewayProviderCode, defaultGatewayProviderCode);
+
+        var gatewayProvider = new ReceiptRequestGatewayProviderParameters
+        {
+            Id = paymentGatewayProvider.Id,
+            Enabled = paymentGatewayProvider.Enabled,
+            MinimumAmount = paymentGatewayProvider.MinimumAmount,
+            MaximumAmount = paymentGatewayProvider.MaximumAmount,
+        };
+
+        receiptRequest.AddNewGatewayPayment(gatewayProvider, _idGenerator);
+
+        return receiptRequest;
+    }
 }

@@ -1,7 +1,7 @@
-﻿using Honamic.PayMaster.Application.ReceiptRequests.Queries; 
+﻿using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 using Honamic.PayMaster.Wrapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages; 
+using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace WebSample.Pages.Recharge
 {
     public class ResultModel : PageModel
@@ -17,7 +17,7 @@ namespace WebSample.Pages.Recharge
         }
 
         [FromRoute()]
-        public long ReceiptRequestId { get; set; } 
+        public long ReceiptRequestId { get; set; }
 
 
         public async Task OnGet(CancellationToken cancellationToken)
@@ -29,6 +29,13 @@ namespace WebSample.Pages.Recharge
 
 
             Receipt = result.Data;
+
+            if (Receipt is not null)
+            {
+                Receipt.GatewayPayments = Receipt.GatewayPayments.OrderByDescending(g => g.RedirectAt).ToList();
+            }
+
+
             Message = result.Messages.FirstOrDefault()?.Message;
 
             if (Receipt is null && Message is null)
@@ -37,6 +44,6 @@ namespace WebSample.Pages.Recharge
             }
 
         }
-         
+
     }
 }
