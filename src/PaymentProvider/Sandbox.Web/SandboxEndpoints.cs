@@ -1,8 +1,10 @@
 ﻿using Honamic.PayMaster.PaymentProvider.Sandbox.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Globalization;
 
 namespace Honamic.PayMaster.PaymentProvider.Sandbox.Web;
 
@@ -48,19 +50,30 @@ public static class SandboxEndpoints
     public static string AddParametersToUrl(this string baseUrl, SanboxCallBackDataModel dataModel)
     {
         var uriBuilder = new UriBuilder(baseUrl);
-        var query = QueryHelpers.ParseQuery(uriBuilder.Query);
 
-        query[nameof(dataModel.Status)] = dataModel.Status;
-        query[nameof(dataModel.Amount)] = dataModel.Amount.ToString();
-        query[nameof(dataModel.Currency)] = dataModel.Currency;
-        query[nameof(dataModel.Token)] = dataModel.Token;
-        query[nameof(dataModel.PayId)] = dataModel.PayId;
-        query[nameof(dataModel.PayRequestId)] = dataModel.PayRequestId;
-        query[nameof(dataModel.TrackingNumber)] = dataModel.TrackingNumber;
-        query[nameof(dataModel.Pan)] = dataModel.Pan;
+        var parsed = QueryHelpers.ParseQuery(uriBuilder.Query); 
 
-        uriBuilder.Query = query.ToString();
+        var qb = new QueryBuilder(
+            parsed.SelectMany(kvp => kvp.Value, (kvp, val) =>
+                new KeyValuePair<string, string>(kvp.Key, val ?? string.Empty))
+        );
 
-        return uriBuilder.ToString();
+        if(dataModel is null )
+            throw new Exception("dataModel is null");
+
+        qb.Add(nameof(dataModel.Status), dataModel.Status!);
+        qb.Add(nameof(dataModel.Amount), dataModel.Amount.ToString(CultureInfo.InvariantCulture));
+        qb.Add(nameof(dataModel.Currency), dataModel.Currency);
+        qb.Add(nameof(dataModel.Token), dataModel.Token);
+        qb.Add(nameof(dataModel.PayId), dataModel.PayId);
+        qb.Add(nameof(dataModel.PayRequestId), dataModel.PayRequestId);
+        
+        qb.Add(nameof(dataModel.TrackingNumber), dataModel.TrackingNumber ?? string.Empty);
+        qb.Add(nameof(dataModel.Pan), dataModel.Pan ?? string.Empty);
+
+         uriBuilder.Query = qb.ToQueryString().Value.TrimStart('?');
+
+        return uriBuilder.Uri.ToString();
+
     }
 }

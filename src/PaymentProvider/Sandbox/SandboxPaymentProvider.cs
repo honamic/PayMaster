@@ -3,6 +3,7 @@ using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.ReceiptRequests;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.Json;
 
@@ -25,7 +26,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         {
             PayId = createResult.CreateReference,
             Amount = (long)createRequest.Amount,
-            Token = HashCode(CreateToken(createRequest.Amount, createRequest.Currency)),
+            Token = CreateToken(createRequest.Amount, createRequest.Currency),
             Currency = createRequest.Currency,
             CallbackUrl = createRequest.CallbackUrl,
             GatewayNote = createRequest.GatewayNote ?? string.Empty,
@@ -147,7 +148,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
 
     private static string CreateToken(decimal amount, string currency)
     {
-        return HashCode($"{amount}|{currency}");
+        return HashCode($"{amount.ToString("0.00", CultureInfo.InvariantCulture)}|{currency}");
     }
 
     private static string HashCode(string input)
