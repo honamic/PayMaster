@@ -23,9 +23,9 @@ public class PayMasterFacade : IPayMasterFacade
         return _commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(model, cancellationToken);
     }
 
-    public Task<Result<PayReceiptRequestCommandResult>> PayReceiptRequest(PayReceiptRequestCommand model, CancellationToken cancellationToken = default)
+    public Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand model, CancellationToken cancellationToken = default)
     {
-        return _commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(model, cancellationToken);
+        return _commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(model, cancellationToken);
     }
 
     public Task<Result<GetPublicReceiptRequestQueryResult?>> GetPublicReceiptRequest(GetPublicReceiptRequestQuery query, CancellationToken cancellationToken)

@@ -17,13 +17,13 @@ public static class ReceiptRequestsEndpoints
         var payGroup = app.MapGroup(prefixRoute)
              .WithTags("PayMaster");
 
-        payGroup.MapGet("pay", async (HttpContext context,
+        payGroup.MapGet("InitiatePay", async (HttpContext context,
           IServiceProvider services,
           [FromServices] ICommandBus commandBus,
-          [AsParameters] PayReceiptRequestCommand model,
+          [AsParameters] InitiatePayReceiptRequestCommand model,
           CancellationToken cancellationToken) =>
         {
-            var paycommandResult = await commandBus.DispatchAsync<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>(model, cancellationToken);
+            var paycommandResult = await commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(model, cancellationToken);
 
             if (paycommandResult.IsSuccess)
             {

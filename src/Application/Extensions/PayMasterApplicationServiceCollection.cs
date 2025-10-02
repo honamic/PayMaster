@@ -39,9 +39,9 @@ public static class PayMasterApplicationServiceCollection
             CreateReceiptRequestCommandHandler,
             Result<CreateReceiptRequestCommandResult>>();
 
-        services.AddCommandHandler<PayReceiptRequestCommand,
-            PayReceiptRequestCommandHandler,
-            Result<PayReceiptRequestCommandResult>>();
+        services.AddCommandHandler<InitiatePayReceiptRequestCommand,
+            InitiatePayReceiptRequestCommandHandler,
+            Result<InitiatePayReceiptRequestCommandResult>>();
 
         services.AddCommandHandler<CallBackGatewayPaymentCommand,
             CallBackGatewayPaymentCommandHandler,

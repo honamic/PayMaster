@@ -7,13 +7,13 @@ using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
-internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptRequestCommand, Result<PayReceiptRequestCommandResult>>
+internal class InitiatePayReceiptRequestCommandHandler : ICommandHandler<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>
 {
     private readonly IReceiptRequestRepository _receiptRequestRepository;
     private readonly IPaymentGatewayInitializationService _paymentGatewayInitializationService;
     private readonly IOptions<PayMasterOptions> _payMasterOptions;
 
-    public PayReceiptRequestCommandHandler(
+    public InitiatePayReceiptRequestCommandHandler(
         IReceiptRequestRepository receiptRequestRepository,
         IPaymentGatewayInitializationService paymentGatewayInitializationService,
         IOptions<PayMasterOptions> payMasterOptions)
@@ -23,9 +23,9 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
         _payMasterOptions = payMasterOptions;
     }
 
-    public async Task<Result<PayReceiptRequestCommandResult>> HandleAsync(PayReceiptRequestCommand command, CancellationToken cancellationToken)
+    public async Task<Result<InitiatePayReceiptRequestCommandResult>> HandleAsync(InitiatePayReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        var result = new Result<PayReceiptRequestCommandResult>();
+        var result = new Result<InitiatePayReceiptRequestCommandResult>();
 
         var receiptRequest = await _receiptRequestRepository.GetByIdAsync(command.GetReceiptRequestIdAsLong());
 
@@ -39,7 +39,7 @@ internal class PayReceiptRequestCommandHandler : ICommandHandler<PayReceiptReque
 
         if (createResult.Success)
         {
-            result.Data = new PayReceiptRequestCommandResult
+            result.Data = new InitiatePayReceiptRequestCommandResult
             {
                 ReceiptRequestId = receiptRequest.Id.ToString(CultureInfo.InvariantCulture),
                 PayParams = createResult.PayParams,

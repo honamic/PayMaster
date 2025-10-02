@@ -11,7 +11,7 @@ public static class PaymentEndpoints
     {
         var payGroup = app.MapGroup("sample");
 
-        payGroup.MapGet("sample/receipt/createAndPay/", async (
+        payGroup.MapGet("sample/receipt/createAndInitiatePay/", async (
             [FromServices] IPayMasterFacade payMasterFacade,
             [AsParameters] CreateReceiptRequestCommand model,
             CancellationToken cancellationToken) =>
@@ -23,12 +23,12 @@ public static class PaymentEndpoints
                 return Results.BadRequest(createResult);
             }
 
-            var paycommand = new PayReceiptRequestCommand
+            var paycommand = new InitiatePayReceiptRequestCommand
             {
                 ReceiptRequestId = createResult.Data!.Id,
             };
 
-            var paycommandResult = await payMasterFacade.PayReceiptRequest(paycommand, cancellationToken);
+            var paycommandResult = await payMasterFacade.InitiatePayReceiptRequest(paycommand, cancellationToken);
 
             if (paycommandResult.IsSuccess)
             {

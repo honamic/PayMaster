@@ -50,12 +50,12 @@ public class RechargeModel : PageModel
             return await ShowPage(cancellationToken);
         }
 
-        var paycommand = new PayReceiptRequestCommand
+        var paycommand = new InitiatePayReceiptRequestCommand
         {
             ReceiptRequestId = createResult.Data!.Id,
         };
 
-        var paycommandResult = await PayMasterFacade.PayReceiptRequest(paycommand, cancellationToken);
+        var paycommandResult = await PayMasterFacade.InitiatePayReceiptRequest(paycommand, cancellationToken);
 
         if (paycommandResult.IsSuccessWithData)
         {

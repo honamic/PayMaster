@@ -3,7 +3,8 @@ using Honamic.Framework.Commands;
 using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;
-public class PayReceiptRequestCommand : ICommand<Result<PayReceiptRequestCommandResult>>
+
+public class InitiatePayReceiptRequestCommand : ICommand<Result<InitiatePayReceiptRequestCommandResult>>
 {
     public required string ReceiptRequestId { get; set; }
 
@@ -13,7 +14,7 @@ public class PayReceiptRequestCommand : ICommand<Result<PayReceiptRequestCommand
     }
 }
 
-public class PayReceiptRequestCommandResult
+public class InitiatePayReceiptRequestCommandResult
 {
     public required string ReceiptRequestId { get; set; }
 

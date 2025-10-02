@@ -11,7 +11,7 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="card-title> mb-0">نتیجه پرداخت</h4>
+                    <h4 class="card-title mb-0">نتیجه پرداخت</h4>
                 </div>
                 @if (Model.Receipt is null)
                 {
@@ -32,6 +32,11 @@
                         {
                             <div class="alert alert-danger" role="alert">
                                 <h5 class="alert-heading">پرداخت ناموفق!</h5>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/repay/@Model.Receipt.Id" class="btn btn-primary">
+                                    <i class="bi bi-arrow-repeat me-2"></i>پرداخت مجدد
+                                </a>
                             </div>
                         }
                         <hr />
