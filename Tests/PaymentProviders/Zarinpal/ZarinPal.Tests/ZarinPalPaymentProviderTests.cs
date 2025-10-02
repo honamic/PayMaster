@@ -47,6 +47,7 @@ public partial class ZarinPalPaymentProviderTests
         var request = new CreateRequest
         {
             Amount = 10000,
+            Currency = "IRR",
             CallbackUrl = "https://callback.com",
             UniqueRequestId = 1,
             GatewayNote = "test",
@@ -112,19 +113,19 @@ public partial class ZarinPalPaymentProviderTests
             MerchantId = "test-merchant"
         };
 
-        var callbackData = new CallBackDataModel 
-        { 
-            Authority = "AUTH123", 
-            Status = "OK" 
+        var callbackData = new CallBackDataModel
+        {
+            Authority = "AUTH123",
+            Status = "OK"
         };
 
         var successResponse = new ZarinPalResult<PaymentVerificationResponse>
         {
-            data = new PaymentVerificationResponse 
-            { 
-                code = 100, 
-                ref_id = 987654321, 
-                card_pan = "1234-****-****-5678" 
+            data = new PaymentVerificationResponse
+            {
+                code = 100,
+                ref_id = 987654321,
+                card_pan = "1234-****-****-5678"
             }
         };
 
@@ -166,16 +167,16 @@ public partial class ZarinPalPaymentProviderTests
             MerchantId = "test-merchant"
         };
 
-        var callbackData = new CallBackDataModel 
-        { 
-            Authority = "AUTH123", 
-            Status = "OK" 
+        var callbackData = new CallBackDataModel
+        {
+            Authority = "AUTH123",
+            Status = "OK"
         };
 
         var failedResponse = new ZarinPalResult<PaymentVerificationResponse>
         {
-            data = new PaymentVerificationResponse 
-            { 
+            data = new PaymentVerificationResponse
+            {
                 code = -51 // failed payment code
             }
         };
@@ -217,10 +218,10 @@ public partial class ZarinPalPaymentProviderTests
             MerchantId = "test-merchant"
         };
 
-        var callbackData = new CallBackDataModel 
-        { 
+        var callbackData = new CallBackDataModel
+        {
             Authority = "WRONG_AUTH", // This doesn't match the request's CreateReference
-            Status = "OK" 
+            Status = "OK"
         };
 
         var provider = new ZarinPalPaymentProvider(_httpClientFactoryMock.Object, _loggerMock.Object);
@@ -256,10 +257,10 @@ public partial class ZarinPalPaymentProviderTests
             MerchantId = "test-merchant"
         };
 
-        var callbackData = new CallBackDataModel 
-        { 
-            Authority = "AUTH123", 
-            Status = "OK" 
+        var callbackData = new CallBackDataModel
+        {
+            Authority = "AUTH123",
+            Status = "OK"
         };
 
         // Setup HttpClient to throw exception

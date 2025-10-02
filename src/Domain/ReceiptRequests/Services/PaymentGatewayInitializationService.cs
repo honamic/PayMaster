@@ -1,10 +1,10 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
-using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions; 
+using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Models;
 using Honamic.PayMaster.ReceiptRequests;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 
 namespace Honamic.PayMaster.Domain.ReceiptRequests.Services;
 
@@ -24,7 +24,7 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
         _repository = repository;
         _factory = factory;
         _clock = clock;
-        _logger = logger; 
+        _logger = logger;
     }
 
     public async Task<PaymentInitializationResult> InitializePaymentAsync(ReceiptRequest receiptRequest, string CallBackUrl)
@@ -66,6 +66,10 @@ public class PaymentGatewayInitializationService : IPaymentGatewayInitialization
             Currency = gatewayPayment.Currency,
             UniqueRequestId = gatewayPayment.Id,
             CallbackUrl = callbackUrl,
+            Email = receiptRequest.Email,
+            MobileNumber = receiptRequest.Mobile,
+            NationalityCode = receiptRequest.NationalityCode,
+            GatewayNote = null,
         });
 
         tryLog.SetSuccess(createResult.Success, createResult.LogData);

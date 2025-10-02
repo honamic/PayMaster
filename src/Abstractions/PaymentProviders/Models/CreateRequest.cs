@@ -7,14 +7,14 @@ public class CreateRequest
     public required string CallbackUrl { get; set; }
 
     public required long UniqueRequestId { get; set; }
+   
+    public required string Currency { get; set; }
 
     public string? MobileNumber { get; set; }
 
     public string? NationalityCode { get; set; }
 
     public string? Email { get; set; }
-
-    public string? Currency { get; set; }
 
     public string? GatewayNote { get; set; }
 }

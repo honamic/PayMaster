@@ -3,9 +3,16 @@
 namespace Honamic.PayMaster.PaymentProvider.Sandbox.Web.Extensions;
 public static class WebApplicationExtensions
 {
-    public static WebApplication UseSandboxPayEndpoints(this WebApplication app, string sandboxPath = "/paymaster/sandbox/pay")
+    public const string DefaultSandboxPath = "/paymaster/sandbox/pay";
+    public static WebApplication UseSandboxPayEndpoints(this WebApplication app, string sandboxPath = DefaultSandboxPath)
     {
-        SandboxEndpoints.MapSandboxPayEndpoints(app, sandboxPath);
+        app.MapRazorPages();
+
+        if (sandboxPath != DefaultSandboxPath)
+        {
+            app.MapFallbackToPage(DefaultSandboxPath, sandboxPath);
+        }
+
         return app;
     }
 }

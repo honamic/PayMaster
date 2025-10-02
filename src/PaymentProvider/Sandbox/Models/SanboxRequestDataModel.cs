@@ -10,9 +10,11 @@ public class SanboxRequestDataModel
 
     public required string Token { get; set; }
 
-    public required string GatewayNote { get;  set; }
-
     public required string CallbackUrl { get;  set; }
 
     public required string UniqueRequestId { get;  set; }
+
+    public string? GatewayNote { get; set; }
+    
+    public string? MerchantName { get; set; }
 }

@@ -10,10 +10,13 @@ public class SandboxConfigurations : IPaymentGatewayProviderConfiguration
     }
 
     public string PayUrl { get; set; }
+   
+    public string MerchantName { get; set; }
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {
         PayUrl = "https://yoursite.com/paymaster/sandbox/pay";
+        MerchantName = "نام پذیرنده محیط تست";
     }
 
     public List<string> GetValidationErrors()

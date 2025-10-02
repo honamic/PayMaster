@@ -1,0 +1,159 @@
+﻿@page "/paymaster/sandbox/pay"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Honamic.PayMaster.PaymentProvider.Sandbox.Web.Pages.SandboxPayModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>درگاه پرداخت تستی</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .payment-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .amount {
+            font-size: 2rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            color: #666;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="header">
+            <h1>درگاه پرداخت تست</h1>
+        </div>
+
+        <div class="info-row">
+            <span class="label">پذیرنده:</span>
+            <span class="value">@(Model.MarchanetName())</span>
+        </div>
+
+        <div class="amount">
+            @Model.Request.Amount.ToString("#,##0") @Model.Request.Currency
+        </div>
+
+        <div class="info-row">
+            <span class="label">شناسه پرداخت:</span>
+            <span class="value">@Model.Request.PayId</span>
+        </div>
+
+        <div class="info-row">
+            <span class="label">شناسه یکتا:</span>
+            <span class="value">@Model.Request.UniqueRequestId</span>
+        </div>
+
+        <div class="buttons">
+            <form method="post" asp-page-handler="Success">
+                <input type="hidden" asp-for="Request.Amount" />
+                <input type="hidden" asp-for="Request.Currency" />
+                <input type="hidden" asp-for="Request.PayId" />
+                <input type="hidden" asp-for="Request.Token" />
+                <input type="hidden" asp-for="Request.CallbackUrl" />
+                <input type="hidden" asp-for="Request.UniqueRequestId" />
+                <input type="hidden" asp-for="Request.GatewayNote" />
+                <button type="submit" class="btn btn-success">پرداخت</button>
+            </form>
+
+            <form method="post" asp-page-handler="Cancel">
+                <input type="hidden" asp-for="Request.Amount" />
+                <input type="hidden" asp-for="Request.Currency" />
+                <input type="hidden" asp-for="Request.PayId" />
+                <input type="hidden" asp-for="Request.Token" />
+                <input type="hidden" asp-for="Request.CallbackUrl" />
+                <input type="hidden" asp-for="Request.UniqueRequestId" />
+                <input type="hidden" asp-for="Request.GatewayNote" />
+                <button type="submit" class="btn btn-danger">انصراف</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

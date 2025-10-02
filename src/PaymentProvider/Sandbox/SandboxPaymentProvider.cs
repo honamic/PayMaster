@@ -26,11 +26,12 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         {
             PayId = createResult.CreateReference,
             Amount = (long)createRequest.Amount,
-            Token = CreateToken(createRequest.Amount, createRequest.Currency),
+            Token = CreateToken(createRequest.Amount, createRequest.UniqueRequestId),
             Currency = createRequest.Currency,
             CallbackUrl = createRequest.CallbackUrl,
-            GatewayNote = createRequest.GatewayNote ?? string.Empty,
             UniqueRequestId = createRequest.UniqueRequestId.ToString(),
+            GatewayNote = createRequest.GatewayNote ?? string.Empty,
+            MerchantName = Configurations.MerchantName ?? string.Empty
         };
 
         createResult.PayParams.Add("payId", createSandboxRequest.PayId);
@@ -39,6 +40,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         createResult.PayParams.Add("currency", createSandboxRequest.Currency ?? string.Empty);
         createResult.PayParams.Add("callbackUrl", createSandboxRequest.CallbackUrl);
         createResult.PayParams.Add("GatewayNote", createSandboxRequest.GatewayNote ?? "");
+        createResult.PayParams.Add("MerchantName", createSandboxRequest.MerchantName ?? "");
         createResult.PayParams.Add("uniqueRequestId", createSandboxRequest.UniqueRequestId);
 
         createResult.LogData.Start(createSandboxRequest, "");
@@ -92,13 +94,13 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         {
             var callbackData = (SanboxCallBackDataModel?)request.CallBackData;
 
-            if (callbackData.Status != "OK")
+            if (callbackData?.Status != "OK")
             {
                 result.PaymentFailedReason = PaymentGatewayFailedReason.Canceled;
                 return Task.FromResult(result);
             }
 
-            if (callbackData.Amount == null || callbackData.Amount <= 0)
+            if (callbackData?.Amount == null || callbackData.Amount <= 0)
             {
                 result.PaymentFailedReason = PaymentGatewayFailedReason.InternalVerify;
                 result.StatusDescription = "callback data not valid";
@@ -114,7 +116,7 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
 
             result.VerifyLogData.Start(callbackData, "");
 
-            var VerifyResult = CreateToken(callbackData.Amount, callbackData.Currency);
+            var VerifyResult = CreateToken(callbackData.Amount, request.PaymentInfo.UniqueRequestId);
 
             result.VerifyLogData.SetResponse(new { VerifyResult });
 
@@ -146,9 +148,9 @@ public class SandboxPaymentProvider(ILogger<SandboxPaymentProvider> logger) : Pa
         return Task.FromResult(result);
     }
 
-    private static string CreateToken(decimal amount, string currency)
+    private static string CreateToken(decimal amount, long uniqueRequestId)
     {
-        return HashCode($"{amount.ToString("0.00", CultureInfo.InvariantCulture)}|{currency}");
+        return HashCode($"{uniqueRequestId.ToString(CultureInfo.InvariantCulture)}|{amount.ToString("0.00", CultureInfo.InvariantCulture)}");
     }
 
     private static string HashCode(string input)
