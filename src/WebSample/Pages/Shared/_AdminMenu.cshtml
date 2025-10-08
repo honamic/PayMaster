@@ -14,7 +14,7 @@
             <h5>پرداخت</h5>
             <ul class="nav flex-column">
                 <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">خانه</a></li>
-                <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">پرداخت</a></li>
+                <li class="nav-item mb-2"><a href="/charge" class="nav-link p-0 text-muted">پرداخت</a></li>
                 <li class="nav-item mb-2"><a href="/tracking" class="nav-link p-0 text-muted">پیگیری پرداخت</a></li>
             </ul>
         </div>
@@ -22,13 +22,15 @@
         <div class="col">
             <h5>مدیریت</h5>
             <ul class="nav flex-column">
-                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">مدیریت قبض ها</a></li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link @(Context.Request.Path.Value!.Contains("/PaymentGateways") ? "active" : "")" asp-page="/PaymentGateways/Index">مدیریت درگاه‌ها</a>
+@*                 <li class="nav-item mb-2"><a href="/ReceiptRequests" class="nav-link p-0 text-muted">مدیریت قبض ها</a></li>
+ *@                <li class="nav-item mb-2">
+                    <a class="nav-link p-0 text-muted @(Context.Request.Path.Value!.Contains("/PaymentGateways") ? "active" : "")"
+                    asp-page="/PaymentGateways/Index">مدیریت درگاه‌ها</a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link @(Context.Request.Path.Value!.Contains("/Issuers") ? "active" : "")" asp-page="/Issuers/Index">مدیریت صادرکننده‌ها</a>
-                </li>
+  @*               <li class="nav-item mb-2">
+                    <a class="nav-link p-0 text-muted @(Context.Request.Path.Value!.Contains("/Issuers") ? "active" : "")"
+                    asp-page="/Issuers/Index">مدیریت صادرکننده‌ها</a>
+                </li> *@
             </ul>
         </div>
 
