@@ -3,8 +3,11 @@ using Honamic.Framework.Commands;
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.Commands;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
+using Honamic.PayMaster.Application.PaymentGatewayProviders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading;
 
 public class EditModel : PageModel
 {
@@ -21,6 +24,7 @@ public class EditModel : PageModel
 
     [BindProperty]
     public UpdatePaymentGatewayProfileCommand? Input { get; set; }
+    public List<SelectListItem> PaymentGatewayProviders { get; set; }
 
     public async Task<IActionResult> OnGetAsync(long id, CancellationToken cancellationToken)
     {
@@ -57,22 +61,47 @@ public class EditModel : PageModel
             Error = result.Messages.FirstOrDefault()?.Message ?? "خطایی رخ داده است.";
         }
 
+        await LoadPaymentGatewayProviders(cancellationToken);
+
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
-        if (Input is null && !ModelState.IsValid)
+        if (Input is null && !ModelState.IsValid) {
+            await LoadPaymentGatewayProviders(cancellationToken);
             return Page();
+        }
 
         var updateResult = await _commandBus.DispatchAsync<UpdatePaymentGatewayProfileCommand, Result<UpdatePaymentGatewayProfileCommandResult>>(Input!, cancellationToken);
 
         if (!updateResult.IsSuccess)
         {
             Error = updateResult.Messages.FirstOrDefault()?.Message ?? "خطایی رخ داده است.";
+            await LoadPaymentGatewayProviders(cancellationToken);
             return Page();
         }
 
         return RedirectToPage("Index");
     }
+
+
+    private async Task LoadPaymentGatewayProviders(CancellationToken cancellationToken)
+    {
+        var query = new GetAllLoaddedPaymentGatewayProvidersQuery();
+
+        var providersResult = await _queryBus.Dispatch(query, cancellationToken);
+
+        if (providersResult.IsSuccessWithData)
+        {
+            PaymentGatewayProviders = providersResult.Data
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.ProviderType,
+                        Text = p.DisplayName
+                    })
+                    .ToList();
+        }
+    }
+
 }

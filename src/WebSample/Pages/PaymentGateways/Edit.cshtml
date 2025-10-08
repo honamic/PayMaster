@@ -28,7 +28,9 @@
     </div>
     <div class="mb-3">
         <label asp-for="Input.ProviderType" class="form-label"></label>
-        <input asp-for="Input.ProviderType" class="form-control" />
+        <select asp-for="Input.ProviderType" asp-items="Model.PaymentGatewayProviders"  class="form-select" disabled>
+            <option value="">-- لطفاً درگاه بانکی را مشخص کنید --</option>
+        </select>
         <span asp-validation-for="Input.ProviderType" class="text-danger"></span>
     </div>
     <div class="mb-3">
