@@ -1,0 +1,64 @@
+﻿@page "/payment-gateways/edit/{id:long}"
+@model EditModel
+@{
+    ViewData["Title"] = "ویرایش درگاه پرداخت";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+
+
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger">@Model.Error</div>
+    }
+
+
+    <input type="hidden" asp-for="Input.Id" />
+    <div class="mb-3">
+        <label asp-for="Input.Title" class="form-label"></label>
+        <input asp-for="Input.Title" class="form-control" />
+        <span asp-validation-for="Input.Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Code" class="form-label"></label>
+        <input asp-for="Input.Code" class="form-control" />
+        <span asp-validation-for="Input.Code" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ProviderType" class="form-label"></label>
+        <input asp-for="Input.ProviderType" class="form-control" />
+        <span asp-validation-for="Input.ProviderType" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.LogoPath" class="form-label"></label>
+        <input asp-for="Input.LogoPath" class="form-control" />
+        <span asp-validation-for="Input.LogoPath" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.JsonConfigurations" class="form-label"></label>
+        <textarea asp-for="Input.JsonConfigurations" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Input.JsonConfigurations" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.MinimumAmount" class="form-label"></label>
+        <input asp-for="Input.MinimumAmount" class="form-control" type="number" />
+        <span asp-validation-for="Input.MinimumAmount" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.MaximumAmount" class="form-label"></label>
+        <input asp-for="Input.MaximumAmount" class="form-control" type="number" />
+        <span asp-validation-for="Input.MaximumAmount" class="text-danger"></span>
+    </div>
+    <div class="mb-3 form-check">
+        <input asp-for="Input.Enabled" class="form-check-input" type="checkbox" />
+        <label asp-for="Input.Enabled" class="form-check-label"></label>
+    </div>
+    <button type="submit" class="btn btn-primary">ذخیره</button>
+    <a asp-page="Index" class="btn btn-secondary">بازگشت</a>
+</form>
+
+@section Scripts {
+    @* @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+}

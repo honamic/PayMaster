@@ -1,0 +1,43 @@
+﻿@page "/payment-gateways/"
+@model IndexModel
+@{
+    ViewData["Title"] = "درگاه‌های پرداخت";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-page="Create" class="btn btn-success mb-3">افزودن درگاه جدید</a>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="alert alert-danger">@Model.Error</div>
+}
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>کد</th>
+            <th>عنوان</th>
+            <th>فعال</th>
+            <th>حداقل مبلغ</th>
+            <th>حداکثر مبلغ</th>
+            <th>عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Profiles)
+    {
+        <tr>
+            <td>@item.Code</td>
+            <td>@item.Title</td>
+            <td>@(item.Enabled ? "بله" : "خیر")</td>
+            <td>@item.MinimumAmount</td>
+            <td>@item.MaximumAmount</td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">ویرایش</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
