@@ -1,6 +1,6 @@
 ﻿using Honamic.Framework.Applications.Results;
 using Honamic.Framework.Queries;
-using Honamic.PayMaster.Application.PaymentGatewayProviders;
+using Honamic.PayMaster.Application.PaymentGatewayProviders.Queries;
 using Honamic.PayMaster.Extensions;
 
 namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.QueryHandlers;

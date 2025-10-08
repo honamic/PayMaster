@@ -1,7 +1,7 @@
 ﻿using Honamic.Framework.Applications.Results;
 using Honamic.Framework.Queries;
 
-namespace Honamic.PayMaster.Application.PaymentGatewayProviders;
+namespace Honamic.PayMaster.Application.PaymentGatewayProviders.Queries;
 
 public class GetAllLoaddedPaymentGatewayProvidersQuery : IQuery<Result<List<GetAllLoaddedPaymentGatewayProvidersQueryResult>>>
 {

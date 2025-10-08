@@ -8,6 +8,8 @@ public interface IPaymentGatewayProvider
 
     ValidationConfigurationResult ValidationConfiguration(string providerJsonConfiguration);
 
+    string GetDefaultJsonConfigurations(bool sandbox = false);
+
     public Task<CreateResult> CreateAsync(CreateRequest request);
 
     public ExtractCallBackDataResult ExtractCallBackData(string callBackJsonValue);

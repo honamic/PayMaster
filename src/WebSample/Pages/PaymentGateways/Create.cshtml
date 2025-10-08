@@ -11,7 +11,7 @@
     {
         <div class="alert alert-danger">@Model.ErrorMessage</div>
     }
- 
+
     <form method="post">
         <div class="mb-3">
             <label asp-for="Input.Title" class="form-label">عنوان</label>
@@ -27,7 +27,7 @@
 
         <div class="mb-3">
             <label asp-for="Input.ProviderType" class="form-label">نوع درگاه آن لاین</label>
-            <select asp-for="Input.ProviderType" asp-items="Model.PaymentGatewayProviders" class="form-select">
+            <select asp-for="Input.ProviderType" asp-items="Model.PaymentGatewayProviders" class="form-select" id="providerTypeSelect">
                 <option value="">-- لطفاً درگاه بانکی را مشخص کنید --</option>
             </select>
             <span asp-validation-for="Input.ProviderType" class="text-danger"></span>
@@ -41,7 +41,7 @@
 
         <div class="mb-3">
             <label asp-for="Input.JsonConfigurations" class="form-label">تنظیمات (JSON)</label>
-            <textarea asp-for="Input.JsonConfigurations" class="form-control" rows="5"></textarea>
+            <textarea dir="ltr" asp-for="Input.JsonConfigurations" class="form-control" rows="7" id="jsonConfigTextarea"></textarea>
             <span asp-validation-for="Input.JsonConfigurations" class="text-danger"></span>
         </div>
 
@@ -71,4 +71,42 @@
 
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const providerSelect = document.getElementById("providerTypeSelect");
+            const jsonTextarea = document.getElementById("jsonConfigTextarea");
+
+            providerSelect.addEventListener("change", function () {
+                const selectedValue = this.value;
+
+                if (!selectedValue) {
+                    jsonTextarea.value = "";
+                    return;
+                }
+                fetch(`/api/management/paymaster/payment-gateway-providers/default-configuration-by-provider-type?ProviderType=${selectedValue}&SandBox=false`)
+                    .then(response => {
+                        if (!response.ok)
+                            throw new Error("خطا در دریافت تنظیمات");
+
+                            debugger;
+
+                        return response.json();
+                    })
+                    .then(result  => {
+                        const config = result?.data?.configuration;
+                        if (config) {
+                            const parsed = JSON.parse(config);
+                            jsonTextarea.value =JSON.stringify(parsed,null,2);
+                        } else {
+                            jsonTextarea.value = "// تنظیمات یافت نشد " + result ;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("خطا:", error);
+                        jsonTextarea.value = "// دریافت تنظیمات با خطا مواجه شد " +error;
+                    });
+            });
+        });
+    </script>
 }
