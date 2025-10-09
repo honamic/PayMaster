@@ -16,7 +16,7 @@ public class GetDefaultConfigurationByProviderTypeQueryHandler :
     }
     public Task<Result<GetDefaultConfigurationByProviderTypeQueryResult>> HandleAsync(GetDefaultConfigurationByProviderTypeQuery query, CancellationToken cancellationToken)
     {
-        var provider = _paymentGatewayProviderFactory.Create(query.ProviderType, "{}");
+        var provider = _paymentGatewayProviderFactory.CreateByDefaultConfiguration(query.ProviderType);
 
         var result = new GetDefaultConfigurationByProviderTypeQueryResult
         {

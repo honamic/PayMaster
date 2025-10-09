@@ -27,6 +27,22 @@ public class PaymentGatewayProviderFactory : IPaymentGatewayProviderFactory
         return provider;
     }
 
+    public IPaymentGatewayProvider CreateByDefaultConfiguration(string ProviderType)
+    {
+        var provider = _services.GetRequiredKeyedService<IPaymentGatewayProvider>(ProviderType);
+
+        if (provider is null)
+        {
+            throw new PaymentProviderNotFoundException($"Payment provider '{ProviderType}' not found.");
+        }
+
+        var defaultConfiguration = provider.GetDefaultJsonConfigurations();
+
+        provider.ParseConfiguration(defaultConfiguration);
+
+        return provider;
+    }
+
     public List<KeyValuePair<string, string>> Providers()
     {
         return GatewayPaymentProviderServiceCollectionExtensions.Providers;

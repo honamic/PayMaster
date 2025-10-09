@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.PaymentGatewayProfiles;
 
-internal class PaymentGatewayProfileRepository 
+internal class PaymentGatewayProfileRepository
     : RepositoryBase<PaymentGatewayProfile, long>
     , IPaymentGatewayProfileRepository
 {
@@ -24,6 +24,14 @@ internal class PaymentGatewayProfileRepository
     public Task<PaymentGatewayProfile?> GetByIdAsync(long id)
     {
         return GetAsync(c => c.Id == id);
+    }
+    public Task<bool> ExistsByCodeAsync(string code, long? currentId)
+    {
+        if (currentId.HasValue)
+            return IsExistsAsync(c => c.Code == code && c.Id != currentId.Value);
+        else
+            return IsExistsAsync(c => c.Code == code);
+
     }
 
     protected override IList<Expression<Func<PaymentGatewayProfile, object?>>> GetIncludes()

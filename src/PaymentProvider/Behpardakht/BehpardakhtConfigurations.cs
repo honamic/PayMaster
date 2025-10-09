@@ -6,18 +6,18 @@ public class BehpardakhtConfigurations : IPaymentGatewayProviderConfiguration
 {
     public BehpardakhtConfigurations()
     {
-        SetDefaultConfiguration();
+
     }
 
-    public long TerminalId { get; set; }
+    public long TerminalId { get; set; } = default!;
 
-    public string ApiAddress { get; set; }
+    public string ApiAddress { get; set; } = default!;
 
-    public string PayUrl { get; set; }
+    public string PayUrl { get; set; } = default!;
 
-    public string UserName { get; set; }
+    public string UserName { get; set; } = default!;
 
-    public string Password { get; set; }
+    public string Password { get; set; } = default!;
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {

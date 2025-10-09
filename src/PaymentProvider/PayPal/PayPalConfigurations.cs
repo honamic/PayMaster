@@ -6,17 +6,17 @@ public class PayPalConfigurations : IPaymentGatewayProviderConfiguration
 {
     public PayPalConfigurations()
     {
-        SetDefaultConfiguration();
+
     }
 
 
-    public string ApiAddress { get; set; }
+    public string ApiAddress { get; set; } = default!;
 
-    public string PayUrl { get; set; }
+    public string PayUrl { get; set; } = default!;
 
-    public string ClientId { get; set; }
+    public string ClientId { get; set; } = default!;
 
-    public string Secret { get; set; }
+    public string Secret { get; set; } = default!;
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {

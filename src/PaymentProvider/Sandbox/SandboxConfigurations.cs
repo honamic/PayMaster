@@ -6,12 +6,12 @@ public class SandboxConfigurations : IPaymentGatewayProviderConfiguration
 {
     public SandboxConfigurations()
     {
-        SetDefaultConfiguration();
+
     }
 
-    public string PayUrl { get; set; }
-   
-    public string MerchantName { get; set; }
+    public string PayUrl { get; set; } = default!;
+
+    public string MerchantName { get; set; } = default!;
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {

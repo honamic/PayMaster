@@ -6,14 +6,14 @@ public class ZarinPalConfigurations : IPaymentGatewayProviderConfiguration
 {
     public ZarinPalConfigurations()
     {
-        SetDefaultConfiguration();
+
     }
 
-    public string ApiAddress { get; set; }
+    public string ApiAddress { get; set; } = default!;
 
-    public string PayUrl { get; set; }
+    public string PayUrl { get; set; } = default!;
 
-    public string MerchantId { get; set; }
+    public string MerchantId { get; set; } = default!;
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {

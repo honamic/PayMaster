@@ -7,18 +7,18 @@ public class DigipayConfigurations : IPaymentGatewayProviderConfiguration
 {
     public DigipayConfigurations()
     {
-        SetDefaultConfiguration();
+
     }
 
-    public string ApiAddress { get; set; }
+    public string ApiAddress { get; set; } = default!;
 
-    public string UserName { get; set; }
+    public string UserName { get; set; } = default!;
 
-    public string Password { get; set; }
+    public string Password { get; set; } = default!;
 
-    public string ClientId { get; set; }
+    public string ClientId { get; set; } = default!;
 
-    public string ClientSecret { get; set; }
+    public string ClientSecret { get; set; } = default!;
 
     public void SetDefaultConfiguration(bool sandbox = false)
     {

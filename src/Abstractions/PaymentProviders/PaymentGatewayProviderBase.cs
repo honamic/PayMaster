@@ -44,6 +44,7 @@ public abstract class PaymentGatewayProviderBase<TConfiguration> : IPaymentGatew
 
     public ValidationConfigurationResult ValidationConfiguration(string providerJsonConfiguration)
     {
+
         var configurations = JsonSerializer.Deserialize<TConfiguration>(providerJsonConfiguration, GetJsonSerializerOptions());
 
         if (configurations is null)
