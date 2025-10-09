@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Exceptions;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
@@ -15,7 +16,20 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithDisabledProvider_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProfile { Enabled = false };
+        
+        var createParameters = new CreatePaymentGatewayProfileParameters
+        {
+            Enabled = false,
+
+            Id = 1,
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
+        };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
+
         var parameters = new CreateGatewayPaymentParameters
         {
             Id = 123456,
@@ -39,11 +53,19 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithAmountBelowMinimum_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProfile
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
             Enabled = true,
-            MinimumAmount = 1000
+            MinimumAmount = 1000,
+
+            Id = 1,
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
         };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
 
         var parameters = new CreateGatewayPaymentParameters
         {
@@ -68,12 +90,19 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithValidParameters_CreatesEntity()
     {
         // Arrange
-        var provider = new PaymentGatewayProfile
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
             Enabled = true,
+            MinimumAmount = 1000,
+
             Id = 1,
-            MinimumAmount = 1000
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
         };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
 
         var parameters = new CreateGatewayPaymentParameters
         {
@@ -105,11 +134,19 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithAmountAboveMaximum_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProfile
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
             Enabled = true,
-            MaximumAmount = 10000
+            MaximumAmount = 10000,
+
+            Id = 1,
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
         };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
 
         var parameters = new CreateGatewayPaymentParameters
         {
@@ -299,7 +336,18 @@ public class ReceiptRequestGatewayPaymentTests
     public void Create_WithInvalidCurrency_ThrowsException()
     {
         // Arrange
-        var provider = new PaymentGatewayProfile { Enabled = true };
+        var createParameters = new CreatePaymentGatewayProfileParameters
+        {
+            Id = 1,
+            Enabled = true,
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
+        };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
+
         var parameters = new CreateGatewayPaymentParameters
         {
             Id = 123456,
@@ -334,11 +382,17 @@ public class ReceiptRequestGatewayPaymentTests
     // Helper method to create a valid payment for testing status changes
     private ReceiptRequestGatewayPayment CreateValidGatewayPayment(PaymentGatewayStatus? status = null)
     {
-        var provider = new PaymentGatewayProfile
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
+            Id = 1,
             Enabled = true,
-            Id = 1
+            Code = "Code",
+            JsonConfigurations = "{}",
+            ProviderType = "Type",
+            Title = "Title"
         };
+
+        var provider = PaymentGatewayProfile.Create(createParameters);
 
         var parameters = new CreateGatewayPaymentParameters
         {

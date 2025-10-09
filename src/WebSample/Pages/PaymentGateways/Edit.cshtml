@@ -32,6 +32,7 @@
             <option value="">-- لطفاً درگاه بانکی را مشخص کنید --</option>
         </select>
         <span asp-validation-for="Input.ProviderType" class="text-danger"></span>
+        <input type="hidden" asp-for="Input.ProviderType" />
     </div>
     <div class="mb-3">
         <label asp-for="Input.LogoPath" class="form-label"></label>
@@ -40,7 +41,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Input.JsonConfigurations" class="form-label"></label>
-        <textarea asp-for="Input.JsonConfigurations" class="form-control" rows="4"></textarea>
+        <textarea dir="ltr" asp-for="Input.JsonConfigurations" class="form-control" rows="4"></textarea>
         <span asp-validation-for="Input.JsonConfigurations" class="text-danger"></span>
     </div>
     <div class="mb-3">

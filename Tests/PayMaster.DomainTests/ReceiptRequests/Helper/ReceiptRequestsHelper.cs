@@ -1,5 +1,6 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Honamic.PayMaster.Domain.ReceiptRequests.Parameters;
 using Honamic.PayMaster.ReceiptRequests;
@@ -56,7 +57,7 @@ public static class ReceiptRequestsHelper
             SupportedCurrencies = ["IRR", "USD"],
             Issuer = new ReceiptRequestIssuerParameters
             {
-                Id = 1, 
+                Id = 1,
                 Enabled = true
             },
             GatewayProvider = new ReceiptRequestGatewayProviderParameters
@@ -71,7 +72,7 @@ public static class ReceiptRequestsHelper
 
     public static PaymentGatewayProfile CreateGatewayProfile()
     {
-        return new PaymentGatewayProfile
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
             Id = 789,
             Code = "sandbox",
@@ -82,5 +83,7 @@ public static class ReceiptRequestsHelper
             MinimumAmount = 1000,
             MaximumAmount = 50000000
         };
+
+        return PaymentGatewayProfile.Create(createParameters);
     }
 }

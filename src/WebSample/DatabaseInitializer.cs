@@ -1,4 +1,5 @@
-﻿using Honamic.PayMaster.Domain.PaymentGatewayProfiles; 
+﻿using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles.Parameters;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.PaymentProvider.Digipay;
@@ -24,7 +25,7 @@ internal static class DatabaseInitializer
                 {
                     Id = 100,
                     Code = "Default",
-                    CallbackUrl = "/result/{ReceiptRequestId}/{Status}",
+                    CallbackUrl = "/result/{ReceiptRequestId}",
                     Title = "صادر کننده پیش فرض",
                     Description = "تست",
                     Enabled = true,
@@ -43,7 +44,7 @@ internal static class DatabaseInitializer
                     PayUrl = "https://localhost:7777/paymaster/sandbox/pay",
                 };
 
-                sandboxProfile= new PaymentGatewayProfile
+                var sandboxProfileCreateParameters = new CreatePaymentGatewayProfileParameters
                 {
                     Id = 1000,
                     Code = "sandbox",
@@ -55,6 +56,8 @@ internal static class DatabaseInitializer
                     ProviderType = typeof(SandboxPaymentProvider).FullName,
                     LogoPath = null,
                 };
+
+                sandboxProfile = PaymentGatewayProfile.Create(sandboxProfileCreateParameters);
 
                 db.Set<PaymentGatewayProfile>().Add(sandboxProfile);
             }
@@ -69,7 +72,7 @@ internal static class DatabaseInitializer
                     MerchantId = "3614255c-8e1a-4729-90d8-92f4119a6489",
                 };
 
-                zainpalProfile= new PaymentGatewayProfile
+               var zainpalProfileCreateParameters = new CreatePaymentGatewayProfileParameters
                 {
                     Id = 1001,
                     Code = "Default",
@@ -81,6 +84,8 @@ internal static class DatabaseInitializer
                     ProviderType = typeof(ZarinPalPaymentProvider).FullName,
                     LogoPath = null,
                 };
+
+                zainpalProfile = PaymentGatewayProfile.Create(zainpalProfileCreateParameters);
 
                 db.Set<PaymentGatewayProfile>().Add(zainpalProfile);
             }
@@ -98,8 +103,8 @@ internal static class DatabaseInitializer
                     UserName = "YourUserName",
                 };
 
-                digipayProfile= new PaymentGatewayProfile
-                {
+               var digipayProfilecreateParameters = new CreatePaymentGatewayProfileParameters
+               {
                     Id = 1002,
                     Code = "digipay",
                     Title = "دیجی پی",
@@ -110,6 +115,8 @@ internal static class DatabaseInitializer
                     ProviderType = typeof(DigiPayPaymentProvider).FullName,
                     LogoPath = null,
                 };
+
+                digipayProfile = PaymentGatewayProfile.Create(digipayProfilecreateParameters);
 
                 db.Set<PaymentGatewayProfile>().Add(digipayProfile);
             }

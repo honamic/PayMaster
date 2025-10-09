@@ -1,5 +1,6 @@
 ﻿using Honamic.Framework.Domain;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
+using Honamic.PayMaster.Domain.PaymentGatewayProfiles.Parameters;
 using Honamic.PayMaster.Domain.ReceiptIssuers;
 using Honamic.PayMaster.Domain.ReceiptIssuers.Parameters;
 using Honamic.PayMaster.Domain.ReceiptRequests;
@@ -58,7 +59,9 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             CallbackUrl = "/payment/{ReceiptRequestId}/{Status}"
         });
 
-        var gatewayProvider = new PaymentGatewayProfile
+
+
+        var createParameters = new CreatePaymentGatewayProfileParameters
         {
             Id = 100,
             Code = "test",
@@ -68,6 +71,8 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             Enabled = true
         };
 
+        var gatewayProvider = PaymentGatewayProfile.Create(createParameters);
+         
         var extractResult = new ExtractCallBackDataResult
         {
             Success = true,

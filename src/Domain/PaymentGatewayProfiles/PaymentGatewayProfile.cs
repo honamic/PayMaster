@@ -2,7 +2,6 @@
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles.Parameters;
 using Honamic.PayMaster.PaymentProviders;
 using Honamic.PayMaster.PaymentProviders.Exceptions;
-using Honamic.PayMaster.PaymentProviders.Models;
 
 namespace Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 public class PaymentGatewayProfile : AggregateRoot<long>
@@ -13,27 +12,27 @@ public class PaymentGatewayProfile : AggregateRoot<long>
         ProviderType = "";
     }
 
-    public string Title { get; set; }
+    public string Title { get; private set; }
 
-    public string Code { get; set; }
+    public string Code { get; private set; }
 
-    public string ProviderType { get; set; }
+    public string ProviderType { get; private set; }
 
-    public string? LogoPath { get; set; }
+    public string? LogoPath { get; private set; }
 
-    public string JsonConfigurations { get; set; }
+    public string JsonConfigurations { get; private set; }
 
-    public bool Enabled { get; set; }
+    public bool Enabled { get; private set; }
 
-    public decimal? MinimumAmount { get; set; }
+    public decimal? MinimumAmount { get; private set; }
 
-    public decimal? MaximumAmount { get; set; }
+    public decimal? MaximumAmount { get; private set; }
 
     public static PaymentGatewayProfile CreateAndValidatProvider(CreatePaymentGatewayProfileParameters createParameters, IPaymentGatewayProviderFactory paymentGatewayProviderFactory)
     {
         IPaymentGatewayProvider provider = CreateProvider(createParameters.ProviderType, paymentGatewayProviderFactory);
 
-        ValidationConfiguration(createParameters, provider);
+        ValidationConfiguration(createParameters.JsonConfigurations, provider);
 
         return new PaymentGatewayProfile()
         {
@@ -49,13 +48,13 @@ public class PaymentGatewayProfile : AggregateRoot<long>
         };
     }
 
-    private static void ValidationConfiguration(CreatePaymentGatewayProfileParameters createParameters, IPaymentGatewayProvider provider)
+    private static void ValidationConfiguration(string jsonConfigurations, IPaymentGatewayProvider provider)
     {
         PaymentProviders.Models.ValidationConfigurationResult ValidationConfigurationResult;
 
         try
         {
-            ValidationConfigurationResult = provider.ValidationConfiguration(createParameters.JsonConfigurations);
+            ValidationConfigurationResult = provider.ValidationConfiguration(jsonConfigurations);
         }
         catch (Exception ex)
         {
@@ -101,4 +100,20 @@ public class PaymentGatewayProfile : AggregateRoot<long>
             Enabled = createParameters.Enabled,
         };
     }
+
+    public void UpdateAndValidate(UpdatePaymentGatewayProfileParameters updateParameters, IPaymentGatewayProviderFactory paymentGatewayProviderFactory)
+    {
+        var provider = CreateProvider(ProviderType, paymentGatewayProviderFactory);
+
+        ValidationConfiguration(updateParameters.JsonConfigurations, provider);
+
+        Title = updateParameters.Title;
+        Code = updateParameters.Code;
+        LogoPath = updateParameters.LogoPath;
+        MinimumAmount = updateParameters.MinimumAmount;
+        MaximumAmount = updateParameters.MaximumAmount;
+        JsonConfigurations = updateParameters.JsonConfigurations;
+        Enabled = updateParameters.Enabled;
+    }
+
 }
