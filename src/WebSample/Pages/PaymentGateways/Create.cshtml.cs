@@ -43,7 +43,7 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        var updateResult = await _commandBus.DispatchAsync<CreatePaymentGatewayProfileCommand, Result<CreatePaymentGatewayProfileCommandResult>>(Input!, cancellationToken);
+        var updateResult = await _commandBus.DispatchAsync(Input!, cancellationToken);
 
         if (!updateResult.IsSuccess)
         {
@@ -61,7 +61,7 @@ public class CreateModel : PageModel
     {
         var query = new GetAllLoaddedPaymentGatewayProvidersQuery();
 
-        var providersResult = await _queryBus.Dispatch(query, cancellationToken);
+        var providersResult = await _queryBus.DispatchAsync(query, cancellationToken);
 
         if (providersResult.IsSuccessWithData)
         {

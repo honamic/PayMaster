@@ -27,7 +27,7 @@ public static class ReceiptRequestsManagementApiEndpoints
                 [FromServices] IQueryBus queryBus,
                 CancellationToken cancellationToken) =>
             {
-                var result = await queryBus.Dispatch(filter, cancellationToken);
+                var result = await queryBus.DispatchAsync(filter, cancellationToken);
 
                 if (result.IsSuccess)
                 {

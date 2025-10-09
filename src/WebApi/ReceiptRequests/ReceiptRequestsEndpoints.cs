@@ -23,7 +23,7 @@ public static class ReceiptRequestsEndpoints
           [AsParameters] InitiatePayReceiptRequestCommand model,
           CancellationToken cancellationToken) =>
         {
-            var paycommandResult = await commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(model, cancellationToken);
+            var paycommandResult = await commandBus.DispatchAsync(model, cancellationToken);
 
             if (paycommandResult.IsSuccess)
             {
@@ -56,8 +56,7 @@ public static class ReceiptRequestsEndpoints
                 CallBackData = callBackData,
             };
 
-            var commandResult = await commandBus.DispatchAsync<CallBackGatewayPaymentCommand,
-                Result<CallBackGatewayPaymentCommandResult>>(command, cancellationToken);
+            var commandResult = await commandBus.DispatchAsync(command, cancellationToken);
 
             var IssuerCallbackUrl = commandResult?.Data?.IssuerCallbackUrl;
 

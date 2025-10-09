@@ -33,7 +33,7 @@ public class EditModel : PageModel
             Id = id
         };
 
-        var result = await _queryBus.Dispatch(query, cancellationToken);
+        var result = await _queryBus.DispatchAsync(query, cancellationToken);
 
         if (result.IsSuccessWithData)
         {
@@ -73,7 +73,7 @@ public class EditModel : PageModel
             return Page();
         }
 
-        var updateResult = await _commandBus.DispatchAsync<UpdatePaymentGatewayProfileCommand, Result<UpdatePaymentGatewayProfileCommandResult>>(Input!, cancellationToken);
+        var updateResult = await _commandBus.DispatchAsync(Input!, cancellationToken);
 
         if (!updateResult.IsSuccess)
         {
@@ -90,7 +90,7 @@ public class EditModel : PageModel
     {
         var query = new GetAllLoaddedPaymentGatewayProvidersQuery();
 
-        var providersResult = await _queryBus.Dispatch(query, cancellationToken);
+        var providersResult = await _queryBus.DispatchAsync(query, cancellationToken);
 
         if (providersResult.IsSuccessWithData)
         {

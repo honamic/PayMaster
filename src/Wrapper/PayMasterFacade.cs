@@ -20,27 +20,27 @@ public class PayMasterFacade : IPayMasterFacade
 
     public Task<Result<CreateReceiptRequestCommandResult>> CreateReceiptRequest(CreateReceiptRequestCommand command, CancellationToken cancellationToken = default)
     {
-        return _commandBus.DispatchAsync<CreateReceiptRequestCommand, Result<CreateReceiptRequestCommandResult>>(command, cancellationToken);
+        return _commandBus.DispatchAsync(command, cancellationToken);
     }
 
     public Task<Result<InitiatePayReceiptRequestCommandResult>> InitiatePayReceiptRequest(InitiatePayReceiptRequestCommand command, CancellationToken cancellationToken = default)
     {
-        return _commandBus.DispatchAsync<InitiatePayReceiptRequestCommand, Result<InitiatePayReceiptRequestCommandResult>>(command, cancellationToken);
+        return _commandBus.DispatchAsync(command, cancellationToken);
     }
 
     public Task<Result<GetPublicReceiptRequestQueryResult?>> GetPublicReceiptRequest(GetPublicReceiptRequestQuery query, CancellationToken cancellationToken)
     {
-        return _queryBus.Dispatch(query, cancellationToken);
+        return _queryBus.DispatchAsync(query, cancellationToken);
     }
 
     public Task<Result<List<GetActivePaymentGatewaysQueryResult>>> GetActivePaymentGateways(CancellationToken cancellationToken)
     {
         var query = new GetActivePaymentGatewaysQuery();
-        return _queryBus.Dispatch(query, cancellationToken);
+        return _queryBus.DispatchAsync(query, cancellationToken);
     }
 
     public Task<Result<RepayReceiptRequestCommandResult>> RepayReceiptRequest(RepayReceiptRequestCommand command, CancellationToken cancellationToken)
     {
-        return _commandBus.DispatchAsync<RepayReceiptRequestCommand, Result<RepayReceiptRequestCommandResult>>(command, cancellationToken);
+        return _commandBus.DispatchAsync(command, cancellationToken);
     }
 }

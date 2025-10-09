@@ -27,7 +27,7 @@ public static class PaymentGatewayProvidersManagementApiEndpoints
                 [FromServices] IQueryBus queryBus,
                 CancellationToken cancellationToken) =>
             {
-                var result = await queryBus.Dispatch(query, cancellationToken);
+                var result = await queryBus.DispatchAsync(query, cancellationToken);
 
                 return result.ToMinimalApiResult();
             })
@@ -40,7 +40,7 @@ public static class PaymentGatewayProvidersManagementApiEndpoints
                   [FromServices] IQueryBus queryBus,
                   CancellationToken cancellationToken) =>
               {
-                   var result = await queryBus.Dispatch(query, cancellationToken);
+                   var result = await queryBus.DispatchAsync(query, cancellationToken);
 
                   return result.ToMinimalApiResult();
               })

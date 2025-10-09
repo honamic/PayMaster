@@ -22,7 +22,7 @@ public class IndexModel : PageModel
             PageSize = 100, 
         };
 
-        var result = await _queryBus.Dispatch(query, cancellationToken);
+        var result = await _queryBus.DispatchAsync(query, cancellationToken);
 
         if (result.IsSuccessWithData)
         {
