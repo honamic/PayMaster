@@ -1,6 +1,6 @@
 ﻿using Honamic.Framework.EntityFramework.Persistence.Extensions;
-using Honamic.Framework.EntityFramework.Query;
-using Honamic.Framework.EntityFramework.Query.Extensions;
+using Honamic.Framework.EntityFramework.QueryModels;
+using Honamic.Framework.EntityFramework.QueryModels.Extensions;
 using Honamic.Framework.Persistence.EntityFramework.Extensions;
 using Honamic.PayMaster.Persistence.Extensions;
 using Honamic.PayMaster.Wrapper.Persistence;
@@ -59,7 +59,7 @@ public class PayMasterWrapperBuilder
         EnsureQueryModelNotAlreadyConfigured();
         QueryModelConfigured = true;
 
-        Services.AddDefaultQueryDbContext<TDbContext>();
+        Services.AddDefaultQueryModelDbContext<TDbContext>();
         Services.AddPayMasterPersistenceServices();
     }
 
@@ -75,7 +75,7 @@ public class PayMasterWrapperBuilder
             options.AddPersianYeKeCommandInterceptor();
         });
 
-        Services.AddDefaultQueryDbContext<PaymasterQueryModelDbContext>();
+        Services.AddDefaultQueryModelDbContext<PaymasterQueryModelDbContext>();
     }
 
 

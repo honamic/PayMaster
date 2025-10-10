@@ -1,4 +1,4 @@
-﻿using Honamic.Framework.Applications.Results;
+﻿using Honamic.Framework.Application.Results;
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.PaymentGatewayProviders.Queries;
 using Honamic.PayMaster.PaymentProviders;

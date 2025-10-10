@@ -1,4 +1,4 @@
-﻿using Honamic.Framework.Applications.Results;
+﻿using Honamic.Framework.Application.Results;
 using Honamic.Framework.Commands;
 using Honamic.Framework.Domain;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.Commands;

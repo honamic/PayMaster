@@ -1,4 +1,4 @@
-﻿using Honamic.Framework.EntityFramework.Query;
+﻿using Honamic.Framework.EntityFramework.QueryModels;
 using Honamic.PayMaster.QueryModels.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 

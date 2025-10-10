@@ -1,6 +1,6 @@
-﻿using Honamic.Framework.Applications.Authorizes;
-using Honamic.Framework.Applications.Extensions;
-using Honamic.Framework.Applications.Results;
+﻿using Honamic.Framework.Application.Authorizes;
+using Honamic.Framework.Application.Extensions;
+using Honamic.Framework.Application.Results;
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.CommandHandlers;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.Commands;

@@ -10,6 +10,7 @@ using Honamic.PayMaster.Wrapper.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WebSample;
 using WebSample.Entities;
+using Honamic.Framework.Persistence.EntityFramework.Extensions;
 
 internal class Program
 {
@@ -26,6 +27,11 @@ internal class Program
         builder.Services.AddDbContext<SampleDbContext>((serviceProvider, options) =>
         {
             options.UseSqlServer(sqlServerConnection);
+            options.AddPersianYeKeCommandInterceptor();
+            options.AddAuditFieldsSaveChangesInterceptor(serviceProvider,
+                Honamic.Framework.EntityFramework.Interceptors.AuditFields.AuditType.UserNameAndId);
+            options.AddAggregateRootVersionInterceptor(serviceProvider);
+            options.AddMarkAsDeletedInterceptors();
         });
 
         builder.Services.AddPayMasterWrapper(option =>

@@ -1,5 +1,5 @@
 ﻿using Honamic.Framework.Commands;
-using Honamic.Framework.Applications.Results;
+using Honamic.Framework.Application.Results;
 using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.Application.ReceiptRequests.Commands;

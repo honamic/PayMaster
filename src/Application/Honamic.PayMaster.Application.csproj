@@ -7,8 +7,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Honamic.Framework.Applications" Version="1.0.14" />
-		<PackageReference Include="Honamic.Framework.Tools.IdGenerators" Version="1.0.14" />
+		<PackageReference Include="Honamic.Framework.Application" Version="1.0.15" />
+		<PackageReference Include="Honamic.Framework.Tools.IdGeneration" Version="1.0.15" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
 	</ItemGroup>
 	

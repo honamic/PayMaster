@@ -1,4 +1,4 @@
-﻿using Honamic.Framework.Endpoints.Web.Results;
+﻿using Honamic.Framework.Endpoints.Web.Results; 
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 using Microsoft.AspNetCore.Builder;

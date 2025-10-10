@@ -1,5 +1,5 @@
-﻿using Honamic.Framework.Applications.Authorizes;
-using Honamic.Framework.Applications.Results;
+﻿using Honamic.Framework.Application.Authorizes;
+using Honamic.Framework.Application.Results;
 using Honamic.Framework.Commands;
 
 namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.Commands;

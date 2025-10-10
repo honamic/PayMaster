@@ -1,4 +1,4 @@
-﻿using Honamic.Framework.EntityFramework.Query;
+﻿using Honamic.Framework.EntityFramework.QueryModels;
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 using Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;

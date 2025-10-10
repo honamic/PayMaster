@@ -1,5 +1,5 @@
-﻿using Honamic.Framework.Applications.Extensions;
-using Honamic.Framework.Tools.IdGenerators;
+﻿using Honamic.Framework.Application.Extensions;
+using Honamic.Framework.Tools.IdGeneration;
 using Honamic.PayMaster.Application.Extensions;
 using Honamic.PayMaster.Domain.Extensions;
 using Honamic.PayMaster.Persistence.Extensions;
@@ -43,6 +43,6 @@ public static class PayMasterWrapperExtensions
     private static void AddFrameworkServies(this IServiceCollection services)
     {
         services.AddDefaultApplicationsServices();
-        services.AddSnowflakeIdGeneratorServices(); 
+        services.AddSnowflakeIdGenerator(); 
     }
 }
