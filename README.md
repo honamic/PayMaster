@@ -8,7 +8,7 @@ It manages the **full payment lifecycle**, currently supporting **online payment
 
 ## ✨ Features
 - Complete payment lifecycle management  
-- Built on the **Honamic Framework** with support for **DDD**, **CQRS**, and more  
+- Built on the [**Honamic Framework**](https://github.com/honamic/Framework) with support for **DDD**, **CQRS**, and more  
 - Follows **Onion** and **Clean Architecture** principles  
 - Easy integration via `Honamic.PayMaster.Wrapper` without requiring deep knowledge of the framework  
 - Extensible with multiple payment providers  
