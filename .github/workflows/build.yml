@@ -1,0 +1,41 @@
+name: .NET Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Build Honamic.PayMaster libs
+      run: dotnet build ./ --configuration Release
+
+    - name: Run Honamic.PayMaster lib Domain Tests
+      run: dotnet test ./Tests/PayMaster.DomainTests/Honamic.PayMaster.DomainTests.csproj --logger "console;verbosity=detailed"
+
+    - name: Run Honamic.PayMaster lib Application Tests
+      run: dotnet test ./Tests/PayMaster.ApplicationTests/Honamic.PayMaster.ApplicationTests.csproj --logger "console;verbosity=detailed"
+
+    - name: Pack Honamic.PayMaster libs
+      run: dotnet pack ./ -c Release --output packages
+
+    - name: Verify package directory
+      run: dir ./
+
+    - name: Verify package directory
+      run: dir ./packages
+
+    - name: Push Package to NuGet.org
+      if: github.event_name == 'push'
+      run: dotnet nuget push **\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
