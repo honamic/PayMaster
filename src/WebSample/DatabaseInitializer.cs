@@ -76,7 +76,7 @@ internal static class DatabaseInitializer
                 {
                     Id = 1001,
                     Code = "Default",
-                    Title = "زرین پل تستی",
+                    Title = "زرین پال تستی",
                     Enabled = true,
                     JsonConfigurations = JsonSerializer.Serialize(zarinPalConfig),
                     MinimumAmount = 1000,

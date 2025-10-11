@@ -45,7 +45,7 @@ builder.Services.AddPayMasterWrapper(option =>
 
     option.Configure(config =>
     {
-        config.CallBackUrl = "https://localhost:7777/api/paymaster/callback/{ReceiptRequestId}/{GatewayPaymentId}/";
+        config.CallBackUrl = "https://localhost:7777/api/paymaster/callback/{GatewayPaymentId}/";
         config.SupportedCurrencies = ["IRR", "USD"];
     });
 

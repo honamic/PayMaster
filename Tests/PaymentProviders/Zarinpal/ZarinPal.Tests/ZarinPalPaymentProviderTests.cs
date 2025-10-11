@@ -218,6 +218,8 @@ public partial class ZarinPalPaymentProviderTests
             MerchantId = "test-merchant"
         };
 
+        config.SetDefaultConfiguration();
+
         var callbackData = new CallBackDataModel
         {
             Authority = "WRONG_AUTH", // This doesn't match the request's CreateReference
@@ -256,6 +258,8 @@ public partial class ZarinPalPaymentProviderTests
             ApiAddress = "https://sandbox.zarinpal.com/",
             MerchantId = "test-merchant"
         };
+
+        config.SetDefaultConfiguration();
 
         var callbackData = new CallBackDataModel
         {

@@ -34,6 +34,8 @@ public partial class PayPalPaymentProviderTests
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
 
+        config.SetDefaultConfiguration();
+
         var responseLinks = new[]
         {
             new PaypalOrderLink
@@ -87,6 +89,8 @@ public partial class PayPalPaymentProviderTests
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
 
+        config.SetDefaultConfiguration();
+
         var handler = new MockHttpMessageHandler("Error response", HttpStatusCode.BadRequest);
         var client = new HttpClient(handler);
         _httpClientFactoryMock.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(client);
@@ -119,6 +123,8 @@ public partial class PayPalPaymentProviderTests
             Secret = "test-secret",
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
+
+        config.SetDefaultConfiguration();
 
         _httpClientFactoryMock.Setup(f => f.CreateClient(It.IsAny<string>()))
             .Throws(new HttpRequestException("Network error"));
@@ -221,6 +227,8 @@ public partial class PayPalPaymentProviderTests
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
 
+        config.SetDefaultConfiguration();
+
         // Setup GetOrder response
         var getOrderResponse = new PayPalOrder
         {
@@ -312,6 +320,9 @@ public partial class PayPalPaymentProviderTests
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
 
+        config.SetDefaultConfiguration();
+
+
         // Setup GetOrder response with non-approved status
         var getOrderResponse = new PayPalOrder
         {
@@ -373,6 +384,8 @@ public partial class PayPalPaymentProviderTests
             Secret = "test-secret",
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
+
+        config.SetDefaultConfiguration();
 
         // Setup GetOrder response with different amount
         var getOrderResponse = new PayPalOrder
@@ -436,6 +449,9 @@ public partial class PayPalPaymentProviderTests
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
 
+        config.SetDefaultConfiguration();
+
+
         var provider = new PayPalPaymentProvider(_loggerMock.Object, _httpClientFactoryMock.Object);
         provider.SetConfiguration(config);
 
@@ -473,6 +489,8 @@ public partial class PayPalPaymentProviderTests
             Secret = "test-secret",
             ApiAddress = "https://api-m.sandbox.paypal.com"
         };
+
+        config.SetDefaultConfiguration();
 
         _httpClientFactoryMock.Setup(f => f.CreateClient(It.IsAny<string>()))
             .Throws(new HttpRequestException("Network error"));
