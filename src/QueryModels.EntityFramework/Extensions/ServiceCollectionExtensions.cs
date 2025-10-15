@@ -14,6 +14,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IPaymentGatewayProfileQueryModelRepository, PaymentGatewayProfileQueryModelRepository>();
         services.AddTransient<IReceiptIssuerQueryModelRepository, ReceiptIssuerQueryModelRepository>();
-        services.AddTransient<IReceiptRequestQueryModelRepository, ReceiptRequestRepositoryQueryModel>();
+        services.AddTransient<IReceiptRequestQueryModelRepository, ReceiptRequestQueryModelRepository>();
     }
 }

@@ -29,11 +29,6 @@ public static class ReceiptRequestsManagementApiEndpoints
             {
                 var result = await queryBus.DispatchAsync(filter, cancellationToken);
 
-                if (result.IsSuccess)
-                {
-                    return TypedResults.Ok(result);
-                }
-
                 return result.ToMinimalApiResult();
             })
             .WithName("GetAllReceiptRequests")

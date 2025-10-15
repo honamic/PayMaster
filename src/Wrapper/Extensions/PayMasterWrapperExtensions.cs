@@ -34,7 +34,6 @@ public static class PayMasterWrapperExtensions
 
     private static void AddPayMasterModuleServices(this IServiceCollection services)
     {
-        services.AddPayMasterDomainServices();
         services.AddPayMasterApplicationServices();
         services.AddPayMasterPersistenceServices();
         services.AddPayMasterQueryModelServices();

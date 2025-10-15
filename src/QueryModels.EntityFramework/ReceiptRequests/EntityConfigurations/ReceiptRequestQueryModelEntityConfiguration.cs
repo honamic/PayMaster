@@ -1,4 +1,3 @@
-using Honamic.PayMaster.QueryModels.ReceiptIssuers;
 using Honamic.PayMaster.QueryModels.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,20 +20,17 @@ public class ReceiptRequestQueryModelEntityConfiguration : IEntityTypeConfigurat
         builder.HasKey(p => p.Id);
 
         builder.ToTable(tableName, schema);
- 
-        builder.HasOne<ReceiptIssuerQueryModel>()
-            .WithMany()
-            .HasForeignKey(p => p.IssuerId)
-            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(c => c.Issuer)
+            .WithMany(c => c.ReceiptRequests)
+            .HasForeignKey(p => p.IssuerId);
 
         builder.HasMany(p => p.GatewayPayments)
             .WithOne()
-            .HasForeignKey(c => c.ReceiptRequestId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(c => c.ReceiptRequestId);
 
         builder.HasMany(c => c.TryLogs)
             .WithOne()
-            .HasForeignKey(c => c.ReceiptRequestId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(c => c.ReceiptRequestId);
     }
 }

@@ -12,6 +12,7 @@ using Honamic.PayMaster.Application.ReceiptRequests.CommandHandlers;
 using Honamic.PayMaster.Application.ReceiptRequests.Commands;
 using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 using Honamic.PayMaster.Application.ReceiptRequests.QueryHandlers;
+using Honamic.PayMaster.Domain.Extensions;
 using Honamic.PayMaster.PaymentProviders;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,6 +30,8 @@ public static class PayMasterApplicationServiceCollection
 
         DynamicPermissionRegistry.Register(typeof(PayMasterApplicationServiceCollection).Assembly);
         DynamicPermissionRegistry.Register(typeof(PayMasterConstants).Assembly);
+
+        services.AddPayMasterDomainServices();
 
         services.AddCommandHandlers();
         services.AddQueryHandlers();
@@ -89,6 +92,10 @@ public static class PayMasterApplicationServiceCollection
         services.AddQueryHandler<GetDefaultConfigurationByProviderTypeQuery,
             Result<GetDefaultConfigurationByProviderTypeQueryResult>,
             GetDefaultConfigurationByProviderTypeQueryHandler>();
+
+        services.AddQueryHandler<GetAllReceiptRequestsQuery,
+            Result<PagedQueryResult<GetAllReceiptRequestsQueryResult>>,
+            GetAllReceiptRequestsQueryHandler>();
     }
 
     private static void AddEventHandlers(this IServiceCollection services)
