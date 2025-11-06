@@ -14,10 +14,8 @@ namespace Honamic.PayMaster.Application.ReceiptRequests.Queries;
  
 public class GetAllReceiptRequestsQuery: PagedQueryFilter, IQuery<Result<PagedQueryResult<GetAllReceiptRequestsQueryResult>>>
 {
-    public GetAllReceiptRequestsQuery()
-    {
-        OrderBy = "Id desc";
-    }
+    protected override string DefaultOrderBy => OrderByDesc("Id");
+
 }
 
 public class GetAllReceiptRequestsQueryResult

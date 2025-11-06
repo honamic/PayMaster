@@ -1,4 +1,5 @@
-﻿using Honamic.Framework.EntityFramework.QueryModels;
+﻿using Honamic.Framework.EntityFramework.Extensions;
+using Honamic.Framework.EntityFramework.QueryModels;
 using Honamic.Framework.Queries;
 using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 using Honamic.PayMaster.QueryModels.ReceiptRequests;
@@ -19,6 +20,12 @@ internal class ReceiptRequestQueryModelRepository : IReceiptRequestQueryModelRep
     public Task<PagedQueryResult<GetAllReceiptRequestsQueryResult>> GetAll(GetAllReceiptRequestsQuery query, CancellationToken cancellationToken)
     {
         return _context.Set<ReceiptRequestQueryModel>()
+                    .WhereIf(!string.IsNullOrEmpty(query.Keyword), c =>
+                            c.Description.Contains(query.Keyword!)
+                            || c.Email.Contains(query.Keyword!)
+                            || c.Mobile.Contains(query.Keyword!)
+                            || c.Issuer.Title.Contains(query.Keyword!)
+                            )
                     .Select(c => new GetAllReceiptRequestsQueryResult
                     {
                         Id = c.Id,

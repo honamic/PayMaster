@@ -1,9 +1,9 @@
 ﻿using Honamic.Framework.Application.Authorizes;
-using Honamic.Framework.Application.Results; 
+using Honamic.Framework.Application.Results;
 using Honamic.Framework.Queries;
 
 namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
- 
+
 [DynamicPermission(
     DisplayName = "لیست درگاههای پرداخت آنلاین",
     Group = "PaymentGateways",
@@ -13,10 +13,7 @@ namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 
 public class GetAllPaymentGatewaysQuery : PagedQueryFilter, IQuery<Result<PagedQueryResult<GetAllPaymentGatewaysQueryResult>>>
 {
-    public GetAllPaymentGatewaysQuery()
-    {
-        OrderBy = "Id desc";
-    }
+    protected override string DefaultOrderBy => OrderByDesc("Id");
 }
 
 public class GetAllPaymentGatewaysQueryResult

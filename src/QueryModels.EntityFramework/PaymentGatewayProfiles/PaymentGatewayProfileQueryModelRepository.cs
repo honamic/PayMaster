@@ -5,6 +5,7 @@ using Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Gridify;
+using Honamic.Framework.EntityFramework.Extensions;
 
 namespace Honamic.PayMaster.QueryModels.EntityFramework.PaymentGatewayProfiles;
 
@@ -35,6 +36,7 @@ internal class PaymentGatewayProfileQueryModelRepository : IPaymentGatewayProfil
     public Task<PagedQueryResult<GetAllPaymentGatewaysQueryResult>> GetAll(GetAllPaymentGatewaysQuery query, CancellationToken cancellationToken)
     {
         return _context.Set<PaymentGatewayProfileQueryModel>()
+             .WhereIf(!string.IsNullOrEmpty(query.Keyword), c => c.Title.Contains(query.Keyword!))
              .Select(c => new GetAllPaymentGatewaysQueryResult
              {
                  Id = c.Id,
@@ -43,11 +45,9 @@ internal class PaymentGatewayProfileQueryModelRepository : IPaymentGatewayProfil
                  LogoPath = c.LogoPath,
                  MinimumAmount = c.MinimumAmount,
                  MaximumAmount = c.MaximumAmount,
-                 Enabled = c.Enabled, 
+                 Enabled = c.Enabled,
                  ProviderType = c.ProviderType,
-             })
-             .ApplyFiltering(query.Filter) 
-             .ToPagedListAsync(query, cancellationToken);
+             }).ToFilteredPagedListAsync(query, cancellationToken);
     }
 
     public Task<GetPaymentGatewayQueryResult?> Get(GetPaymentGatewayQuery query, CancellationToken cancellationToken)
