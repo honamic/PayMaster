@@ -33,4 +33,9 @@ public class GetAllPaymentGatewaysQueryResult
     public string ProviderType { get; set; }
 
     public bool Enabled { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Title} | {Id}";
+    }
 }

@@ -47,4 +47,9 @@ public class GetAllReceiptRequestsQueryResult
     public string? PartyReference { get; set; }
 
     public long? PartyId { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Amount} {Currency} | {Id}";
+    }
 }
