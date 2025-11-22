@@ -67,7 +67,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Get
         };
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -102,7 +102,7 @@ public partial class PaymentGatewayInitializationServiceTests
         // Arrange
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync((PaymentGatewayProfile)null);
 
         // Act & Assert
@@ -124,7 +124,7 @@ public partial class PaymentGatewayInitializationServiceTests
             StatusDescription = "Gateway rejected the request"
         };
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -174,7 +174,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -191,7 +191,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var receiptRequest = ReceiptRequestsHelper.CreateValidReceiptRequest(_idGenerator.Object);
         var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -247,7 +247,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Get
         };
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -283,7 +283,7 @@ public partial class PaymentGatewayInitializationServiceTests
             PayVerb = PayVerb.Post // But PayVerb is provided
         };
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -318,7 +318,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         createResult.LogData.SetMessage("Test log message");
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -350,7 +350,7 @@ public partial class PaymentGatewayInitializationServiceTests
 
         CreateRequest? capturedRequest = null;
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))
@@ -377,7 +377,7 @@ public partial class PaymentGatewayInitializationServiceTests
         var initialStatus = receiptRequest.Status;
         var gatewayProvider = ReceiptRequestsHelper.CreateGatewayProfile();
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(gatewayProvider.ProviderType, gatewayProvider.JsonConfigurations))

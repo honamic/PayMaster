@@ -72,7 +72,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
         };
 
         var gatewayProvider = PaymentGatewayProfile.Create(createParameters);
-         
+
         var extractResult = new ExtractCallBackDataResult
         {
             Success = true,
@@ -93,7 +93,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             }
         };
 
-        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>()))
+        _repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<long>(), CancellationToken.None))
             .ReturnsAsync(gatewayProvider);
 
         _factoryMock.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>()))
@@ -125,7 +125,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
             _clockMock.Object);
 
         // Act
-        var result = await _service.ProcessCallbackAsync( 
+        var result = await _service.ProcessCallbackAsync(
             gatewayPayment.Id,
             "{\"data\": \"sample callback data\"}");
 
@@ -155,7 +155,7 @@ public partial class CallbackGatewayPaymentDomainServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidPaymentException>(() =>
-            _service.ProcessCallbackAsync( 1, "{}"));
+            _service.ProcessCallbackAsync(1, "{}"));
     }
 
     [Fact]

@@ -86,7 +86,7 @@ public partial class CreateReceiptRequestDomainServiceTests
         var gateway = ReceiptRequestsHelper.CreateGatewayProfile();
 
         _receiptIssuerRepositoryMock.Setup(x => x.GetByCodeAsync("issuer1", CancellationToken.None)).ReturnsAsync(issuer);
-        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(gateway);
+        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync(gateway);
         _receiptRequestRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<ReceiptRequest>(), CancellationToken.None)).Returns(Task.CompletedTask);
 
         _idGenerator.Setup(x => x.GetNewId()).Returns(123);
@@ -192,7 +192,7 @@ public partial class CreateReceiptRequestDomainServiceTests
             Description = ""
         });
         _receiptIssuerRepositoryMock.Setup(x => x.GetByCodeAsync("issuer1", CancellationToken.None)).ReturnsAsync(issuer);
-        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync((PaymentGatewayProfile?)null);
+        _paymentGatewayProfileRepositoryMock.Setup(x => x.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync((PaymentGatewayProfile?)null);
 
         var service = CreateService();
 
