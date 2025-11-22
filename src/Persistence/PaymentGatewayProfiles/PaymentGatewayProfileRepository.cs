@@ -16,21 +16,17 @@ internal class PaymentGatewayProfileRepository
 
     }
 
-    public Task<PaymentGatewayProfile?> GetByCodeAsync(string code)
+    public Task<PaymentGatewayProfile?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
-        return GetAsync(c => c.Code == code);
+        return GetAsync(c => c.Code == code, cancellationToken);
     }
-
-    public Task<PaymentGatewayProfile?> GetByIdAsync(long id)
-    {
-        return GetAsync(c => c.Id == id);
-    }
-    public Task<bool> ExistsByCodeAsync(string code, long? currentId)
+ 
+    public Task<bool> ExistsByCodeAsync(string code, long? currentId, CancellationToken cancellationToken = default)
     {
         if (currentId.HasValue)
-            return IsExistsAsync(c => c.Code == code && c.Id != currentId.Value);
+            return IsExistsAsync(c => c.Code == code && c.Id != currentId.Value, cancellationToken);
         else
-            return IsExistsAsync(c => c.Code == code);
+            return IsExistsAsync(c => c.Code == code, cancellationToken);
 
     }
 

@@ -27,11 +27,6 @@ internal class ReceiptRequestRepository
         return GetAsync(receipt => receipt.GatewayPayments.Any(pay => pay.Id == gatewayPaymentId), cancellationToken);
     }
 
-    public Task<ReceiptRequest?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
-    {
-        return GetAsync(c => c.Id == id, cancellationToken);
-    }
-
     protected override IList<Expression<Func<ReceiptRequest, object?>>> GetIncludes()
     {
         return new List<Expression<Func<ReceiptRequest, object?>>>

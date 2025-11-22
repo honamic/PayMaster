@@ -16,11 +16,6 @@ internal class ReceiptIssuerRepository
 
     }
 
-    public Task<ReceiptIssuer?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
-    {
-        return GetAsync(x => x.Id == id, cancellationToken);
-    }
-
     public Task<ReceiptIssuer?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         return GetAsync(x => x.Code == code, cancellationToken);

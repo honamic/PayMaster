@@ -9,7 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
-		<PackageReference Include="Honamic.Framework.EntityFramework.QueryModels" Version="1.0.19" />
+		<PackageReference Include="Honamic.Framework.EntityFramework.QueryModels" Version="1.0.20" />
 	</ItemGroup>
 	
 	<ItemGroup>
