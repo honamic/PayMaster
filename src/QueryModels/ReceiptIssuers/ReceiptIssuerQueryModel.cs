@@ -3,7 +3,7 @@ using Honamic.PayMaster.QueryModels.ReceiptRequests;
 
 namespace Honamic.PayMaster.QueryModels.ReceiptIssuers;
 
-public class ReceiptIssuerQueryModel : AggregateQueryBase<long>
+public class ReceiptIssuerQueryModel : AggregateRootQueryBase<long>
 {
     public string Code { get; set; } = default!;
 

@@ -2,7 +2,7 @@
 using Honamic.PayMaster.QueryModels.ReceiptRequests;
 
 namespace Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;
-public class PaymentGatewayProfileQueryModel : AggregateQueryBase<long>
+public class PaymentGatewayProfileQueryModel : AggregateRootQueryBase<long>
 {
     
     public string Title { get; set; }

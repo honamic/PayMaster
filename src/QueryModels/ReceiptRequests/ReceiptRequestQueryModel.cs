@@ -4,7 +4,7 @@ using Honamic.PayMaster.ReceiptRequests;
 
 namespace Honamic.PayMaster.QueryModels.ReceiptRequests;
 
-public class ReceiptRequestQueryModel : AggregateQueryBase<long>
+public class ReceiptRequestQueryModel : AggregateRootQueryBase<long>
 {
     
     public ReceiptRequestStatus Status { get;  set; }
