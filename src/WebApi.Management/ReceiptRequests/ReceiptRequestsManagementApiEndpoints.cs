@@ -1,5 +1,6 @@
-﻿using Honamic.Framework.Endpoints.Web.Results; 
+﻿using Honamic.Framework.Endpoints.Web.Results;
 using Honamic.Framework.Queries;
+using Honamic.PayMaster.Application;
 using Honamic.PayMaster.Application.ReceiptRequests.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +15,10 @@ public static class ReceiptRequestsManagementApiEndpoints
     {
         ArgumentNullException.ThrowIfNull(endpoints);
 
-        prefixRoute = prefixRoute + "receipt-requests";
+        prefixRoute = prefixRoute + PayMasterConstants.ReceiptRequestsFeatureRoute;
 
         var routeGroup = endpoints.MapGroup(prefixRoute)
-            .WithTags("ReceiptRequests")
+            .WithTags($"{PayMasterConstants.ModuleName}.{PayMasterConstants.ReceiptRequestsFeatureName}")
             //.RequireAuthorization()
             ;
 
