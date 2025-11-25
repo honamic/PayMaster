@@ -16,10 +16,8 @@ public class GetPaymentGatewayQuery : IQuery<Result<GetPaymentGatewayQueryResult
     public long Id { get; set; }
 }
 
-public class GetPaymentGatewayQueryResult
+public class GetPaymentGatewayQueryResult : AggregateQueryResult<long>
 {
-    public long Id { get; set; }
-
     public string Code { get; set; } = default!;
 
     public string Title { get; set; } = default!;

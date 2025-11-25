@@ -16,10 +16,8 @@ public class GetAllPaymentGatewaysQuery : PagedQueryFilter, IQuery<Result<PagedQ
     protected override string DefaultOrderBy => OrderByDesc("Id");
 }
 
-public class GetAllPaymentGatewaysQueryResult
+public class GetAllPaymentGatewaysQueryResult : AggregateQueryResult<long>
 {
-    public long Id { get; set; }
-
     public string Code { get; set; } = default!;
 
     public string Title { get; set; } = default!;

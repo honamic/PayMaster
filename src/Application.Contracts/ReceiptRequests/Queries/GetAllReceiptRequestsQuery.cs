@@ -18,10 +18,8 @@ public class GetAllReceiptRequestsQuery: PagedQueryFilter, IQuery<Result<PagedQu
 
 }
 
-public class GetAllReceiptRequestsQueryResult
+public class GetAllReceiptRequestsQueryResult : AggregateQueryResult<long>
 {
-    public long Id { get; set; }
-
     public ReceiptRequestStatus Status { get; set; }
 
     public decimal Amount { get; set; }

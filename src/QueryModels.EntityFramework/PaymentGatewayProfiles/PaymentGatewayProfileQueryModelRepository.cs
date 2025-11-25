@@ -4,7 +4,6 @@ using Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 using Honamic.PayMaster.QueryModels.PaymentGatewayProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Gridify;
 using Honamic.Framework.EntityFramework.Extensions;
 
 namespace Honamic.PayMaster.QueryModels.EntityFramework.PaymentGatewayProfiles;
@@ -47,6 +46,11 @@ internal class PaymentGatewayProfileQueryModelRepository : IPaymentGatewayProfil
                  MaximumAmount = c.MaximumAmount,
                  Enabled = c.Enabled,
                  ProviderType = c.ProviderType,
+                 CreatedBy = c.CreatedBy,
+                 CreatedOn = c.CreatedOn,
+                 ModifiedBy = c.ModifiedBy,
+                 ModifiedOn = c.ModifiedOn,
+                 Version = c.Version
              }).ToFilteredPagedListAsync(query, cancellationToken);
     }
 
@@ -65,6 +69,11 @@ internal class PaymentGatewayProfileQueryModelRepository : IPaymentGatewayProfil
                  Enabled = c.Enabled,
                  JsonConfigurations = c.JsonConfigurations,
                  ProviderType = c.ProviderType,
+                 CreatedBy = c.CreatedBy,
+                 CreatedOn = c.CreatedOn,
+                 ModifiedBy = c.ModifiedBy,
+                 ModifiedOn = c.ModifiedOn,
+                 Version = c.Version
              }).FirstOrDefaultAsync(cancellationToken);
     }
 

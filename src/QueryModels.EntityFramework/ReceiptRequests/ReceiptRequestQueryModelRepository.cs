@@ -42,6 +42,11 @@ internal class ReceiptRequestQueryModelRepository : IReceiptRequestQueryModelRep
                         PartyReference = c.PartyReference,
                         IssuerTitle = c.Issuer.Title,
                         PartyId = c.PartyId,
+                        CreatedBy = c.CreatedBy,
+                        CreatedOn = c.CreatedOn,
+                        ModifiedBy = c.ModifiedBy,
+                        ModifiedOn = c.ModifiedOn,
+                        Version = c.Version
                     })
                     .ToFilteredPagedListAsync(query, cancellationToken);
     }
