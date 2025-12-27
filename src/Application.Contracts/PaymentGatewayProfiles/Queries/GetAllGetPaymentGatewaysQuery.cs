@@ -6,7 +6,7 @@ namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.Queries;
 
 [DynamicPermission(
     DisplayName = "لیست درگاههای پرداخت آنلاین",
-    Group = "PaymentGateways",
+    Feature = "PaymentGateways",
     Module = PayMasterConstants.ModuleName,
     Name = null,
     Description = "")]
@@ -16,7 +16,7 @@ public class GetAllPaymentGatewaysQuery : PagedQueryFilter, IQuery<Result<PagedQ
     protected override string DefaultOrderBy => OrderByDesc("Id");
 }
 
-public class GetAllPaymentGatewaysQueryResult : AggregateQueryResult<long>
+public class GetAllPaymentGatewaysQueryResult : AggregateRootQueryResult<long>
 {
     public string Code { get; set; } = default!;
 

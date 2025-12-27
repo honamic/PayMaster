@@ -7,7 +7,7 @@ namespace Honamic.PayMaster.Application.ReceiptRequests.Queries;
 
 [DynamicPermission(
     DisplayName = "لیست درخواست پرداخت ها",
-    Group = "ReceiptRequests",
+    Feature = "ReceiptRequests",
     Module = PayMasterConstants.ModuleName,
     Name = null,
     Description = "")]
@@ -18,7 +18,7 @@ public class GetAllReceiptRequestsQuery: PagedQueryFilter, IQuery<Result<PagedQu
 
 }
 
-public class GetAllReceiptRequestsQueryResult : AggregateQueryResult<long>
+public class GetAllReceiptRequestsQueryResult : AggregateRootQueryResult<long>
 {
     public ReceiptRequestStatus Status { get; set; }
 

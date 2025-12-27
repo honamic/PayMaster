@@ -6,7 +6,7 @@ namespace Honamic.PayMaster.Application.PaymentGatewayProfiles.Commands;
 
 [DynamicPermission(
     DisplayName = "بروزرسانی درگاه پرداخت آنلاین",
-    Group = "PaymentGateways",
+    Feature = "PaymentGateways",
     Module = PayMasterConstants.ModuleName,
     Name = null,
     Description = "")]
