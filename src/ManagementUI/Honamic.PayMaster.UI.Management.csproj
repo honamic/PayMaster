@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Honamic.Framework.Application.Abstractions" Version="1.0.22" />
+		<PackageReference Include="Honamic.Framework.Application.Abstractions" Version="1.0.23" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
 	</ItemGroup>
 
