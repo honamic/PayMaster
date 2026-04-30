@@ -3,7 +3,6 @@ using Honamic.Framework.Persistence.EntityFramework;
 using Honamic.PayMaster.Domain.PaymentGatewayProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.PaymentGatewayProfiles;
 
@@ -30,9 +29,9 @@ internal class PaymentGatewayProfileRepository
 
     }
 
-    protected override IList<Expression<Func<PaymentGatewayProfile, object?>>> GetIncludes()
+    protected override IList<Func<IQueryable<PaymentGatewayProfile>, IQueryable<PaymentGatewayProfile>>> GetIncludes()
     {
-        return new List<Expression<Func<PaymentGatewayProfile, object?>>>
+        return new List<Func<IQueryable<PaymentGatewayProfile>, IQueryable<PaymentGatewayProfile>>>
         {
             // c=>c.Logs
         };

@@ -3,7 +3,6 @@ using Honamic.Framework.Persistence.EntityFramework;
 using Honamic.PayMaster.Domain.ReceiptRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
 
 namespace Honamic.PayMaster.Persistence.ReceiptRequests;
 
@@ -27,11 +26,11 @@ internal class ReceiptRequestRepository
         return GetAsync(receipt => receipt.GatewayPayments.Any(pay => pay.Id == gatewayPaymentId), cancellationToken);
     }
 
-    protected override IList<Expression<Func<ReceiptRequest, object?>>> GetIncludes()
+    protected override IList<Func<IQueryable<ReceiptRequest>, IQueryable<ReceiptRequest>>> GetIncludes()
     {
-        return new List<Expression<Func<ReceiptRequest, object?>>>
+        return new List<Func<IQueryable<ReceiptRequest>, IQueryable<ReceiptRequest>>>
         {
-            c=>c.GatewayPayments
+            q => q.Include(c => c.GatewayPayments)
         };
     }
 }
