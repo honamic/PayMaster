@@ -9,8 +9,8 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Honamic.Framework.Application.Abstractions" Version="1.0.24" />
-		<PackageReference Include="Honamic.Framework.Commands.Abstractions" Version="1.0.24" />
-		<PackageReference Include="Honamic.Framework.Queries.Abstractions" Version="1.0.24" />
+		<PackageReference Include="Honamic.Framework.Commands.Abstractions" Version="1.0.25" />
+		<PackageReference Include="Honamic.Framework.Queries.Abstractions" Version="1.0.25" />
 	</ItemGroup>
 	
 	<ItemGroup>
