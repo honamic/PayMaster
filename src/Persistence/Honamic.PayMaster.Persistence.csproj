@@ -7,10 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Honamic.Framework.EntityFramework.Persistence" Version="2.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" /> 
+		<PackageReference Include="Honamic.Framework.EntityFramework.Persistence" Version="2.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" /> 
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Domain\Honamic.PayMaster.Domain.csproj" /> 
